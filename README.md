@@ -53,9 +53,17 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 ##  Requirements Elaboration 
 | Client's Requrements| Elaborated requirements| 
 | --------------------| :--------------------: | 
-| Left-aligned content| Center-aligned content | 
-| Row 1, Column 1     |   Row 1, Column 2      |  
-| Row 2, Column 1     |   Row 2, Column 2      | 
+| Member              |                        | 
+| Create a new member |   Creating a a new club member record with:<br> (memberID, birthate   |  
+| Update a member     |   Row 2, Column 2      | 
+| Delete a member     |   Row 2, Column 2      | 
+| List of members     |   Row 2, Column 2      | 
+
+| Update a member     |   Row 2, Column 2      | 
+| Update a member     |   Row 2, Column 2      | 
+| Update a member     |   Row 2, Column 2      | 
+| Update a member     |   Row 2, Column 2      | 
+| Update a member     |   Row 2, Column 2      | 
  
 
 
