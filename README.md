@@ -73,4 +73,8 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 | Update a trainer     |   Modify Data of an existing option  | 
 | Delete a trainer     |   Delete an option     | 
 
+## Domain Model
+![domainModel(2)](https://github.com/xpes/webapp23-FitflexStudio/assets/25884342/aa392b3b-38f1-4fb8-adf8-b9a0cae297bc)
+
+
 
