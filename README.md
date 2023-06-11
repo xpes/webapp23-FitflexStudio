@@ -54,15 +54,14 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 | Client's Requrements| Elaborated requirements| 
 | --------------------| :--------------------: | 
 | Member              |                        | 
-| Create a new member |   Creating a a new club member record with:<br> (memberID, memberName, gender, birtDate, address, email, phone) <br> |  
-| Update a member     |   Row 2, Column 2      | 
-| Delete a member     |   Row 2, Column 2      | 
-| List of members     |   Row 2, Column 2      | 
-
-| Update a member     |   Row 2, Column 2      | 
-| Update a member     |   Row 2, Column 2      | 
-| Update a member     |   Row 2, Column 2      | 
-| Update a member     |   Row 2, Column 2      | 
+| Create a new member |   Creating a a new club member record with:<br> (memberID, memberName, gender, birtDate, address, email, phone) <br> the Gender is either Male or Female <br> the member must be at least 16 years old <br> |  
+| Update a member     |   Modify the data of an existing member     | 
+| Delete a member     |   Delete an existing member     | 
+| List of members     |   Shows the List of all memebrs with data   | 
+| fitnessClass    |  a member can particiapte different fitness class available    | 
+| Create a fitnessClass    |   Creating a new fitness course with: <br> (fitnessClassId, fitnessClassName, instructor, schedule, duration, capacity)   | 
+| Update a fitnessClass     |   Modify Data of an existing fitnessClass  | 
+| Delete a fitnessClass     |   Delete a fitnessClass     | 
 | Update a member     |   Row 2, Column 2      | 
  
 
