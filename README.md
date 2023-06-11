@@ -49,6 +49,13 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 15. Edit: Allows the user to edit the details of a trainer, such as their contact information or additional details.
 16. View: Displays the details of a trainer, including their ID, name, contact information, and any additional details.
 17. Delete: Removes a trainer from the system, including all associated information.
+
+##  Requirements Elaboration 
+| Client's Requrements| Elaborated requirements| 
+| --------------------| :--------------------: | 
+| Left-aligned content| Center-aligned content | 
+| Row 1, Column 1     |   Row 1, Column 2      |  
+| Row 2, Column 1     |   Row 2, Column 2      | 
  
 
 
