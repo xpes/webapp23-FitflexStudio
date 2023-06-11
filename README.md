@@ -54,7 +54,7 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 | Client's Requrements| Elaborated requirements| 
 | --------------------| :--------------------: | 
 | Member              |                        | 
-| Create a new member |   Creating a a new club member record with:<br> (memberID, birthate   |  
+| Create a new member |   Creating a a new club member record with:<br> (memberID, memberName, gender, birtDate, address, email, phone) <br> |  
 | Update a member     |   Row 2, Column 2      | 
 | Delete a member     |   Row 2, Column 2      | 
 | List of members     |   Row 2, Column 2      | 
