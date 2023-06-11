@@ -53,16 +53,24 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 ##  Requirements Elaboration 
 | Client's Requrements| Elaborated requirements| 
 | --------------------| :--------------------: | 
-| Member              |                        | 
+| **Member**          |   a member is a person enrolled to the fitness studio    | 
 | Create a new member |   Creating a a new club member record with:<br> (memberID, memberName, gender, birtDate, address, email, phone) <br> the Gender is either Male or Female <br> the member must be at least 16 years old <br> |  
 | Update a member     |   Modify the data of an existing member     | 
 | Delete a member     |   Delete an existing member     | 
 | List of members     |   Shows the List of all memebrs with data   | 
-| fitnessClass    |  a member can particiapte different fitness class available    | 
+| **fitnessClass**    |  a member can particiapte different fitness class available    | 
 | Create a fitnessClass    |   Creating a new fitness course with: <br> (fitnessClassId, fitnessClassName, instructor, schedule, duration, capacity)   | 
 | Update a fitnessClass     |   Modify Data of an existing fitnessClass  | 
 | Delete a fitnessClass     |   Delete a fitnessClass     | 
-| Update a member     |   Row 2, Column 2      | 
- 
+| List of fitnessClasses     |   Delete a fitnessClass     | 
+| **membershipOwner**           |  once a member is enrolled to the fitness studio, he/she needs<br> to choose an option each option has its own caracteristics and requirements     | 
+| Create a membershipOption    |   Creating a new option with: <br> (optionId, optionName, price, duration, caracteristics)   | 
+| Update a membershipOption     |   Modify Data of an existing option  | 
+| Delete a membershipOption     |   Delete an option     | 
+| list of membershipOptions     |   show the list of membership offers    | 
+| **trainer**          |               | 
+| Create a trainer     |   Creating a new option with: <br> (optionId, optionName, price, duration, caracteristics)   | 
+| Update a trainer     |   Modify Data of an existing option  | 
+| Delete a trainer     |   Delete an option     | 
 
 
