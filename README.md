@@ -77,7 +77,8 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 ![domainModel](https://github.com/xpes/webapp23-FitflexStudio/assets/25884342/dc1b2904-9be2-4a38-8eed-adc32cec3c51)
 
 ## Design Model
-https://github.com/xpes/webapp23-FitflexStudio/blob/main/Design%20Model.png
+![image](https://github.com/xpes/webapp23-FitflexStudio/assets/6268532/1873fb7c-6a7b-48dd-95d6-a2ccb91a2695)
+
 
 
 
