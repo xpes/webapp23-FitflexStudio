@@ -58,20 +58,26 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 | Update a member     |   Modify the data of an existing member     | 
 | Delete a member     |   Delete an existing member     | 
 | List of members     |   Shows the List of all memebrs with data   | 
-| **fitnessClass**    |  a member can particiapte different fitness class available    | 
-| Create a fitnessClass    |   Creating a new fitness course with: <br> (fitnessClassId, fitnessClassName, instructor, schedule, duration, capacity)   | 
-| Update a fitnessClass     |   Modify Data of an existing fitnessClass  | 
-| Delete a fitnessClass     |   Delete a fitnessClass     | 
-| List of fitnessClasses     |   Delete a fitnessClass     | 
-| **membershipOwner**           |  once a member is enrolled to the fitness studio, he/she needs<br> to choose an option each option has its own caracteristics and requirements     | 
-| Create a membershipOption    |   Creating a new option with: <br> (optionId, optionName, price, duration, caracteristics)   | 
-| Update a membershipOption     |   Modify Data of an existing option  | 
-| Delete a membershipOption     |   Delete an option     | 
-| list of membershipOptions     |   show the list of membership offers    | 
+| **class**    |  a member can particiapte different class available    | 
+| Create a class    |   Creating a new course with: <br> (classId, className, instructor, startDate, endDate, capacity, registerdMembers)   | 
+| Update a class     |   Modify Data of an existing class  | 
+| Delete a class     |   Delete a class     | 
+| List of classes     |   show the list of all classes with data     | 
+| **membership**           |  once a member is enrolled to the fitness studio, he/she needs<br> to choose an option each option has its own caracteristics and requirements     | 
+| Create a membership    |   Creating a new option with: <br> (optionId, optionName, price, duration)   | 
+| Update a membership     |   Modify Data of an existing option  | 
+| Delete a membership     |   Delete an option     | 
+| list of membership     |   show the list of membership offered    | 
 | **trainer**          |               | 
-| Create a trainer     |   Creating a new option with: <br> (optionId, optionName, price, duration, caracteristics)   | 
-| Update a trainer     |   Modify Data of an existing option  | 
-| Delete a trainer     |   Delete an option     | 
+| Create a trainer     |   Creating a new trainer with: <br> (trainerId)   | 
+| Update a trainer     |   Modify Data of an existing trainer  | 
+| Delete a trainer     |   Delete a trainer     | 
+| list of trainer     |   show  a list of trainer     | 
+| **schedule**          |               | 
+| Create a schedule     |   Creating a new schedule with: <br> (scheduleId, className, instructor, startDate, endDate, scheduleWeek, scheduleTime, duration)   | 
+| Update a schedule     |   Modify Data of an existing schedule  | 
+| Delete a schedule     |   Delete a schedule     | 
+| list of schedule     |   show  a list of schedule     | 
 
 ## Domain Model
 ![domainModel](https://github.com/xpes/webapp23-FitflexStudio/assets/25884342/dc1b2904-9be2-4a38-8eed-adc32cec3c51)
