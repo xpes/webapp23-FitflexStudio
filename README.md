@@ -86,5 +86,10 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 ![image](https://github.com/xpes/webapp23-FitflexStudio/assets/6268532/1873fb7c-6a7b-48dd-95d6-a2ccb91a2695)
 
 
+## Separation of Work
 
+| Developpers | Work| 
+| --------------------| :--------------------: | 
+|   Nour Elhouda Benaida    |   Domain Model <br>  Requirements Elaboration   | 
+|   Elias George            |    Design Model <br> Requirements Elaboration   |  
 
