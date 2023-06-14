@@ -80,7 +80,7 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 | list of schedule     |   show  a list of schedule     | 
 
 ## Domain Model
-![domainModel]()
+![domainModel](domainModel.png)
 
 ## Design Model
 ![image](https://github.com/xpes/webapp23-FitflexStudio/blob/main/designModel.png)
