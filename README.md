@@ -64,9 +64,9 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 | Delete a class     |   Delete a class     | 
 | List of classes     |   show the list of all classes with data     | 
 | **membership**           |  once a member is enrolled to the fitness studio, he/she needs<br> to choose an option each option has its own caracteristics and requirements     | 
-| Create a membership    |   Creating a new option with: <br> (optionId, optionName, price, duration)   | 
-| Update a membership     |   Modify Data of an existing option  | 
-| Delete a membership     |   Delete an option     | 
+| Create a membership    |   Creating a new membership with: <br> (membershipId, membershipName, price, duration)   | 
+| Update a membership     |   Modify Data of an existing membership  | 
+| Delete a membership     |   Delete an membership     | 
 | list of membership     |   show the list of membership offered    | 
 | **trainer**          |               | 
 | Create a trainer     |   Creating a new trainer with: <br> (trainerId)   | 
