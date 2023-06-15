@@ -93,6 +93,6 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 
 | Developpers | Work| 
 | --------------------| :--------------------: | 
-|   Nour Elhouda Benaida    |   Domain Model <br>  Requirements Elaboration   | 
-|   Elias George            |    Design Model <br> Requirements Elaboration   |  
+|   Nour Elhouda Benaida    |                     Domain Model <br>  Requirements Elaboration   | 
+|   Elias George            |                     Design Model <br> Requirements Elaboration   |  
 
