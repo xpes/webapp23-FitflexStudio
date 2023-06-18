@@ -29,7 +29,7 @@ for (const PersonRec of PersonRecords) {
   row.insertCell().textContent = PersonRec.gender;
   row.insertCell().textContent = PersonRec.birthDate;
   row.insertCell().textContent = PersonRec.email;
-  row.insertCell().textContent = PersonRec.phoneNo;
+  row.insertCell().textContent = PersonRec.phoneNumber;
   row.insertCell().textContent = PersonRec.address;
   row.insertCell().textContent = PersonRec.iban;
 }

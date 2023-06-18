@@ -74,6 +74,7 @@ Person.retrieve = async function (personId) {
     return null;
   }
   const personRec = personDocSn.data();
+  console.log(personRec);
   return personRec;
 };
 /**
@@ -102,12 +103,17 @@ Person.retrieveAll = async function () {
 Person.update = async function (slots) {
   const updSlots = {};
   // retrieve up-to-date person record
-  const personRec = await person.retrieve(slots.personId);
+  const personRec = await Person.retrieve(slots.personId);
   // convert from string to integer
-  if (slots.birthDate) slots.birthDate = parseInt(slots.birthDate);
+  //if (slots.birthDate) slots.birthDate = parseInt(slots.birthDate);
   // update only those slots that have changed
   if (personRec.personName !== slots.personName) updSlots.personName = slots.personName;
+  if (personRec.gender !== slots.gender) updSlots.gender = slots.gender;
   if (personRec.birthDate !== slots.birthDate) updSlots.birthDate = slots.birthDate;
+  if (personRec.email !== slots.email) updSlots.email = slots.email;
+  if (personRec.phoneNumber !== slots.phoneNumber) updSlots.phoneNumber = slots.phoneNumber;
+  if (personRec.address !== slots.address) updSlots.address = slots.address;
+  if (personRec.iban !== slots.iban) updSlots.iban = slots.iban;
   if (Object.keys(updSlots).length > 0) {
     try {
       const personDocRef = fsDoc(fsDb, "persons", slots.personId);
