@@ -6,7 +6,7 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Person, { GenderEL } from "../m/Person.mjs";
+import Person from "../m/Person.mjs";
 
 /***************************************************************
  Load data
@@ -26,11 +26,10 @@ for (const PersonRec of PersonRecords) {
   const row = tableBodyEl.insertRow();
   row.insertCell().textContent = PersonRec.personId;
   row.insertCell().textContent = PersonRec.personName;
-  row.insertCell().textContent = GenderEL.stringify(person.gender);
+  row.insertCell().textContent = PersonRec.gender;
   row.insertCell().textContent = PersonRec.birthDate;
   row.insertCell().textContent = PersonRec.email;
   row.insertCell().textContent = PersonRec.phoneNo;
   row.insertCell().textContent = PersonRec.address;
   row.insertCell().textContent = PersonRec.iban;
-
 }
