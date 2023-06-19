@@ -2,11 +2,13 @@
  * @fileOverview  View methods for the use case "update Member"
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
+ * @author Elias George
  */
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Person from "../m/Person.mjs";
+import Person, { GenderEL } from "../m/Person.mjs";
+import { fillSelectWithOptions } from "../../lib/util.mjs";
 
 /***************************************************************
  Load data
@@ -19,6 +21,9 @@ const MemberRecords = await Person.retrieveAll();
 const formEl = document.forms["Person"],
   updateButton = formEl["commit"],
   selectMemberEl = formEl["selectPerson"];
+
+// set up the gender selection list
+fillSelectWithOptions(formEl.gender, GenderEL.labels);
 
 /***************************************************************
  Set up select element
@@ -68,6 +73,6 @@ updateButton.addEventListener("click", async function () {
   if (!MemberIdRef) return;
   await Person.update(slots);
   // update the selection list option element
-  selectMemberEl.options[selectMemberEl.selectedIndex].text = slots.memberName;
+  selectMemberEl.options[selectMemberEl.selectedIndex].text = slots.personName;
   formEl.reset();
 });

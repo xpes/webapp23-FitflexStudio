@@ -2,6 +2,7 @@
  * @fileOverview  View methods for the use case "delete Person"
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
+ * @author Elias George
  */
 /***************************************************************
  Import classes and data types
@@ -27,7 +28,7 @@ for (const PersonRec of PersonRecords) {
   const optionEl = document.createElement("option");
   optionEl.text = PersonRec.personName;
   optionEl.value = PersonRec.personId;
-  selectPersonEl.add( optionEl, null);
+  selectPersonEl.add(optionEl, null);
 }
 
 /******************************************************************
@@ -38,8 +39,8 @@ deleteButton.addEventListener("click", async function () {
   const personId = selectPersonEl.value;
   if (!personId) return;
   if (confirm("Do you really want to delete this Person record?")) {
-    await Person.destroy( personId);
+    await Person.destroy(personId);
     // remove deleted Person from select options
-    selectPersonEl.remove( selectPersonEl.selectedIndex);
+    selectPersonEl.remove(selectPersonEl.selectedIndex);
   }
 });

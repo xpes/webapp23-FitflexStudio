@@ -2,11 +2,12 @@
  * @fileOverview  View methods for the use case "retrieve and list Persons"
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
+ * @author Elias George
  */
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Person from "../m/Person.mjs";
+import Person, { GenderEL } from "../m/Person.mjs";
 
 /***************************************************************
  Load data
@@ -26,7 +27,7 @@ for (const PersonRec of PersonRecords) {
   const row = tableBodyEl.insertRow();
   row.insertCell().textContent = PersonRec.personId;
   row.insertCell().textContent = PersonRec.personName;
-  row.insertCell().textContent = PersonRec.gender;
+  row.insertCell().textContent = GenderEL.labels[PersonRec.gender - 1];
   row.insertCell().textContent = PersonRec.birthDate;
   row.insertCell().textContent = PersonRec.email;
   row.insertCell().textContent = PersonRec.phoneNumber;

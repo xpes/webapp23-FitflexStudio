@@ -2,6 +2,7 @@
  * @fileOverview  The model class person with attribute definitions and storage management methods
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
+ * @author Elias George
  * @copyright Copyright 2020-2022 Gerd Wagner (Chair of Internet Technology) and Juan-Francisco Reyes,
  * Brandenburg University of Technology, Germany.
  * @license This code is licensed under The Code Project Open License (CPOL), implying that the code is provided "as-is",
@@ -10,15 +11,12 @@
 import { fsDb } from "../initFirebase.mjs";
 import { collection as fsColl, deleteDoc, doc as fsDoc, getDoc, getDocs, setDoc, updateDoc }
   from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore-lite.js";
+import { Enumeration } from "../../lib/Enumeration.mjs";
 
 /**
  * Define Enumerations
  */
-//const GenderEL = new Enumeration(["Male", "Female", "Other"]);
-//const CategoryEL = new Enumeration(["Yoga training", "Fitness training", "Personal training"]);
-//const WeekEL = new Enumeration(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
-//const ServiceEL = new Enumeration(["Massage Chair", "Zumba Aerobics", "Personal Training", "Women's Only Studio", "Steam and Sauna rooms"]);
-//const PlanEL = new Enumeration(["3 Months", "6 Months", "Yearly"]);
+const GenderEL = new Enumeration({ "M": "Male", "F": "Female", "O": "Other" });
 
 /**
  * Constructor function for the class person
@@ -148,36 +146,36 @@ Person.generateTestData = async function () {
     {
       personId: "1",
       personName: "NourElhouda Benaida",
-      gender: "Female",
-      birthDate: "15-06-1995",
+      gender: "2",
+      birthDate: "1995-06-15",
       email: "houda.bn15@gmail.com",
-      phoneNo: "03412345637",
+      phoneNumber: "03412345637",
       address: "Hello World!",
-      IBAN: "DE09876543567897654",
+      iban: "DE09876543567897654",
     },
     {
       personId: "2",
       personName: "Marat Safin",
-      gender: "Male",
-      birthDate: "05-01-1980",
+      gender: "1",
+      birthDate: "1980-01-05",
       email: "Maratee2@gmail.com",
-      phoneNo: "03879765434",
+      phoneNumber: "03879765434",
       address: "Moskaw str",
-      IBAN: "RE0989876545678954",
+      iban: "RE0989876545678954",
     },
     {
       personId: "3",
       personName: "Selma Hayek",
-      gender: "Female",
-      birthDate: "15-03-1965",
+      gender: "2",
+      birthDate: "1965-03-15",
       email: "selmoucha@gmail.com",
-      phoneNo: "098765432345",
+      phoneNumber: "098765432345",
       address: "hay elhattab str",
-      IBAN: "DE0987654988345245",
+      iban: "DE0987654988345245",
     }
   ];
   // save all person record/documents
-  await Promise.all(personRecs.map(d => person.add(d)));
+  await Promise.all(personRecs.map(d => Person.add(d)));
   console.log(`${Object.keys(personRecs).length} person records saved.`);
 };
 /**
@@ -186,12 +184,13 @@ Person.generateTestData = async function () {
 Person.clearData = async function () {
   if (confirm("Do you really want to delete all person records?")) {
     // retrieve all person documents from Firestore
-    const personRecs = await person.retrieveAll();
+    const personRecs = await Person.retrieveAll();
     // delete all documents
-    await Promise.all(personRecs.map(d => person.destroy(d.personId)));
+    await Promise.all(personRecs.map(d => Person.destroy(d.personId)));
     // ... and then report that they have been deleted
     console.log(`${Object.values(personRecs).length} person records deleted.`);
   }
 };
 
 export default Person;
+export { GenderEL };
