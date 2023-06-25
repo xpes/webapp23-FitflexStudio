@@ -3,6 +3,7 @@
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
  * @author Elias George
+ * @author NourElhouda Benaida
  * @copyright Copyright 2020-2022 Gerd Wagner (Chair of Internet Technology) and Juan-Francisco Reyes,
  * Brandenburg University of Technology, Germany.
  * @license This code is licensed under The Code Project Open License (CPOL), implying that the code is provided "as-is",
@@ -122,7 +123,7 @@ Person.update = async function (slots) {
     }
   }
 };
-/**
+/**ok
  * Delete a Firestore document from the Firestore collection "persons"
  * @param personId: {string}
  * @returns {Promise<void>}
