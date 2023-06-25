@@ -3,6 +3,7 @@
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
  * @author Elias George
+ * @author NourElhouda Benaida
  */
 /***************************************************************
  Import classes and data types
