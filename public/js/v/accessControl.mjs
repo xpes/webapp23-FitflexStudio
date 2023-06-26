@@ -16,13 +16,14 @@ import { onAuthStateChanged, signInAnonymously, signOut }
 function handleAuthentication() {
   // get current page
   const currentPage = window.location.pathname;
-  console.log(currentPage);
   try {
     // evaluate user authentication status
     onAuthStateChanged(auth, async function (user) {
       // if status is "anonymous" or "registered"
+      console.log(user.isAnonymous);
       if (user) {
         if (user.isAnonymous) { // if user is "anonymous"
+          console.log(user.isAnonymous);
           handleAuthorization("Anonymous", currentPage);
         } else { // if status is "registered"
           if (!user.emailVerified) { // if email address is not verified
@@ -45,18 +46,18 @@ function handleAuthentication() {
 function handleAuthorization(userStatus, currentPage, email) {
   // declare variables for current page and for accessing UI elements
   const divLoginMgmtEl = document.getElementById("login-management"),
-    startPage = ["/", "/public/index.html"],
-    authorizedPages = startPage.concat(["/retrieveAndListAllBooks.html"]);
+    startPage = ["/", "/index.html"],
+    authorizedPages = startPage.concat(["/membershipOptions.html", "/persons.html"]);
   switch (userStatus) {
     case "Anonymous":
       // if user is not authorized to current page, restrict access & redirect to sign up page
-      if (!authorizedPages.includes(currentPage)) window.location.pathname = "/public/signUp.html";
+      if (!authorizedPages.includes(currentPage)) window.location.pathname = "/signUp.html";
       else divLoginMgmtEl.appendChild(createSignInAndSignUpUI());
       console.log(`Authenticated as "${userStatus}"`);
       break;
     case "Registered with non-verified email":
       // if user is not authorized to current page, restrict access & redirect to start page
-      if (!authorizedPages.includes(currentPage)) window.location.pathname = "/public/index.html";
+      if (!authorizedPages.includes(currentPage)) window.location.pathname = "/index.html";
       else divLoginMgmtEl.appendChild(createSignOutUI(email, true));
       console.log(`Authenticated as "${userStatus}" (${email})`);
       break;
@@ -121,7 +122,7 @@ function createSignOutUI(email, invitation) {
 async function handleSignOut() {
   try {
     signOut(auth);
-    window.location.pathname = "/public/index.html"; // redirect to start page
+    window.location.pathname = "/index.html"; // redirect to start page
   } catch (e) {
     console.error(`${e.constructor.name}: ${e.message}`);
   }

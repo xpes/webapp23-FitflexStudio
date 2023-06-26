@@ -27,7 +27,7 @@ resetBtn.addEventListener("click", async function () {
       // send a password reset email
       await sendPasswordResetEmail(auth, email);
       alert(`Check your email "${email}" and confirm this request to create a new password.`);
-      window.location.pathname = "/public/index.html"; // redirect user to start page
+      window.location.pathname = "/index.html"; // redirect user to start page
     } catch (e) {
       const spanMsgEl = document.getElementById("message");
       spanMsgEl.textContent = e.message;

@@ -6,7 +6,6 @@
   <title>FitflexStudio</title>
   <meta name="description" content="A minimal effort web app with plain JS + Firebase." />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <meta name="theme-color" content="#ffffff" />
   <link rel="stylesheet" href="css/normalize.css" />
   <link rel="stylesheet" href="css/main.css" />
@@ -16,6 +15,12 @@
     }
 
     a.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    button.disabled {
       opacity: 0.4;
       pointer-events: none;
       cursor: default;
@@ -34,7 +39,7 @@
   </style>
   <script type="module">
     import { handleAuthentication } from "./js/v/accessControl.mjs";
-    //import { clearData, generateTestData } from "./src/c/app.mjs";
+    import { clearData, generateTestData } from "./js/c/app.mjs";
 
     handleAuthentication();
     const clearButton = document.getElementById("clearData"),
@@ -56,10 +61,10 @@
       <div id="login-management"></div>
       <nav>
         <ul>
-          <li><a href="persons.html" class="disabled">Persons</a></li>
-          <li><a href="">Memberships</a></li>
-          <li><a href="">Classes</a></li>
-          <li><a href="">Schedule</a></li>
+          <li><a href="persons.html">Persons</a></li>
+          <li><a href="membershipOptions.html" class="disabled">Memberships</a></li>
+          <li><a href="" class="disabled">Classes</a></li>
+          <li><a href="" class="disabled">Schedule</a></li>
         </ul>
       </nav>
     </div>
@@ -69,10 +74,10 @@
       <p>This app supports the following operations:</p>
       <div class="two-col-menu">
         <ul class="menu">
-          <li><a href="persons.html" class="disabled">Manage person data</a></li>
-          <li><a href="">Manage Membership Options</a></li>
-          <li><a href="">Manage classes offered</a></li>
-          <li><a href="">Manage class schedules</a></li>
+          <li><a href="persons.html">Manage person data</a></li>
+          <li><a href="membershipOptions.html" class="disabled">Manage Membership Options</a></li>
+          <li><a href="" class="disabled">Manage classes offered</a></li>
+          <li><a href="" class="disabled">Manage class schedules</a></li>
         </ul>
         <ul class="menu">
           <li><button type="button" class="generateTestData, disabled">Generate test data</button></li>

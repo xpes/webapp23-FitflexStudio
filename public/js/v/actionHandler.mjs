@@ -91,7 +91,7 @@ async function handleResetPassword(sectionRstPswEl, actionCode) {
         alert(`Your password has been update! You will be automatically signed in with your email address "${email}.`);
         // sign in user using email + password
         await signInWithEmailAndPassword(auth, email, newPassword);
-        window.location.pathname = "/public/index.html"; // redirect user to start page
+        window.location.pathname = "/index.html"; // redirect user to start page
       }
     });
   } catch (e) {

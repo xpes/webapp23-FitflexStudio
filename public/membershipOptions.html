@@ -18,12 +18,6 @@
       cursor: default;
     }
 
-    button.disabled {
-      opacity: 0.4;
-      pointer-events: none;
-      cursor: default;
-    }
-
     .generateTestData {
       margin-top: 1em;
     }
@@ -66,30 +60,30 @@
       <nav>
         <ul>
           <li><a href="index.html">Home</a></li>
-          <li><a href="membershipOptions.html" class="disabled">Memberships</a></li>
-          <li><a href="" class="disabled">Classes</a></li>
-          <li><a href="" class="disabled">Schedule</a></li>
+          <li><a href="persons.html" class="disabled">Persons</a></li>
+          <li><a href="">Classes</a></li>
+          <li><a href="">Schedule</a></li>
         </ul>
       </nav>
     </div>
   </header>
   <main>
     <div class="wrapper clearfix">
-      <div class="subheading">Manage Person</div>
+      <div class="subheading">Manage Membership Option</div>
       <menu>
-        <li><a href="createPerson.html" class="disabled">Create</a> a new Person record</li>
-        <li><a href="retrieveAndListAllPersons.html">Retrieve</a> and list all Person records</li>
-        <li><a href="updatePerson.html" class="disabled">Update</a> a Person record</li>
-        <li><a href="deletePerson.html" class="disabled">Delete</a> a Person record</li>
-        <li style="margin-top: 1em"><button class="generateTestData, disabled" type="button">Generate test
+        <li><a href="createMembership.html" class="disabled">Create</a> a new Membership record</li>
+        <li><a href="retrieveAndListAllMemberships.html">Retrieve</a> and list all Membership records</li>
+        <li><a href="updateMembership.html" class="disabled">Update</a> a Membership record</li>
+        <li><a href="deleteMembership.html" class="disabled">Delete</a> a Membership record</li>
+        <li style="margin-top: 1em"><button class="generateTestData" type="button" class="disabled">Generate test
             data</button></li>
         <li><button id="clearData" type="button" class="disabled">Clear database</button></li>
       </menu>
       <p>For playing with the app, you may first want to
-        <button class="generateTestData, disabled" type="button">Generate test data</button>
+        <button class="generateTestData" type="button" class="disabled">Generate test data</button>
         and then view it with
-        <a href="retrieveAndListAllPersons.html">
-          <button type="button">Retrieve and list all Persons</button>
+        <a href="retrieveAndListAllMemberships.html">
+          <button type="button">Retrieve and list all Membership Options</button>
         </a>.
         For observing the internal status and error messages, turn on the JavaScript console.
       </p>

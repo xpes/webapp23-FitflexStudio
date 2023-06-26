@@ -26,7 +26,7 @@ signInBtn.addEventListener("click", async function () {
     try {
       // sign in user using email + password
       await signInWithEmailAndPassword(auth, email, password);
-      window.location.pathname = "/public/index.html"; // redirect user to start page
+      window.location.pathname = "/index.html"; // redirect user to start page
     } catch (e) {
       const divMsgEl = document.getElementById("message");
       divMsgEl.textContent = e.message;

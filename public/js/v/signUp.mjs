@@ -34,7 +34,7 @@ signUpBtn.addEventListener("click", async function () {
       await sendEmailVerification(userRef);
       console.log(`User ${email} became "Registered"`);
       alert(`Account created ${email}. Check your email for instructions to verify this account.`);
-      window.location.pathname = "/public/index.html"; // redirect user to start page
+      window.location.pathname = "/index.html"; // redirect user to start page
     } catch (e) {
       const divMsgEl = document.getElementById("message");
       divMsgEl.textContent = e.message;
