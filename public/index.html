@@ -3,45 +3,88 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>FitflexStudioe</title>
+  <title>FitflexStudio</title>
   <meta name="description" content="A minimal effort web app with plain JS + Firebase." />
-  <link rel="icon" href="favicon.ico" />
-  <script type="module">
-    import Person from "./js/m/Person.mjs";
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    window.addEventListener("load", function () {
-      const clearButton = document.getElementById("clearData"),
-        generateTestDataButtons = document.querySelectorAll("button.generateTestData");
-      // set event handlers for the buttons "clearData" and "generateTestData"
-      clearButton.addEventListener("click", Person.clearData);
-      for (const btn of generateTestDataButtons) {
-        btn.addEventListener("click", Person.generateTestData);
-      }
-    });
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="stylesheet" href="css/normalize.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <style>
+    figure {
+      float: right;
+    }
+
+    a.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    div#login-management {
+      text-align: right;
+      padding: 1em;
+      background: #efe9ff;
+      border: 1px solid #704cff;
+      height: 100%;
+      float: right;
+      width: 50%;
+      margin: 10px;
+    }
+  </style>
+  <script type="module">
+    import { handleAuthentication } from "./js/v/accessControl.mjs";
+    //import { clearData, generateTestData } from "./src/c/app.mjs";
+
+    handleAuthentication();
+    const clearButton = document.getElementById("clearData"),
+      generateTestDataButtons = document.querySelectorAll("button.generateTestData");
+    // Set event handlers for the buttons "clearData" and "generateTestData"
+    clearButton.addEventListener("click", clearData);
+    for (const btn of generateTestDataButtons) {
+      btn.addEventListener("click", generateTestData);
+    }
   </script>
 </head>
 
 <body>
+  <header>
+    <div class="wrapper clearfix">
+      <div class="title">
+        <h1>FitflexStudio</h1>
+      </div>
+      <div id="login-management"></div>
+      <nav>
+        <ul>
+          <li><a href="persons.html" class="disabled">Persons</a></li>
+          <li><a href="">Memberships</a></li>
+          <li><a href="">Classes</a></li>
+          <li><a href="">Schedule</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
   <main>
-    <h1>FitflexStudio</h1>
-    <div class="subheading">FitflexStudio is a fitness centre that aims to foster healthy living, wellness, and active
-      lifestyles.</div>
-    <menu>
-      <li><a href="createPerson.html">Create</a> a new Person record</li>
-      <li><a href="retrieveAndListAllPersons.html">Retrieve</a> and list all Person records</li>
-      <li><a href="updatePerson.html">Update</a> a Person record</li>
-      <li><a href="deletePerson.html">Delete</a> a Person record</li>
-      <li style="margin-top: 1em"><button class="generateTestData" type="button">Generate test data</button></li>
-      <li><button id="clearData" type="button">Clear database</button></li>
-    </menu>
-    <p>For playing with the app, you may first want to
-      <button class="generateTestData" type="button">Generate test data</button>
-      and then view it with
-      <a href="retrieveAndListAllPersons.html">
-        <button type="button">Retrieve and list all Persons</button>
-      </a>.
-      For observing the internal status and error messages, turn on the JavaScript console.
-    </p>
+    <div class="wrapper clearfix">
+      <p>This app supports the following operations:</p>
+      <div class="two-col-menu">
+        <ul class="menu">
+          <li><a href="persons.html" class="disabled">Manage person data</a></li>
+          <li><a href="">Manage Membership Options</a></li>
+          <li><a href="">Manage classes offered</a></li>
+          <li><a href="">Manage class schedules</a></li>
+        </ul>
+        <ul class="menu">
+          <li><button type="button" class="generateTestData, disabled">Generate test data</button></li>
+          <li><button type="button" id="clearData" class="disabled">Clear database</button></li>
+        </ul>
+      </div>
+      <p>For playing with the app, you may first want to
+        <button type="button" class="generateTestData, disabled">Generate test data</button>
+        and then view it (e.g. by choosing "Manage person data" and then "Retrieve and list all person"). For observing
+        the internal status and error messages, turn on the JavaScript console.
+      </p>
+    </div>
   </main>
 </body>
 
