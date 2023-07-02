@@ -23,7 +23,7 @@ function generateTestData() {
 function clearData() {
   if (confirm("Do you really want to delete the entire database?")) {
     try {
-      Person.clearData();
+      Person.clearData(false);
       console.log("All data cleared.");
     } catch (e) {
       console.log(`${e.constructor.name}: ${e.message}`);

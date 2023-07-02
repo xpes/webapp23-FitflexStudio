@@ -181,8 +181,17 @@ Person.generateTestData = async function () {
 /**
  * Clear database
  */
-Person.clearData = async function () {
-  if (confirm("Do you really want to delete all person records?")) {
+Person.clearData = async function (confirmation = true) {
+  if (confirmation) {
+    if (confirm("Do you really want to delete all person records?")) {
+      // retrieve all person documents from Firestore
+      const personRecs = await Person.retrieveAll();
+      // delete all documents
+      await Promise.all(personRecs.map(d => Person.destroy(d.personId)));
+      // ... and then report that they have been deleted
+      console.log(`${Object.values(personRecs).length} person records deleted.`);
+    }
+  } else {
     // retrieve all person documents from Firestore
     const personRecs = await Person.retrieveAll();
     // delete all documents

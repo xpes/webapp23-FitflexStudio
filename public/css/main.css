@@ -233,7 +233,7 @@ form>div>label>input[type="checkbox"],
 form>div>label>select,
 form>div>label>output {
     position: absolute;
-    left: 11em;
+    /*left: 11em;*/
 }
 
 form>div>div.MultiSelectionWidget {
@@ -243,7 +243,7 @@ form>div>div.MultiSelectionWidget {
 
 form>div>label>input[type="date"] {
     position: absolute;
-    left: 11em;
+    /*left: 11em;*/
     height: 20px;
 }
 

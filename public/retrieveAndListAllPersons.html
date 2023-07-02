@@ -4,34 +4,50 @@
 <head>
   <meta charset="UTF-8" />
   <title>FitFlexStudio: Retrieve and List Persons</title>
-  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="css/normalize.css" />
+  <link rel="stylesheet" href="css/main.css" />
   <script src="js/v/retrieveAndListAllPersons.mjs" type="module"></script>
 </head>
 
 <body>
   <header>
-    <h1>Retrieve and list all Person records</h1>
+    <div class="wrapper clearfix">
+      <div class="title">
+        <h1>Retrieve and list all Person records</h1>
+      </div>
+      <div id="login-management" hidden="hidden"></div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="persons.html">Person</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
   <main>
-    <table id="Persons">
-      <thead>
-        <tr>
-          <th>PersonId</th>
-          <th>Person Name</th>
-          <th>Gender</th>
-          <th>Date of birth</th>
-          <th>Email</th>
-          <th>Phone number</th>
-          <th>Address</th>
-          <th>IBAN</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div class="wrapper clearfix">
+      <table id="Persons">
+        <thead>
+          <tr>
+            <th>PersonId</th>
+            <th>Person Name</th>
+            <th>Gender</th>
+            <th>Date of birth</th>
+            <th>Email</th>
+            <th>Phone number</th>
+            <th>Address</th>
+            <th>IBAN</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </main>
   <br>
   <footer>
-    <a href="index.html">« Back to main menu</a>
+    <div class="wrapper clearfix">
+      <a href="persons.html">« Back to person management</a>
+    </div>
   </footer>
 </body>
 

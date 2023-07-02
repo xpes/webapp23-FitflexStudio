@@ -36,7 +36,7 @@ signUpBtn.addEventListener("click", async function () {
       alert(`Account created ${email}. Check your email for instructions to verify this account.`);
       window.location.pathname = "/index.html"; // redirect user to start page
     } catch (e) {
-      const divMsgEl = document.getElementById("message");
+      const divMsgEl = document.getElementById("login-management");
       divMsgEl.textContent = e.message;
       divMsgEl.hidden = false;
     }
