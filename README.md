@@ -100,6 +100,6 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 
 | Developpers | Work Assignment 7c1 | Work Assignment 7c2
 | --------------------| :--------------------: | 
-|   Nour Elhouda Benaida    |                      Model <br>  Create/Retrieve | Enabling/disabling UI elements in start page based on authentication <br> Implementation of Sign out<br> Implementation of 404 page |
-|   Elias George            |                      Model <br>  Delete/Update  |  Implementation of user authentication status<br> Redirection to Sign in/up page <br>  Email verification with customised page | 
+|   Nour Elhouda Benaida    |    Model <br>  Create/Retrieve |   Enabling/disabling UI elements in start page based on authentication <br> Implementation of Sign out<br> Implementation of 404 page |
+|   Elias George            |    Model <br>  Delete/Update  |    Implementation of user authentication status<br> Redirection to Sign in/up page <br>  Email verification with customised page | 
 
