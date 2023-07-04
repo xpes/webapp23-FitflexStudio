@@ -3,6 +3,7 @@
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
  * @author Elias George
+ * @author NourElhouda Benaida
  * @copyright Copyright 2020-2022 Gerd Wagner (Chair of Internet Technology) and Juan-Francisco Reyes,
  * Brandenburg University of Technology, Germany.
  * @license This code is licensed under The Code Project Open License (CPOL), implying that the code is provided "as-is",
@@ -35,10 +36,210 @@ class Person {
     this.address = address;
     this.IBAN = IBAN;
   }
+    //___________________________________________________________________________________ all basic constraints, getters, chechers, setters of the personId attribute
+    get personId() {
+      return this.personId;
+    };
+
+    static checkPersonId( personId) {
+      if (!personId) return new NoConstraintViolation();
+      else if (!isIntegerOrIntegerString(personId)) {
+          return new RangeConstraintViolation("The value of person ID must be an integer!"); //must be integer
+      } else if (!isIntegerOrIntegerString(personId) || parseInt(personId) < 1) {
+          return new RangeConstraintViolation(
+              "The value of person ID must be a positive integer!"); //must be positive
+      } else {
+          return new NoConstraintViolation();
+      }
+    }
+    
+    static checkPersonIdAsId( personId) {
+      var validationResult = Person.checkPersonId( personId);
+      if ((validationResult instanceof NoConstraintViolation)) {
+          if (!personId) {
+              validationResult = new MandatoryValueConstraintViolation(
+                  "A value for the person ID must be provided!");
+          } else if (Person.instances[personId]) {
+              validationResult = new UniquenessConstraintViolation(
+                  `There is already a person record with person ID ${personId}`);
+          } else {
+              validationResult = new NoConstraintViolation();
+          }
+      }
+      return validationResult;
+    }
+    set personId( personId) {
+      var validationResult = Person.checkPersonIdAsId( personId);
+      if (validationResult instanceof NoConstraintViolation) {
+          this._personId = personId;
+      } else {
+          throw validationResult;
+      }
+    }
+//___________________________________________________________________________________ all basic constraints, getters, chechers, setters of the personName attribute
+
+get personName() {
+  return this._personName;
 }
+static checkPersonName(personName) {
+  const PERSONNAME_LENGTH_MAX = 50;
+  if (!personName) {
+      return new MandatoryValueConstraintViolation("A name must be provided!");
+  } else if (!isNonEmptyString(personName)) {
+      return new RangeConstraintViolation("The name must be a non-empty string!");
+  } else if (personName.length > PERSONNAME_LENGTH_MAX) {
+      return new StringLengthConstraintViolation(
+          `The value of the person must be at most ${PERSONNAME_LENGTH_MAX} characters!`);
+  }
+  else {
+      return new NoConstraintViolation();
+  }
+}
+set personName( personName) {
+  const validationResult = Person.checkPersonName( personName);
+  if (validationResult instanceof NoConstraintViolation) {
+      this._personName = personName;
+  } else {
+      throw validationResult;
+  }
+}
+//_______________________________________________________________________________________all basic constraints, getters, setters, checkers of the birthDate
+
+get birthDate() {
+  return this._birthDate;
+}
+static checkBirthDate(bd) {
+  const BIRTH_DATE_MIN = new Date("2007-01-01");
+  if (!bd || bd === "") return new MandatoryValueConstraintViolation(
+      "A value for the birth date must be provided!"
+  );
+  else {
+      if (new Date(bd) < BIRTH_DATE_MIN) {
+          return new IntervalConstraintViolation(
+              `The value of birth date must be greater than or equal to 
+        ${createIsoDateString(BIRTH_DATE_MIN)}!`);
+      } else {
+          return new NoConstraintViolation();
+      }
+  }
+}
+set birthDate( bd) {
+  const validationResult = Person.checkBirthDate( bd);
+  if (validationResult instanceof NoConstraintViolation) {
+      this._birthDate = new Date( bd);
+  } else {
+      throw validationResult;
+  }
+}
+
+//_______________________________________________________________________________________all basic constraints, getters, setters, checkers of the phone number
+get phoneNumber() {
+  return this._phoneNumber;
+}
+static checkPhoneNumber(phoneNumber) {
+  const PHONENUMBER_LENGTH_MAX = 12;     //MAX nbr of numbers = 12
+  if (!phoneNumber) {
+      return new MandatoryValueConstraintViolation("A phone number must be provided!");
+  } else if (!isNonEmptyString(phoneNumber)) {
+      return new RangeConstraintViolation("The phone number must be a non-empty string!");
+  } else if (phoneNumber.length > PHONENUMBER_LENGTH_MAX) {
+      return new StringLengthConstraintViolation(
+          `The value of the phone number must be at most ${PHONENUMBER_LENGTH_MAX} characters!`);
+  }
+  else {
+      return new NoConstraintViolation();
+  }
+}
+set phoneNumber( phoneNumber) {
+  const validationResult = Person.checkPhoneNumber( phoneNumber);
+  if (validationResult instanceof NoConstraintViolation) {
+      this._personName = personName;
+  } else {
+      throw validationResult;
+  }
+}
+    //___________________________________________________________________________________ all basic constraints, getters, chechers, setters of the address attribute
+    get address() {
+      return this.address;
+    };
+
+    
+    static checkAddress(address) {
+
+      if (!address) {
+          return new MandatoryValueConstraintViolation("An address must be provided!");
+      } else if (!isNonEmptyString(address)) {
+          return new RangeConstraintViolation("The phone number must be a non-empty string!");
+      } else {
+          return new NoConstraintViolation();
+      }
+    }
+    set address( address) {
+      var validationResult = Person.checkAddress( address);
+      if (validationResult instanceof NoConstraintViolation) {
+          this._address = address;
+      } else {
+          throw validationResult;
+      }
+    }
+
+
+    //___________________________________________________________________________________ all basic constraints, getters, chechers, setters of the IBAN attribute
+    get iban() {
+      return this.iban;
+    };
+
+    
+    static checkIBAN(iban) {
+
+      if (!iban) {
+          return new MandatoryValueConstraintViolation("An IBAN must be provided!");
+      } else if (!isNonEmptyString(iban)) {
+          return new RangeConstraintViolation("The IBAN must be a non-empty string!");
+      } else {
+          return new NoConstraintViolation();
+      }
+    }
+    set iban( iban) {
+      var validationResult = Person.checkIBAN( iban);
+      if (validationResult instanceof NoConstraintViolation) {
+          this._iban = iban;
+      } else {
+          throw validationResult;
+      }
+    }
+}
+
 /*********************************************************
  ***  Class-level ("static") storage management methods **
  *********************************************************/
+
+/**
+ * Conversion between a Book object and a corresponding Firestore document
+ * @type {{toFirestore: (function(*): {birthDate: number,
+* personId: (Document.personId|*), personName}), fromFirestore: (function(*, *=): Person)}}
+*/
+Person.converter = {
+ toFirestore: function (person) {
+   const data = {
+     personId: parseInt( person.personId),   //person.personId
+     personName: person.personName,
+     gender: person.gender,
+     birthDate: person.birthDate,//year: parseInt( book.year)
+     email: person.email,
+     phoneNo: person.phoneNo, //phoneNo: parseInt( person.phoneNO)
+     address: person.address,
+     IBAN: person.IBAN,
+   };
+ },
+ fromFirestore: function (snapshot, options) {
+   const data = snapshot.data( options);
+   return new Person( data);
+ },
+};
+
+
+
 /**
  * Create a Firestore document in the Firestore collection "persons"
  * @param slots: {object}
