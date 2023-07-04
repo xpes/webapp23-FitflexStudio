@@ -1,9 +1,59 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true;
+    /** VALIDATION FUNCTIONS **/
+    //Person
+    // if present, check if it is integer
+      function checkPersonId( personId) {
+        return (personId is int || !("personId" in request.resource.data));
+      }
+
+    // 
+    // check if exist document with same personId
+    function checkPersonIdAsId( personId) {
+      return !(exists(/databases/$(database)/documents/persons/$(personId)));
+    }
+
+    // check all constraints for year: min, max and integer I need to think how to change it according to birthDate
+    //function checkBirthDate( birthDate) {
+    //  return (timestamp.date( year,1,1).toMillis() < request.time.toMillis()
+    //          && year > 1459
+    //          && year is int
+    //          && year != null);
+    //}
+
+
+    /** VALIDATION RULES **/
+    match /{persons}/{document=**} {
+      /** RULES FOR allow read WITH CONVENIENCE METHOD - LOW GRANULARITY **/
+      /** NO authentication required **/
+      allow read: if request.auth != null;
+
+      /** RULES FOR allow write WITH STANDARD METHODS - HIGH GRANULARITY **/
+      /** authentication required **/
+      //validate when create new person record
+      allow create: if request.auth.token.email_verified == true
+                       && checkPersonIdAsId( request.resource.data.personId) == true
+                       && checkPersonId( request.resource.data.personId) == true
+                       && request.resource.data.personName != null
+                       && checkGender( request.resource.data.gender) == true
+                       && checkBirthDate( request.resource.data.birthDate) == true
+                       && checkPhoneNo( request.resource.data.phoneNo) == true
+                       && checkAddress( request.resource.data.address) == true
+                       && checkIBAN( request.resource.data.IBAN) == true
+
+
+      // validate when update person record
+      allow update: if request.auth.token.email_verified == true
+                       && (request.resource.data.diff( resource.data).affectedKeys()
+                        .hasOnly(['personName', 'gender', 'birthDate', 'email', 'phoneNo', 'address', 'IBAN']))
+                       && request.resource.data.birthDate != null ?
+                           checkBirthDate( request.resource.data.birthDate) : true
+                       && request.resource.data. != null ?
+                           checkEdition( request.resource.data.edition) : true;
+
+      // validate when delete person record
+      allow delete: if request.auth.token.email_verified == true;
     }
   }
 }
