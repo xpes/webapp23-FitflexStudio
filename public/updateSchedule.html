@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>FitFlexStudio: Update Schedule</title>
+  <link rel="icon" href="favicon.ico" />
+  <script src="js/v/updateSchedule.mjs" type="module"></script>
+</head>
+
+<body>
+  <header>
+    <h1>Update a Schedule record</h1>
+  </header>
+  <main>
+    <form id="Schedule">
+      <div>
+        <label>Select Schedule:
+          <select name="selectSchedule">
+            <option value=""> ---</option>
+          </select>
+        </label>
+      </div>
+      <div><label>SchedduleId: <output name="ScheduleId" /></label></div>
+      <div><label>Class Name: <input name="klassName" /></label></div>
+      <div><label>Starting Date: <select name="startDate"></select></label></div>
+      <div><label>Ending Date: <input name="endDate" type="date" /></label></div>
+      <div><label>Instructor: <input name="instructor" /></label></div>
+      <div><label>Schedule Week: <input name="scheduleWeek" /></label></div>
+      <div><label>Schedule Time: <input name="scheduleTime" /></label></div>
+      <div><label>Duration: <input name="duration" /></label></div>
+      <div>
+        <button name="commit" type="button">Update</button>
+      </div>
+    </form>
+  </main>
+  <br>
+  <footer>
+    <a href="index.html">« Back to main menu</a>
+  </footer>
+</body>
+
+</html>

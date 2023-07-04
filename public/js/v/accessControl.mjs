@@ -47,8 +47,8 @@ function handleAuthorization(userStatus, currentPage, email) {
   // declare variables for current page and for accessing UI elements
   const divLoginMgmtEl = document.getElementById("login-management"),
     startPage = ["/", "/index.html"],
-    authorizedPages = startPage.concat(["/membershipOptions.html"]),
-    verifiedUserPages = startPage.concat(["/persons.html"]);
+    authorizedPages = startPage.concat(["/membershipOptions.html", "/klass.html", "/schedules.html"]),
+    verifiedUserPages = startPage.concat(["/persons.html", "/membershipOptions.html", "/klass.html", "/schedules.html"]);
   switch (userStatus) {
     case "Anonymous":
       // if user is not authorized to current page, restrict access & redirect to sign up page

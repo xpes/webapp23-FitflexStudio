@@ -3,11 +3,19 @@
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
  * @author Elias George
+ * @author Nourelhouda Benaida
  */
 /***************************************************************
  Import classes and data types
  ***************************************************************/
+import { handleAuthentication } from "./accessControl.mjs";
 import Person from "../m/Person.mjs";
+import { fillSelectWithOptions, showProgressBar, hideProgressBar } from "../../lib/util.mjs";
+
+/***************************************************************
+ Setup and handle UI Authentication
+ ***************************************************************/
+ handleAuthentication();
 
 /***************************************************************
  Load data
@@ -30,6 +38,12 @@ for (const PersonRec of PersonRecords) {
   optionEl.value = PersonRec.personId;
   selectPersonEl.add(optionEl, null);
 }
+
+/***************************************************************
+ Set up (choice) widgets
+ ***************************************************************/
+// set up the person selection list
+fillSelectWithOptions( personRecords, selectPersonEl, "personId", "personName");
 
 /******************************************************************
  Add event listeners for the delete/submit button

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>FitflexStudio</title>
+  <meta name="description" content="A minimal effort web app with plain JS + Firebase." />
+  <link rel="stylesheet" href="css/normalize.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <style>
+    figure {
+      float: right;
+    }
+
+    a.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    button.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .generateTestData {
+      margin-top: 1em;
+    }
+
+    div#login-management {
+      text-align: right;
+      padding: 1em;
+      background: #efe9ff;
+      border: 1px solid #704cff;
+      height: 100%;
+      float: right;
+      width: 50%;
+      margin: 10px;
+    }
+  </style>
+  <script type="module">
+    import { handleAuthentication } from "./js/v/accessControl.mjs";
+    import Schedule from "./js/m/Schedule.mjs";
+
+    handleAuthentication();
+    window.addEventListener("load", function () {
+      const clearButton = document.getElementById("clearData"),
+        generateTestDataButtons = document.querySelectorAll("button.generateTestData");
+      // set event handlers for the buttons "clearData" and "generateTestData"
+      clearButton.addEventListener("click", Schedule.clearData);
+      for (const btn of generateTestDataButtons) {
+        btn.addEventListener("click", Schedule.generateTestData);
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <header>
+    <div class="wrapper clearfix">
+      <div class="title">
+        <h1>FitflexStudio</h1>
+      </div>
+      <div id="login-management"></div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="membershipOptions.html" class="disabled">Memberships</a></li>
+          <li><a href="" class="disabled">Classes</a></li>
+          <li><a href="Schedules.html" class="disabled">Schedule</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="wrapper clearfix">
+      <div class="subheading">Manage Schedules</div>
+      <menu>
+        <li><a href="createSchedule.html" class="disabled">Create</a> a new Schedule record</li>
+        <li><a href="retrieveAndListAllSchedules.html">Retrieve</a> and list all Scheddule records</li>
+        <li><a href="updateSchedule.html" class="disabled">Update</a> a Schedule record</li>
+        <li><a href="deleteSchedule.html" class="disabled">Delete</a> a Schedule record</li>
+        <li style="margin-top: 1em"><button class="generateTestData, disabled" type="button">Generate test
+            data</button></li>
+        <li><button id="clearData" type="button" class="disabled">Clear database</button></li>
+      </menu>
+      <p>For playing with the app, you may first want to
+        <button class="generateTestData, disabled" type="button">Generate test data</button>
+        and then view it with
+        <a href="retrieveAndListAllSchedules.html">
+          <button type="button">Retrieve and list all Schedule</button>
+        </a>.
+        For observing the internal status and error messages, turn on the JavaScript console.
+      </p>
+    </div>
+  </main>
+</body>
+
+</html>

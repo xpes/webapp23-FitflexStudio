@@ -3,12 +3,19 @@
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
  * @author Elias George
+ * @author Nourelhouda Benaida
  */
 /***************************************************************
  Import classes and data types
  ***************************************************************/
+ import { handleAuthentication } from "./accessControl.mjs";
 import Person, { GenderEL } from "../m/Person.mjs";
-import { fillSelectWithOptions } from "../../lib/util.mjs";
+import { fillSelectWithOptions, showProgressBar, hideProgressBar } from "../../lib/util.mjs";
+
+/***************************************************************
+ Setup and handle UI Authentication
+ ***************************************************************/
+ handleAuthentication();
 
 /***************************************************************
  Load data
@@ -25,6 +32,37 @@ const formEl = document.forms["Person"],
 // set up the gender selection list
 fillSelectWithOptions(formEl.gender, GenderEL.labels);
 
+/***************************************************************
+ Add event listeners for responsive validation
+ ***************************************************************/
+// add event listeners for responsive validation
+formEl["personId"].addEventListener("input", function () {
+  // do not yet check the ID constraint, only before commit
+  formEl["personId"].setCustomValidity( Person.checkPersonId( formEl["personId"].value).message);
+});
+formEl["personName"].addEventListener("input", function () {
+  formEl["personName"].setCustomValidity( Person.checkPersonName( formEl["personName"].value).message);
+});
+/*formEl["gender"].addEventListener("input", function () {
+  formEl["gender"].setCustomValidity( Person.checkGender( formEl["gender"].value).message);
+});*/
+formEl["birthDate"].addEventListener("input", function () {
+  formEl["birthDate"].setCustomValidity( Person.checkBirthDate( formEl["birthDate"].value).message);
+});
+formEl["email"].addEventListener("input", function () {
+  formEl["email"].setCustomValidity( Person.checkEmail( formEl["email"].value).message);
+});
+formEl["phoneNo"].addEventListener("input", function () {
+  formEl["phoneNO"].setCustomValidity( Person.checkPhoneNo( formEl["phoneNo"].value).message);
+});  
+formEl["address"].addEventListener("input", function () {
+  formEl["address"].setCustomValidity( Person.checkAddress( formEl["address"].value).message);
+});
+formEl["iban"].addEventListener("input", function () {
+  formEl["IBAN"].setCustomValidity( Person.checkPhoneNo( formEl["phoneNo"].value).message);
+});  
+
+//________________________________________Should we write the Set Up choice widgets as in the example code ???
 /***************************************************************
  Set up select element
  ***************************************************************/
@@ -75,4 +113,8 @@ updateButton.addEventListener("click", async function () {
   // update the selection list option element
   selectMemberEl.options[selectMemberEl.selectedIndex].text = slots.personName;
   formEl.reset();
+});
+// neutralize the submit event
+formEl.addEventListener("submit", function (e) {
+  e.preventDefault();
 });

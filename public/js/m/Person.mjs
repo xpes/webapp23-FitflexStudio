@@ -158,6 +158,28 @@ set phoneNumber( phoneNumber) {
       throw validationResult;
   }
 }
+
+//_______________________________________________________________________________________all basic constraints, getters, setters, checkers of the email
+get phoneEmail() {
+  return this._phoneEmail;
+}
+static checkEmail(email) {
+  if (!email) {
+      return new MandatoryValueConstraintViolation("An email must be provided!");
+  } else if (!isNonEmptyString(email)) {
+      return new RangeConstraintViolation("The email must be a non-empty string!");
+  } else {
+      return new NoConstraintViolation();
+  }
+}
+set email( email) {
+  const validationResult = Person.checkEmail( email);
+  if (validationResult instanceof NoConstraintViolation) {
+      this._email = email;
+  } else {
+      throw validationResult;
+  }
+}
     //___________________________________________________________________________________ all basic constraints, getters, chechers, setters of the address attribute
     get address() {
       return this.address;
