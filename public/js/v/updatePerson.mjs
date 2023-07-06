@@ -8,7 +8,7 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
- import { handleAuthentication } from "./accessControl.mjs";
+import { handleAuthentication } from "./accessControl.mjs";
 import Person, { GenderEL } from "../m/Person.mjs";
 import { fillSelectWithOptions, showProgressBar, hideProgressBar } from "../../lib/util.mjs";
 

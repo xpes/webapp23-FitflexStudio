@@ -103,6 +103,69 @@ set personName( personName) {
       throw validationResult;
   }
 }
+
+//________________________________________________________________________________OriginalLanguage Available language
+
+get originalLanguage() {
+  return this._originalLanguage;
+};
+static checkOriginalLanguage( ol) {
+  if (!ol) {
+    return new MandatoryValueConstraintViolation(
+      "An original language must be provided!");
+  } else if (!isIntegerOrIntegerString( ol) ||
+      parseInt( ol) < 1 || parseInt( ol) > LanguageEL.MAX) {
+    return new RangeConstraintViolation(
+      `Invalid value for original language: ${ol}`);
+  } else {
+    return new NoConstraintViolation();
+  }
+};
+set originalLanguage( ol) {
+  const validationResult = Book.checkOriginalLanguage( ol);
+  if (validationResult instanceof NoConstraintViolation) {
+    this._originalLanguage = parseInt( ol);
+  } else {
+    throw validationResult;
+  }
+};
+get otherAvailableLanguages() {
+  return this._otherAvailableLanguages;
+};
+static checkOtherAvailableLanguage( oLang) {
+  if (!Number.isInteger( oLang) || oLang < 1 ||
+      oLang > LanguageEL.MAX) {
+    return new RangeConstraintViolation(
+        `Invalid value for other available language: ${oLang}`);
+  } else {
+    return new NoConstraintViolation();
+  }
+};
+static checkOtherAvailableLanguages( oLangs) {
+  if (!oLangs || (Array.isArray( oLangs) &&
+    oLangs.length === 0)) {
+    return new NoConstraintViolation();  // optional
+  } else if (!Array.isArray( oLangs)) {
+    return new RangeConstraintViolation(
+        "The value of otherAvailableLanguages must be a list/array!");
+  } else {
+    for (const i of oLangs.keys()) {
+      const validationResult = Book.checkOtherAvailableLanguage( oLangs[i]);
+      if (!(validationResult instanceof NoConstraintViolation)) {
+        return validationResult;
+      }
+    }
+    return new NoConstraintViolation();
+  }
+};
+set otherAvailableLanguages( oLangs) {
+  const validationResult = Book.checkOtherAvailableLanguages( oLangs);
+  if (validationResult instanceof NoConstraintViolation) {
+    this._otherAvailableLanguages = oLangs;
+  } else {
+    throw validationResult;
+  }
+};
 //_______________________________________________________________________________________all basic constraints, getters, setters, checkers of the birthDate
 
 get birthDate() {
@@ -423,6 +486,34 @@ Person.clearData = async function (confirmation = true) {
     console.log(`${Object.values(personRecs).length} person records deleted.`);
   }
 };
+
+/*******************************************
+ *** Non specific use case procedures ******
+ ********************************************/
+/**
+ * Handle DB-UI synchronization
+ */
+Person.observeChanges = async function (personId) {
+  try {
+    // listen document changes, returning a snapshot (snapshot) on every change
+    const personDocRef = fsDoc( fsDb, "persons", personId).withConverter( Person.converter);
+    const personRec = (await getDoc( personDocRef)).data();
+    return onSnapshot( personDocRef, function (snapshot) {
+      // create object with original document data
+      const originalData = { itemName: "person", description: `${bookRec.title} (ISBN: ${bookRec.isbn })`}; //___________need to work on that one
+      if (!snapshot.data()) { // removed: if snapshot has not data
+        originalData.type = "REMOVED";
+        createModalFromChange( originalData); // invoke modal window reporting change of original data
+      } else if (JSON.stringify( bookRec) !== JSON.stringify( snapshot.data())) {
+        originalData.type = "MODIFIED";
+        createModalFromChange( originalData); // invoke modal window reporting change of original data
+      }
+    });
+  } catch (e) {
+    console.error(`${e.constructor.name} : ${e.message}`);
+  }
+}
+
 
 export default Person;
 export { GenderEL };
