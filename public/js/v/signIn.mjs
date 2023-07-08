@@ -25,10 +25,10 @@ signInBtn.addEventListener("click", async function () {
   if (email && password) {
     try {
       // sign in user using email + password
-      await signInWithEmailAndPassword( auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       window.location.pathname = "/index.html"; // redirect user to start page
     } catch (e) {
-      const divMsgEl = document.getElementById("message");
+      const divMsgEl = document.getElementById("login-management");
       divMsgEl.textContent = e.message;
       divMsgEl.hidden = false;
     }

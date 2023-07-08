@@ -3,26 +3,21 @@
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
  */
-import { initializeApp, getApp, getApps }
-  from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
-import { getFirestore }
-  from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore-lite.js";
-import { getAuth }
-  from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
+import { initializeApp, getApp, getApps } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore-lite.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
 
-  // TODO: Replace the following with your web app's Firebase project configuration
+// TODO: Replace the following with your web app's Firebase project configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCz-hG89E-P57sdYFQC3PH6j8DvBx_FOXU",
-    authDomain: "fitflexstudio-12345.firebaseapp.com",
-    projectId: "fitflexstudio-12345",
-    appId: "1:631078771763:web:65ca2e707bb3444bb6d746"
-  };
-  
-
+    apiKey: "AIzaSyBUwAkgZ9n0kOPqEwPZPdNeGPg9f2Q8boo",
+    authDomain: "fitflexstudio-c6452.firebaseapp.com",
+    projectId: "fitflexstudio-c6452",
+    appId: "1:615662861023:web:2534b401a0347ab891876a"
+};
 // Initialize a Firebase App object only if not already initialized
-const app = (!getApps().length) ? initializeApp( config ) : getApp();
+const app = (!getApps().length) ? initializeApp(firebaseConfig) : getApp();
 // Initialize Firebase Authentication
-const auth = getAuth( app);
+const auth = getAuth(app);
 // Initialize Cloud Firestore interface
 const fsDb = getFirestore();
 

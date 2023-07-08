@@ -3,7 +3,6 @@
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
  * @author Elias George
- * @author NourElhouda Benaida
  */
 /***************************************************************
  Import classes and data types
@@ -21,6 +20,8 @@ const PersonRecords = await Person.retrieveAll();
 const formEl = document.forms["Person"],
   deleteButton = formEl["commit"],
   selectPersonEl = formEl["selectPerson"];
+let cancelListener = null;
+
 
 /***************************************************************
  Set up select element
@@ -31,6 +32,20 @@ for (const PersonRec of PersonRecords) {
   optionEl.value = PersonRec.personId;
   selectPersonEl.add(optionEl, null);
 }
+
+/*******************************************************************
+ Setup listener on the selected person record synchronising DB with UI
+ ******************************************************************/
+// set up listener to document changes on selected person record
+selectPersonEl.addEventListener("change", async function () {
+  const personKey = selectPersonEl.value;
+  if (personKey) {
+    // cancel record listener if a previous listener exists
+    if (cancelListener) cancelListener();
+    // add listener to selected person, returning the function to cancel listener
+    cancelListener = await Person.observeChanges(personKey);
+  }
+});
 
 /******************************************************************
  Add event listeners for the delete/submit button

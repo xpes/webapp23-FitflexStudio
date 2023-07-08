@@ -3,7 +3,6 @@
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
  * @author Elias George
- * @author NourElhouda Benaida
  */
 /***************************************************************
  Import classes and data types
@@ -14,6 +13,7 @@ import Person, { GenderEL } from "../m/Person.mjs";
  Load data
  ***************************************************************/
 const PersonRecords = await Person.retrieveAll();
+console.log(PersonRecords);
 
 /***************************************************************
  Declare variables for accessing UI elements
