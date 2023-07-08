@@ -10,7 +10,7 @@ service cloud.firestore {
     }
 
     /*
-     *  Ensembles
+     *  Person
      */
 
     match /{person}/{document=**}{
@@ -27,9 +27,8 @@ service cloud.firestore {
           ;
       
       allow update:
-          if request.auth.token.email_verified == true;
-          && (request.resource.data.diff(resource.data).affectedKeys()
-                .hasOnly(['role', 'personName', 'gender', 'birthDate', 'email', 'phoneNumber', 'address', 'iban']))
+          if request.auth.token.email_verified == true
+          && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role', 'personName', 'gender', 'birthDate', 'email', 'phoneNumber', 'address', 'iban']))
           && request.resource.data.personName != null ? checkPersonName(request.resource.data.personName) : false
           && request.resource.data.gender != null ? checkGender(request.resource.data.gender) : false
           && request.resource.data.birthDate != null ? checkBirthDate(request.resource.data.birthDate) : false
