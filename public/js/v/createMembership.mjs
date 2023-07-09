@@ -29,19 +29,24 @@ fillSelectWithOptions(createAccessSelectEl, ServiceEL.labels);
 formEl["membershipId"].addEventListener("input", function () {
     // do not yet check the ID constraint, only before commit
     formEl["membershipId"].setCustomValidity(Membership.checkMembershipId(formEl["membershipId"].value).message);
+    formEl["membershipId"].reportValidity();
 });
 formEl["membershipName"].addEventListener("input", function () {
     formEl["membershipName"].setCustomValidity(Membership.checkMembershipName(formEl["membershipName"].value).message);
+    formEl["membershipName"].reportValidity();
 });
 formEl["price"].addEventListener("input", function () {
     formEl["price"].setCustomValidity(Membership.checkPrice(formEl["price"].value).message);
+    formEl["price"].reportValidity();
 });
 formEl["duration"].addEventListener("input", function () {
     formEl["duration"].setCustomValidity(Membership.checkDuration(formEl["duration"].value).message);
+    formEl["duration"].reportValidity();
 });
 
 formEl["membershipAccess"].addEventListener("input", function () {
     formEl["membershipAccess"].setCustomValidity(Membership.checkMembershipAccess(formEl["membershipAccess"].value).message);
+    formEl["membershipAccess"].reportValidity();
 });
 
 /******************************************************************

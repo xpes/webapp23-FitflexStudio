@@ -28,30 +28,38 @@ fillSelectWithOptions(createGenderSelectEl, GenderEL.labels);
 formEl["personId"].addEventListener("input", function () {
     // do not yet check the ID constraint, only before commit
     formEl["personId"].setCustomValidity(Person.checkPersonId(formEl["personId"].value).message);
+    formEl["personId"].reportValidity();
 });
 formEl["personName"].addEventListener("input", function () {
     formEl["personName"].setCustomValidity(Person.checkPersonName(formEl["personName"].value).message);
+    formEl["personName"].reportValidity();
 });
 formEl["gender"].addEventListener("input", function () {
     formEl["gender"].setCustomValidity(Person.checkGender(formEl["gender"].value).message);
+    formEl["gender"].reportValidity();
 });
 formEl["birthDate"].addEventListener("input", function () {
     formEl["birthDate"].setCustomValidity(Person.checkBirthDate(formEl["birthDate"].value).message);
+    formEl["birthDate"].reportValidity();
 });
 
 formEl["email"].addEventListener("input", function () {
     formEl["email"].setCustomValidity(Person.checkEmail(formEl["email"].value).message);
+    formEl["email"].reportValidity();
 });
 
 formEl["phoneNumber"].addEventListener("input", function () {
     formEl["phoneNumber"].setCustomValidity(Person.checkPhoneNumber(formEl["phoneNumber"].value).message);
+    formEl["phoneNumber"].reportValidity();
 });
 
 formEl["address"].addEventListener("input", function () {
     formEl["address"].setCustomValidity(Person.checkAddress(formEl["address"].value).message);
+    formEl["address"].reportValidity();
 });
 formEl["IBAN"].addEventListener("input", function () {
     formEl["IBAN"].setCustomValidity(Person.checkIban(formEl["IBAN"].value).message);
+    formEl["IBAN"].reportValidity();
 });
 
 /******************************************************************

@@ -7,30 +7,27 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Person, { GenderEL } from "../m/Person.mjs";
+import Membership, { PlanEL, ServiceEL } from "../m/Membership.mjs";
 
 /***************************************************************
  Load data
  ***************************************************************/
-const PersonRecords = await Person.retrieveAll();
+const membershipRecords = await Membership.retrieveAll();
 
 /***************************************************************
  Declare variables for accessing UI elements
  ***************************************************************/
-const tableBodyEl = document.querySelector("table#Persons>tbody");
+const tableBodyEl = document.querySelector("table#Memberships>tbody");
 
 /***************************************************************
  Render list of all Person records
  ***************************************************************/
 // for each Person, create a table row with a cell for each attribute
-for (const PersonRec of PersonRecords) {
-  const row = tableBodyEl.insertRow();
-  row.insertCell().textContent = PersonRec.personId;
-  row.insertCell().textContent = PersonRec.personName;
-  row.insertCell().textContent = GenderEL.labels[PersonRec.gender - 1];
-  row.insertCell().textContent = PersonRec.birthDate;
-  row.insertCell().textContent = PersonRec.email;
-  row.insertCell().textContent = PersonRec.phoneNumber;
-  row.insertCell().textContent = PersonRec.address;
-  row.insertCell().textContent = PersonRec.iban;
+for (const membershipRec of membershipRecords) {
+    const row = tableBodyEl.insertRow();
+    row.insertCell().textContent = membershipRec.membershipId;
+    row.insertCell().textContent = membershipRec.membershipName;
+    row.insertCell().textContent = membershipRec.price;
+    row.insertCell().textContent = PlanEL.labels[membershipRec.duration - 1];
+    row.insertCell().textContent = ServiceEL.labels[membershipRec.membershipAccess - 1];
 }

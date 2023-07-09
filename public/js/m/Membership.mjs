@@ -10,10 +10,10 @@
  */
 import { fsDb } from "../initFirebase.mjs";
 import {
-    collection as fsColl, deleteDoc, doc as fsDoc, getDoc, getDocs, orderBy, query as fsQuery,
-    setDoc, updateDoc, deleteField
+    collection as fsColl, deleteDoc, doc as fsDoc, getDoc, getDocs, onSnapshot,
+    orderBy, query as fsQuery, setDoc, updateDoc
 }
-    from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore-lite.js";
+    from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import { Enumeration } from "../../lib/Enumeration.mjs";
 import {
     NoConstraintViolation, MandatoryValueConstraintViolation, IntervalConstraintViolation,

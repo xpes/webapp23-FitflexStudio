@@ -465,18 +465,14 @@ Person.observeChanges = async function (personId) {
     // listen document changes, returning a snapshot (snapshot) on every change
     const personDocRef = fsDoc(fsDb, "persons", personId).withConverter(Person.converter);
     const personRec = (await getDoc(personDocRef)).data();
-    console.log(personRec);
     return onSnapshot(personDocRef, function (snapshot) {
-      console.log("In snapshot function");
       // create object with original document data
       const originalData = { itemName: "person", description: `${personRec.personName} (personId: ${personRec.personId})` };
-      console.log("orginal before " + originalData);
       if (!snapshot.data()) { // removed: if snapshot has not data
         originalData.type = "REMOVED";
         createModalFromChange(originalData); // invoke modal window reporting change of original data
       } else if (JSON.stringify(personRec) !== JSON.stringify(snapshot.data())) {
         originalData.type = "MODIFIED";
-        console.log(originalData);
         createModalFromChange(originalData); // invoke modal window reporting change of original data
       }
     });
