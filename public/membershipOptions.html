@@ -38,15 +38,6 @@
     import Person from "./js/m/Person.mjs";
 
     handleAuthentication();
-    window.addEventListener("load", function () {
-      const clearButton = document.getElementById("clearData"),
-        generateTestDataButtons = document.querySelectorAll("button.generateTestData");
-      // set event handlers for the buttons "clearData" and "generateTestData"
-      clearButton.addEventListener("click", Person.clearData);
-      for (const btn of generateTestDataButtons) {
-        btn.addEventListener("click", Person.generateTestData);
-      }
-    });
   </script>
 </head>
 

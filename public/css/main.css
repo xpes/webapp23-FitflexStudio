@@ -141,6 +141,11 @@ footer div.foot-content {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+
+.logo {
+    opacity: 0.03;
+}
+
 footer div.foot-content {
     font-size: smaller;
     /* margin: 2em auto; */

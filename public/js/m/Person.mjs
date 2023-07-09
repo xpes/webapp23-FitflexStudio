@@ -9,11 +9,17 @@
  * can be modified to create derivative works, can be redistributed, and can be used in commercial applications.
  */
 import { fsDb } from "../initFirebase.mjs";
-import {
+/*import {
   collection as fsColl, deleteDoc, doc as fsDoc, getDoc, getDocs, orderBy, query as fsQuery,
-  setDoc, updateDoc, deleteField
+  setDoc, updateDoc
 }
-  from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore-lite.js";
+  from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore-lite.js";*/
+//import { doc as snfsDoc, getDoc as snGetDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
+import {
+  collection as fsColl, deleteDoc, doc as fsDoc, getDoc, getDocs, onSnapshot,
+  orderBy, query as fsQuery, setDoc, updateDoc
+}
+  from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import { Enumeration } from "../../lib/Enumeration.mjs";
 import {
   NoConstraintViolation, MandatoryValueConstraintViolation, IntervalConstraintViolation,
@@ -276,7 +282,7 @@ Person.converter = {
   fromFirestore: function (snapshot, options) {
     const data = snapshot.data(options);
     return new Person(data);
-  },
+  }
 };
 
 /**
@@ -459,14 +465,18 @@ Person.observeChanges = async function (personId) {
     // listen document changes, returning a snapshot (snapshot) on every change
     const personDocRef = fsDoc(fsDb, "persons", personId).withConverter(Person.converter);
     const personRec = (await getDoc(personDocRef)).data();
+    console.log(personRec);
     return onSnapshot(personDocRef, function (snapshot) {
+      console.log("In snapshot function");
       // create object with original document data
       const originalData = { itemName: "person", description: `${personRec.personName} (personId: ${personRec.personId})` };
+      console.log("orginal before " + originalData);
       if (!snapshot.data()) { // removed: if snapshot has not data
         originalData.type = "REMOVED";
         createModalFromChange(originalData); // invoke modal window reporting change of original data
       } else if (JSON.stringify(personRec) !== JSON.stringify(snapshot.data())) {
         originalData.type = "MODIFIED";
+        console.log(originalData);
         createModalFromChange(originalData); // invoke modal window reporting change of original data
       }
     });
