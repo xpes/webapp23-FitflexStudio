@@ -5,9 +5,14 @@ service cloud.firestore {
 
     match /{document=**} {
       allow read: if request.auth != null;
-
+			allow create: if request.auth.token.email_verified == true;
+      allow update: if request.auth.token.email_verified == true;
       allow delete: if request.auth.token.email_verified == true;
     }
+
+    /** VALIDATION FUNCTIONS **/
+    function checkMandatory( prop) {
+      return prop != null && prop !="";
 
     /*
      *  Person
@@ -16,26 +21,26 @@ service cloud.firestore {
     match /{person}/{document=**}{
       allow create:
           if request.auth.token.email_verified == true
-          && request.resource.data.personId != null ? checkPersonID(request.resource.data.personId) : false
-          && request.resource.data.personName != null ? checkPersonName(request.resource.data.personName) : false
-          && request.resource.data.gender != null ? checkGender(request.resource.data.gender) : false
-          && request.resource.data.birthDate != null ? checkBirthDate(request.resource.data.birthDate) : false
-          && request.resource.data.email != null ? checkEmail(request.resource.data.email) : false
-          && request.resource.data.phoneNumber != null ? checkPhoneNumber(request.resource.data.phoneNumber) : false
-          && request.resource.data.address != null ? checkAddress(request.resource.data.address) : false
-          && request.resource.data.iban != null ? checkIban(request.resource.data.iban) : false
+          && request.resource.data.personId != null ? checkMandatory(request.resource.data.personId) : true
+          && request.resource.data.personName != null ? checkMandatory(request.resource.data.personName) : true
+          && request.resource.data.gender != null ? checkMandatory(request.resource.data.gender) : true
+          && request.resource.data.birthDate != null ? checkMandatory(request.resource.data.birthDate) : true
+          && request.resource.data.email != null ? checkMandatory(request.resource.data.email) : true
+          && request.resource.data.phoneNumber != null ? checkMandatory(request.resource.data.phoneNumber) : true
+          && request.resource.data.address != null ? checkMandatory(request.resource.data.address) : true
+          && request.resource.data.iban != null ? checkMandatory(request.resource.data.iban) : true
           ;
       
       allow update:
           if request.auth.token.email_verified == true
           && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role', 'personName', 'gender', 'birthDate', 'email', 'phoneNumber', 'address', 'iban']))
-          && request.resource.data.personName != null ? checkPersonName(request.resource.data.personName) : false
-          && request.resource.data.gender != null ? checkGender(request.resource.data.gender) : false
-          && request.resource.data.birthDate != null ? checkBirthDate(request.resource.data.birthDate) : false
-          && request.resource.data.email != null ? checkEmail(request.resource.data.email) : false
-          && request.resource.data.phoneNumber != null ? checkPhoneNumber(request.resource.data.phoneNumber) : false
-          && request.resource.data.address != null ? checkAddress(request.resource.data.address) : false
-          && request.resource.data.iban != null ? checkIban(request.resource.data.iban) : false
+          && request.resource.data.personName != null ? checkMandatory(request.resource.data.personName) : true
+          && request.resource.data.gender != null ? checkMandatory(request.resource.data.gender) : true
+          && request.resource.data.birthDate != null ? checkMandatory(request.resource.data.birthDate) : true
+          && request.resource.data.email != null ? checkMandatory(request.resource.data.email) : true
+          && request.resource.data.phoneNumber != null ? checkMandatory(request.resource.data.phoneNumber) : true
+          && request.resource.data.address != null ? checkMandatory(request.resource.data.address) : true
+          && request.resource.data.iban != null ? checkMandatory(request.resource.data.iban) : true
           ;
           
 
