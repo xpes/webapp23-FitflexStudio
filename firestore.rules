@@ -13,7 +13,7 @@ service cloud.firestore {
     /** VALIDATION FUNCTIONS **/
     function checkMandatory( prop) {
       return prop != null && prop !="";
-
+    }
     /*
      *  Person
      */
