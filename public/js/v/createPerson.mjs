@@ -79,6 +79,7 @@ createButton.addEventListener("click", async function () {
     // check constraints and set error messages
     showProgressBar(progressEl);
     formEl["personId"].setCustomValidity((await Person.checkPersonIdAsId(slots.personId)).message);
+    formEl["personId"].reportValidity();
     formEl["personName"].setCustomValidity(Person.checkPersonName(slots.personName).message);
     formEl["gender"].setCustomValidity(Person.checkGender(slots.gender).message);
     formEl["birthDate"].setCustomValidity(Person.checkBirthDate(slots.birthDate).message);
