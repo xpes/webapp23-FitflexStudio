@@ -43,12 +43,10 @@
 
     handleAuthentication();
     const clearButton = document.getElementById("clearData"),
-      generateTestDataButtons = document.querySelectorAll("button.generateTestData");
+      generateTestDataButtons = document.getElementById("generateTestData");
     // Set event handlers for the buttons "clearData" and "generateTestData"
     clearButton.addEventListener("click", clearData);
-    for (const btn of generateTestDataButtons) {
-      btn.addEventListener("click", generateTestData);
-    }
+    generateTestDataButtons.addEventListener("click", generateTestData);
   </script>
 </head>
 
@@ -62,9 +60,9 @@
       <img class="logo" src="./img/logo.jpg" alt="logo">
       <nav>
         <ul>
-          <li><a href="persons.html">Persons</a></li>
-          <li><a href="membershipOptions.html">Memberships</a></li>
-          <li><a href="classes.html" class="disabled">Classes</a></li>
+          <li><a href="./html/Person/persons.html">Persons</a></li>
+          <li><a href="./html/Membership/membershipOptions.html">Memberships</a></li>
+          <li><a href="./html/Klasses/klasses.html" class="disabled">Classes</a></li>
           <li><a href="schedule.html" class="disabled">Schedule</a></li>
         </ul>
       </nav>
@@ -75,21 +73,16 @@
       <p>Main Menu Operations:</p>
       <div class="two-col-menu">
         <ul class="menu">
-          <li><a href="persons.html">Manage person data</a></li>
-          <li><a href="membershipOptions.html">Manage Membership Options</a></li>
-          <li><a href="classes.html" class="disabled">Manage classes offered</a></li>
+          <li><a href="./html/Person/persons.html">Manage person data</a></li>
+          <li><a href="./html/Membership/membershipOptions.html">Manage Membership Options</a></li>
+          <li><a href="./html/Klasses/klasses.html" class="disabled">Manage classes offered</a></li>
           <li><a href="schedule.html" class="disabled">Manage class schedules</a></li>
         </ul>
         <ul class="menu">
-          <li><button type="button" class="generateTestData, disabled">Generate test data</button></li>
+          <li><button type="button" id="generateTestData" class="disabled">Generate test data</button></li>
           <li><button type="button" id="clearData" class="disabled">Clear database</button></li>
         </ul>
       </div>
-      <p>For playing with the app, you may first want to
-        <button type="button" class="generateTestData, disabled">Generate test data</button>
-        and then view it (e.g. by choosing "Manage person data" and then "Retrieve and list all people"). For observing
-        the internal status and error messages, turn on the JavaScript console.
-      </p>
     </div>
   </main>
   <br>

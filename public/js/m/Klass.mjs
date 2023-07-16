@@ -28,7 +28,7 @@ import {
 
 import { createModalFromChange } from "../../lib/util.mjs";
 import Person from "./Person.mjs";
-import Schedule from "./Schedule.mjs";
+
 /**
  * Define Enumerations
  */
@@ -40,7 +40,7 @@ import Schedule from "./Schedule.mjs";
  * @param {{klassId: integer, klassName: string, instructor: string, startDate: number, endDate: string, capacity: integer}} slots - Object creation slots.
  */
 
-class Klass1 {
+class Klass {
   // record parameter with the ES6 syntax for function parameter destructuring
   constructor({ klassId }) {
     this.klassId = klassId;
@@ -51,7 +51,7 @@ class Klass1 {
     return this._klassId;
   };
 
-  static checkKlassId( klassId) {
+  static checkKlassId(klassId) {
     if (!klassId) {
       return new MandatoryValueConstraintViolation("A value for the class ID must be provided!");
     } else {
@@ -63,14 +63,14 @@ class Klass1 {
     }
   }
 
-  static async checkKlassIdAsId( klassId) {
-    let validationResult = Klass.checkKlassId( klassId);
+  static async checkKlassIdAsId(klassId) {
+    let validationResult = Klass.checkKlassId(klassId);
     if ((validationResult instanceof NoConstraintViolation)) {
       if (!klassId) {
         validationResult = new MandatoryValueConstraintViolation(
           "A value for the class ID must be provided!");
       } else {
-        const klassDocSn = await getDoc( fsDoc( fsDb, "klasses", klassId));
+        const klassDocSn = await getDoc(fsDoc(fsDb, "klasses", klassId));
         if (klassDocSn.exists()) {
           console.log("The class ID already exist");
           validationResult = new UniquenessConstraintViolation(
@@ -83,19 +83,19 @@ class Klass1 {
     return validationResult;
   }
 
-  static checkKlassIdAsIdRef( id) {
-    var validationResult = Klass.checkKlassId( id);
+  static checkKlassIdAsIdRef(id) {
+    var validationResult = Klass.checkKlassId(id);
     if ((validationResult instanceof NoConstraintViolation) && id) {
-        if (!Klass.instances[id]) {
-            validationResult = new ReferentialIntegrityConstraintViolation(
-                'There is no klass record with this klass ID!');
-        }
+      if (!Klass.instances[id]) {
+        validationResult = new ReferentialIntegrityConstraintViolation(
+          'There is no klass record with this klass ID!');
+      }
     }
     return validationResult;
-}
+  }
 
-  set klassId( klassId) {
-    var validationResult = Klass.checkKlassId( klassId);
+  set klassId(klassId) {
+    var validationResult = Klass.checkKlassId(klassId);
     if (validationResult instanceof NoConstraintViolation) {
       this._klassId = klassId;
     } else {
@@ -103,7 +103,7 @@ class Klass1 {
     }
   }
 
- 
+
 }
 
 /*********************************************************
@@ -112,7 +112,7 @@ class Klass1 {
 
 
 Klass.converter = {
-  toFirestore: function ( klass) {
+  toFirestore: function (klass) {
     const data = {
       klassId: klass.klassId,
 
@@ -121,7 +121,7 @@ Klass.converter = {
   },
   fromFirestore: function (snapshot, options) {
     const data = snapshot.data(options);
-    return new Klass( data);
+    return new Klass(data);
   },
 };
 
@@ -139,16 +139,16 @@ Klass.add = async function (slots) {
     klass = new Klass(slots);
     console.log(`klass creating new class ` + slots);
     // invoke asynchronous ID/uniqueness check
-    validationResult = await Klass.checkKlassIdAsId( klass.klassId);
+    let validationResult = await Klass.checkKlassIdAsId(klass.klassId);
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
   } catch (e) {
     console.error(`${e.constructor.name}: ${e.message}`);
     klass = null;
     console.log("class read");
-  }  
+  }
   if (klass) {
     try {
-      const klassDocRef = fsDoc( fsDb, "klasses", klass.klassId).withConverter( Klass.converter);
+      const klassDocRef = fsDoc(fsDb, "klasses", klass.klassId).withConverter(Klass.converter);
       setDoc(klassDocRef, klass);
       console.log(`klass record "${klass.klassId}" created!`);
     } catch (e) {
@@ -164,7 +164,7 @@ Klass.add = async function (slots) {
  */
 Klass.retrieve = async function (klassId) {
   try {
-    const klassRec = (await getDoc( fsDoc( fsDb, "klasses", klassId)
+    const klassRec = (await getDoc(fsDoc(fsDb, "klasses", klassId)
       .withConverter(Klass.converter))).data();
     console.log(`Klass record "${klassRec.klassId}" retrieved.`);
     return klassRec;
@@ -179,8 +179,8 @@ Klass.retrieve = async function (klassId) {
  */
 Klass.retrieveAll = async function (order) {
   if (!order) order = "klassId";
-  const klassesCollRef = fsColl( fsDb, "klasses"),
-    q = fsQuery( klassesCollRef, orderBy(order));
+  const klassesCollRef = fsColl(fsDb, "klasses"),
+    q = fsQuery(klassesCollRef, orderBy(order));
   try {
     const klassRecs = (await getDocs(q.withConverter(Klass.converter))).docs.map(d => d.data());
     console.log(`${klassRecs.length} klass records retrieved ${order ? "ordered by " + order : ""}`);
@@ -197,10 +197,10 @@ Klass.retrieveAll = async function (order) {
  */
 Klass.update = async function (slots) {
   let noConstraintViolated = true,
-  validationResult = null,
-  klassBeforeUpdate = null;
-  const klassDocRef = fsDoc( fsDb, "klasses", slots.klassId).withConverter(Klass.converter),
-  updatedSlots = {};
+    validationResult = null,
+    klassBeforeUpdate = null;
+  const klassDocRef = fsDoc(fsDb, "klasses", slots.klassId).withConverter(Klass.converter),
+    updatedSlots = {};
   try {
     // retrieve up-to-date book record
     const klassDocSn = await getDoc(klassDocRef);
@@ -238,7 +238,7 @@ Klass.update = async function (slots) {
  */
 Klass.destroy = async function (klassId) {
   try {
-    await deleteDoc( fsDoc( fsDb, "klasses", klassId));
+    await deleteDoc(fsDoc(fsDb, "klasses", klassId));
     console.log(`klass record "${klassId}" deleted!`);
   } catch (e) {
     console.error(`Error deleting class record: ${e}`);
@@ -256,7 +256,7 @@ Klass.generateTestData = async function () {
     console.log("working");
     const response = await fetch("../../test-data/klasses.json");
     const klassRecs = await response.json();
-    await Promise.all( klassRecs.map(d => Klass.add(d)));
+    await Promise.all(klassRecs.map(d => Klass.add(d)));
     console.log(`${klassRecs.length} klasses saved.`);
   } catch (e) {
     console.error(`${e.constructor.name}: ${e.message}`);
@@ -282,7 +282,7 @@ Klass.clearData = async function (confirmation = true) {
 Klass.observeChanges = async function (klassId) {
   try {
     // listen document changes, returning a snapshot (snapshot) on every change
-    const klassDocRef = fsDoc( fsDb, "klasses", klassId).withConverter(Klass.converter);
+    const klassDocRef = fsDoc(fsDb, "klasses", klassId).withConverter(Klass.converter);
     const klassRec = (await getDoc(klassDocRef)).data();
     console.log(klassRec);
     return onSnapshot(klassDocRef, function (snapshot) {

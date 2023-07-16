@@ -23,14 +23,17 @@ import {
 import { Enumeration } from "../../lib/Enumeration.mjs";
 import {
   NoConstraintViolation, MandatoryValueConstraintViolation, IntervalConstraintViolation,
-  RangeConstraintViolation, UniquenessConstraintViolation, StringLengthConstraintViolation
+  RangeConstraintViolation, UniquenessConstraintViolation, StringLengthConstraintViolation, ConstraintViolation
 } from "../../lib/errorTypes.mjs";
 
 import { createModalFromChange } from "../../lib/util.mjs";
+import Membership from "./Membership.mjs";
 /**
  * Define Enumerations
  */
 const GenderEL = new Enumeration({ "M": "Male", "F": "Female", "O": "Other" });
+const PersonRoleEL = new Enumeration(["Trainer", "Member"]);
+const TrainerCategoryEL = new Enumeration(["Yoga Trainer", "Fitness Trainer", "Personal Trainer"]);
 
 /**
  * Constructor function for the class person
@@ -39,7 +42,7 @@ const GenderEL = new Enumeration({ "M": "Male", "F": "Female", "O": "Other" });
  */
 class Person {
   // record parameter with the ES6 syntax for function parameter destructuring
-  constructor({ personId, personName, gender, birthDate, email, phoneNumber, address, iban }) {
+  constructor({ personId, personName, gender, birthDate, email, phoneNumber, address, iban, role, trainerId, trainerCategory, memberId, membershipType }) {
     this.personId = personId;
     this.personName = personName;
     this.gender = gender;
@@ -48,6 +51,11 @@ class Person {
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.iban = iban;
+    if (role) this.role = role;
+    if (trainerId) this.trainerId = trainerId;
+    if (trainerCategory) this.trainerCategory = trainerCategory;
+    if (memberId) this.memberId = memberId;
+    if (membershipType) this.membershipType = membershipType;
   }
   get personId() {
     return this._personId;
@@ -252,6 +260,149 @@ class Person {
       throw validationResult;
     }
   }
+
+  //all basic constraints, getters, chechers, setters of the IBAN attribute
+
+  get role() {
+    return this._role;
+  }
+  static checkRole(role) {
+    console.log("Max " + PersonRoleEL.MAX)
+    if (role === undefined || role === "") {
+      return new NoConstraintViolation();  // category is optional
+    } else if (parseInt(role) < 1 || parseInt(role) > PersonRoleEL.MAX) {
+      return new RangeConstraintViolation(
+        "Invalid value for category: " + role);
+    } else {
+      return new NoConstraintViolation();
+    }
+  }
+  set role(role) {
+    console.log("In role");
+    var validationResult = Person.checkRole(role);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._role = role;
+    } else {
+      throw validationResult;
+    }
+  }
+
+  //all basic constraints, getters, chechers, setters of the IBAN attribute
+
+  get trainerId() {
+    return this._trainerId;
+  }
+  static checkTrainerId(trainerId, role) {
+    console.log(trainerId + " " + role + " " + PersonRoleEL.TRAINER);
+    if (role === PersonRoleEL.TRAINER && !trainerId) {
+      return new MandatoryValueConstraintViolation(
+        "A training ID must be provided for a Trainer!");
+    } else if (role !== PersonRoleEL.TRAINER && trainerId) {
+      return new ConstraintViolation("A training ID must not " +
+        "be provided if the role is not a Trainer!");
+    } else if (trainerId && (typeof (trainerId) !== "string" || trainerId.trim() === "")) {
+      return new RangeConstraintViolation(
+        "The taining ID must be a non-empty string!");
+    } else {
+      return new NoConstraintViolation();
+    }
+  }
+  set trainerId(trainerId) {
+    console.log("In trainer Id");
+    var validationResult = Person.checkTrainerId(trainerId, this.role);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._trainerId = trainerId;
+    } else {
+      throw validationResult;
+    }
+  }
+
+  //all basic constraints, getters, chechers, setters of the IBAN attribute
+
+  get trainerCategory() {
+    return this._trainerCategory;
+  }
+  static checkTrainerCategory(trainerCategory, role) {
+    if (role === PersonRoleEL.TRAINER && !trainerCategory) {
+      return new MandatoryValueConstraintViolation(
+        "A training category must be provided for a Trainer!");
+    } else if (role !== PersonRoleEL.TRAINER && trainerCategory) {
+      return new ConstraintViolation("A training category must not " +
+        "be provided if the role is not a Trainer!");
+    } else if (parseInt(trainerCategory) < 1 || parseInt(trainerCategory) > TrainerCategoryEL.MAX) {
+      return new RangeConstraintViolation(
+        "Invalid value for  trainer category: " + trainerCategory);
+    } else {
+      return new NoConstraintViolation();
+    }
+  }
+  set trainerCategory(trainerCategory) {
+    console.log("In tainer category");
+    var validationResult = Person.checkTrainerCategory(trainerCategory, this.role);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._trainerCategory = trainerCategory;
+    } else {
+      throw validationResult;
+    }
+  }
+
+  //all basic constraints, getters, chechers, setters of the IBAN attribute
+
+  get memberId() {
+    return this._memberId;
+  }
+  static checkMemberId(memberId, role) {
+    if (role === PersonRoleEL.MEMBER && !memberId) {
+      return new MandatoryValueConstraintViolation(
+        "A member ID must be provided for a Member!");
+    } else if (role !== PersonRoleEL.MEMBER && memberId) {
+      return new ConstraintViolation("A member ID must not " +
+        "be provided if the role is not a Member!");
+    } else if (memberId && (typeof (memberId) !== "string" || memberId.trim() === "")) {
+      return new RangeConstraintViolation(
+        "The member ID must be a non-empty string!");
+    } else {
+      return new NoConstraintViolation();
+    }
+  }
+  set memberId(memberId) {
+    console.log("In member ID");
+    var validationResult = Person.checkMemberId(memberId, this.role);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._memberId = memberId;
+    } else {
+      throw validationResult;
+    }
+  }
+
+  //all basic constraints, getters, chechers, setters of the IBAN attribute
+
+  get membershipType() {
+    return this._membershipType;
+  }
+  static checkMembershipType(membershipType, role) {
+    if (role === PersonRoleEL.MEMBER && !membershipType) {
+      return new MandatoryValueConstraintViolation(
+        "A membership type must be provided for a Member!");
+    } else if (role !== PersonRoleEL.MEMBER && membershipType) {
+      return new ConstraintViolation("A membership type must not " +
+        "be provided if the role is not a Member!");
+    } else if (membershipType && (typeof (membershipType) !== "string")) {
+      return new RangeConstraintViolation(
+        "The membership type must be non-empty!");
+    } else {
+      return new NoConstraintViolation();
+    }
+  }
+  set membershipType(membershipType) {
+    console.log("In membership Type");
+    var validationResult = Person.checkMembershipType(membershipType, this.role);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._membershipType = membershipType;
+    } else {
+      throw validationResult;
+    }
+  }
 }
 
 
@@ -267,7 +418,8 @@ class Person {
 */
 Person.converter = {
   toFirestore: function (person) {
-    const data = {
+    console.log(person);
+    var data = {
       personId: person.personId,
       personName: person.personName,
       gender: person.gender,
@@ -275,12 +427,51 @@ Person.converter = {
       email: person.email,
       phoneNumber: person.phoneNumber,
       address: person.address,
-      iban: person.iban,
+      iban: person.iban
     };
+    if (person.role) {
+      data["role"] = person.role;
+      switch (person.role) {
+        case PersonRoleEL.TRAINER:
+          data["trainerId"] = person.trainerId;
+          data["trainerCategory"] = person.trainerCategory;
+          break;
+        case PersonRoleEL.MEMBER:
+          data["memberId"] = person.memberId;
+          data["membershipType"] = person.membershipType;
+          break;
+      }
+    }
+    console.log(data);
     return data;
   },
   fromFirestore: function (snapshot, options) {
-    const data = snapshot.data(options);
+    const person = snapshot.data(options);
+    console.log(person.personId);
+    var data = {
+      personId: person.personId,
+      personName: person.personName,
+      gender: person.gender,
+      birthDate: person.birthDate,
+      email: person.email,
+      phoneNumber: person.phoneNumber,
+      address: person.address,
+      iban: person.iban
+    };
+    if (person.role) {
+      data["role"] = person.role;
+      switch (person.role) {
+        case PersonRoleEL.TRAINER:
+          data["trainerId"] = person.trainerId;
+          data["trainerCategory"] = person.trainerCategory;
+          break;
+        case PersonRoleEL.MEMBER:
+          data["memberId"] = person.memberId;
+          data["membershipType"] = person.membershipType;
+          break;
+      }
+    }
+    console.log(data);
     return new Person(data);
   }
 };
@@ -297,6 +488,10 @@ Person.add = async function (slots) {
     person = new Person(slots);
     // invoke asynchronous ID/uniqueness check
     let validationResult = await Person.checkPersonIdAsId(person.personId);
+    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+    console.log("Membersip ref ID " + person.membershipType);
+    validationResult = await Membership.checkMembershipIdAsIdRef(person.membershipType);
+    console.log("completed refID check " + validationResult.message);
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
   } catch (e) {
     console.error(`${e.constructor.name}: ${e.message}`);

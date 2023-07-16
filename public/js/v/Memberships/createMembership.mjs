@@ -6,9 +6,9 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Membership, { ServiceEL, PlanEL } from "../m/Membership.mjs";
-import { fillSelectWithOptions } from "../../lib/util.mjs";
-import { showProgressBar, hideProgressBar } from "../../lib/util.mjs";
+import Membership, { ServiceEL, PlanEL } from "../../m/Membership.mjs";
+import { fillSelectWithOptions } from "../../../lib/util.mjs";
+import { showProgressBar, hideProgressBar } from "../../../lib/util.mjs";
 
 
 /***************************************************************
@@ -53,13 +53,18 @@ formEl["membershipAccess"].addEventListener("input", function () {
  Add event listeners for the create/submit button
  ******************************************************************/
 createButton.addEventListener("click", async function () {
+    const selectedMembershipAccess = formEl["membershipAccess"].selectedOptions;
     const slots = {
         membershipId: formEl["membershipId"].value,
         membershipName: formEl["membershipName"].value,
         price: formEl["price"].value,
         duration: formEl["duration"].value,
-        membershipAccess: formEl["membershipAccess"].value
+        membershipAccess: []
     };
+    // construct the list of selected membershipAccess
+    for (const o of selectedMembershipAccess) {
+        slots.membershipAccess.push(parseInt(o.value));
+    }
     // check constraints and set error messages
     showProgressBar(progressEl);
     formEl["membershipId"].setCustomValidity((await Membership.checkMembershipIdAsId(slots.membershipId)).message);

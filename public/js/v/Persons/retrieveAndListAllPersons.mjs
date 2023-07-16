@@ -7,7 +7,7 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Person, { GenderEL } from "../m/Person.mjs";
+import Person, { GenderEL } from "../../m/Person.mjs";
 
 /***************************************************************
  Load data

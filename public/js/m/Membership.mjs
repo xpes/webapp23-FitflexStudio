@@ -77,6 +77,21 @@ class Membership {
         return validationResult;
     }
 
+    static async checkMembershipIdAsIdRef(n) {
+        console.log(n);
+        let validationResult = Membership.checkMembershipId(n);
+        console.log(validationResult.message);
+        if ((validationResult instanceof NoConstraintViolation) && n) {
+            const membershipDocSn = await getDoc(fsDoc(fsDb, "memberships", n));
+            console.log(membershipDocSn.exists());
+            if (!membershipDocSn.exists()) {
+                validationResult = new ReferentialIntegrityConstraintViolation(
+                    "There is no membership record with this ID!");
+            }
+        }
+        return validationResult;
+    };
+
     set membershipId(membershipId) {
         var validationResult = Membership.checkMembershipId(membershipId);
         if (validationResult instanceof NoConstraintViolation) {
@@ -339,11 +354,23 @@ Membership.update = async function (slots) {
  * @returns {Promise<void>}
  */
 Membership.destroy = async function (membershipId) {
+    const personsCollRef = fsColl(fsDb, "persons"),
+        q = fsQuery(personsCollRef, where("membershipType", "==", membershipId)),
+        membershipDocRef = fsDoc(fsColl(fsDb, "memberships"), membershipId);
     try {
-        await deleteDoc(fsDoc(fsDb, "memberships", membershipId));
-        console.log(`membership record "${membershipId}" deleted!`);
+        const personQrySns = (await getDocs(q)),
+            batch = writeBatch(fsDb); // initiate batch write
+        // iterate and delete associations with book records
+        await Promise.all(personQrySns.docs.map(d => {
+            batch.update(fsDoc(personsCollRef, d.id), {
+                membershipType: deleteField()
+            });
+        }));
+        batch.delete(membershipDocRef); // delete publisher record
+        batch.commit(); // finish batch write
+        console.log(`Membership record "${membershipId}" deleted!`);
     } catch (e) {
-        console.error(`Error deleting book record: ${e}`);
+        console.error(`Error deleting Membership record: ${e}`);
     }
 };
 /*******************************************

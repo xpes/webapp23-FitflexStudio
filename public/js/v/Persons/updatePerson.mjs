@@ -7,9 +7,9 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Person, { GenderEL } from "../m/Person.mjs";
-import { fillSelectWithOptions } from "../../lib/util.mjs";
-import { showProgressBar, hideProgressBar } from "../../lib/util.mjs";
+import Person, { GenderEL } from "../../m/Person.mjs";
+import { fillSelectWithOptions } from "../../../lib/util.mjs";
+import { showProgressBar, hideProgressBar } from "../../../lib/util.mjs";
 
 /***************************************************************
  Load data
@@ -64,6 +64,7 @@ formEl["iban"].addEventListener("input", function () {
  ***************************************************************/
 // fill select with options
 for (const MemberRec of MemberRecords) {
+  console.log("selection " + MemberRec.personId);
   const optionEl = document.createElement("option");
   optionEl.text = MemberRec.personName;
   optionEl.value = MemberRec.personId;

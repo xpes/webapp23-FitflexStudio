@@ -5,20 +5,14 @@
   <meta charset="UTF-8" />
   <title>FitflexStudio</title>
   <meta name="description" content="A minimal effort web app with plain JS + Firebase." />
-  <link rel="stylesheet" href="css/normalize.css" />
-  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="../../css/normalize.css" />
+  <link rel="stylesheet" href="../../css/main.css" />
   <style>
     figure {
       float: right;
     }
 
     a.disabled {
-      opacity: 0.4;
-      pointer-events: none;
-      cursor: default;
-    }
-
-    button.disabled {
       opacity: 0.4;
       pointer-events: none;
       cursor: default;
@@ -40,8 +34,8 @@
     }
   </style>
   <script type="module">
-    import { handleAuthentication } from "./js/v/accessControl.mjs";
-    import Person from "./js/m/Person.mjs";
+    import { handleAuthentication } from "../../js/v/accessControl.mjs";
+    import Person from "../../js/m/Person.mjs";
 
     handleAuthentication();
   </script>
@@ -52,29 +46,29 @@
     <div class="wrapper clearfix">
       <div class="title">
         <h1>FitflexStudio</h1>
-        <p>Manage Person Record</p>
+        <p>Manage Membership Record</p>
       </div>
       <div id="login-management"></div>
       <nav>
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="membershipOptions.html" class="disabled">Memberships</a></li>
-          <li><a href="404.html" class="disabled">Classes</a></li>
-          <li><a href="404.html" class="disabled">Schedule</a></li>
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../Person/persons.html" class="disabled">Persons</a></li>
+          <li><a href="404.html">Classes</a></li>
+          <li><a href="404.html">Schedule</a></li>
         </ul>
       </nav>
     </div>
   </header>
   <main>
     <div class="wrapper clearfix">
-      <p>Manage Person Operations</p>
+      <p>Manage Membership operations</p>
       <div class="two-col-menu">
-        <img class="menu" src="./img/person.png" alt="Girl in a jacket" width="100" height="100">
+        <img class="menu" src="../../img/membership.jpg" alt="Girl in a jacket" width="100" height="100">
         <ul class="menu">
-          <li><a href="createPerson.html" class="disabled">Create</a> a new Person record</li>
-          <li><a href="retrieveAndListAllPersons.html">Retrieve</a> and list all Person records</li>
-          <li><a href="updatePerson.html" class="disabled">Update</a> a Person record</li>
-          <li><a href="deletePerson.html" class="disabled">Delete</a> a Person record</li>
+          <li><a href="createMembership.html" class="disabled">Create</a> a new Membership record</li>
+          <li><a href="retrieveAndListAllMembership.html">Retrieve</a> and list all Membership records</li>
+          <li><a href="updateMembership.html" class="disabled">Update</a> a Membership record</li>
+          <li><a href="deleteMembership.html" class="disabled">Delete</a> a Membership record</li>
         </ul>
       </div>
     </div>
@@ -82,7 +76,7 @@
   <br>
   <footer>
     <div class="wrapper clearfix">
-      <a href="index.html">« Back to Main Menu</a>
+      <a href="../../index.html">« Back to Main Menu</a>
     </div>
   </footer>
 </body>

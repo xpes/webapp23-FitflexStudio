@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <title>FitFlexStudio: Create Membership</title>
-    <link rel="stylesheet" href="css/normalize.css" />
-    <link rel="stylesheet" href="css/main.css" />
-    <script src="js/v/createMembership.mjs" type="module"></script>
+    <link rel="stylesheet" href="../../css/normalize.css" />
+    <link rel="stylesheet" href="../../css/main.css" />
+    <script src="../../js/v/Memberships/createMembership.mjs" type="module"></script>
 </head>
 
 <body>
@@ -31,7 +31,10 @@
                 <div><label>Membership Name: <input name="membershipName" /></label></div>
                 <div><label>price: <input name="price" /></label></div>
                 <div><label>Duration: <select name="duration"></select></label></div>
-                <div><label>membership Access: <select name="membershipAccess"></select></label></div>
+                <!--div><label>membership Access: <select name="membershipAccess"></select></label></div-->
+                <div class="multi-sel"><label>membership Access:
+                        <select name="membershipAccess" multiple="multiple" rows="4"></select>
+                    </label></div>
                 <div>
                     <button name="commit" type="button">Create</button>
                     <progress hidden="hidden" max="100">%</progress>

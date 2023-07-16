@@ -8,9 +8,9 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Person, { GenderEL } from "../m/Person.mjs";
-import { fillSelectWithOptions } from "../../lib/util.mjs";
-import { showProgressBar, hideProgressBar } from "../../lib/util.mjs";
+import Person, { GenderEL } from "../../m/Person.mjs";
+import { fillSelectWithOptions } from "../../../lib/util.mjs";
+import { showProgressBar, hideProgressBar } from "../../../lib/util.mjs";
 
 
 /***************************************************************

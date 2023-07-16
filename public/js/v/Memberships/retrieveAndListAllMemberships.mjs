@@ -7,7 +7,7 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Membership, { PlanEL, ServiceEL } from "../m/Membership.mjs";
+import Membership, { PlanEL, ServiceEL } from "../../m/Membership.mjs";
 
 /***************************************************************
  Load data
