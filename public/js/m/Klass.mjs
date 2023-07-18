@@ -42,9 +42,14 @@ import Person from "./Person.mjs";
 
 class Klass {
   // record parameter with the ES6 syntax for function parameter destructuring
-  constructor({ klassId }) {
+  constructor({ klassId, klassName, instructor, startDate, endDate, capacity,registeredMember }) {
     this.klassId = klassId;
-
+    this.klassName = klassName;
+    this.instructor = instructor;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.capacity = capacity;
+    this.registeredMember = registeredMember; 
   }
 
   get klassId() {
@@ -103,6 +108,163 @@ class Klass {
     }
   }
 
+    //all basic constraints, getters, chechers, setters of the personName attribute
+
+    get klassName() {
+      return this._klassName;
+    };
+  
+    static checkKlassName( klassName) {
+      const KLASSNAME_LENGTH_MAX = 50;
+      if (!klassName) {
+        return new MandatoryValueConstraintViolation("A class name must be provided!");
+      } else if (klassName === "") {
+        return new RangeConstraintViolation("The name must be a non-empty string!");
+      } else if (klassName.length > KLASSNAME_LENGTH_MAX) {
+        return new StringLengthConstraintViolation(
+          `The value of the class must be at most ${KLASSNAME_LENGTH_MAX} characters!`);
+      }
+      else {
+        return new NoConstraintViolation();
+      }
+    }
+  
+    set klassName( klassName) {
+      console.log("klassName");
+      const validationResult = Klass.checkKlassName( klassName);
+      if (validationResult instanceof NoConstraintViolation) {
+        this._klassName = klassName;
+      } else {
+        throw validationResult;
+      }
+    }
+
+        //all basic constraints, getters, chechers, setters of the instructor attribute
+
+   get Instructor() {
+     return this._instructor;
+   };
+   
+   static checkInstructor( instructor) {
+     if (!instructor || instructor === "") {
+       return new MandatoryValueConstraintViolation("An instructor value must be provided!");
+     } else {
+       return new NoConstraintViolation();
+     }
+   }
+   
+   set Instructor( instructor) {
+     const validationResult = Klass.checkInstructor( instructor);
+     if (validationResult instanceof NoConstraintViolation) {
+       this._instructor = instructor;
+     } else {
+       throw validationResult;
+     }
+   }
+
+    //all basic constraints, getters, chechers, setters of the startDate attribute
+   get startDate() {
+     return this._startDate;
+   };
+   
+   static checkStartDate( startDate) {
+     if (!startDate) {
+       return new MandatoryValueConstraintViolation("A date must be provided!");
+     } else if (startDate === "") {
+       return new RangeConstraintViolation("The date must be a non-empty string!");
+     } else {
+       return new NoConstraintViolation();
+     }
+   }
+   set startDate( startDate) {
+     const validationResult = Klass.checkStartDate( startDate);
+     if (validationResult instanceof NoConstraintViolation) {
+       this._startDate = startDate;
+     } else {
+       throw validationResult;
+     }
+   } 
+
+  //  //all basic constraints, getters, chechers, setters of the endDate attribute
+  //  get endDate() {
+  //    return this.endDate;
+  //  };
+
+  //  static checkEndDate( endDate) {
+  //    if (!endDate) {
+  //      return new MandatoryValueConstraintViolation("A date must be provided!");
+  //    } else if (endDate === "") {
+  //      return new RangeConstraintViolation("The date must be a non-empty string!");
+  //    } else {
+  //      return new NoConstraintViolation();
+  //    }
+  //  }
+
+
+  //  set endDate( endDate) {
+  //    console.log("endDate");
+  //    const validationResult = Klass.checkEndDate( endDate);
+  //    if (validationResult instanceof NoConstraintViolation) {
+  //      this._endDate = endDate;
+  //    } else {
+  //      throw validationResult;
+  //    }
+  //  }
+    //all basic constraints, getters, chechers, setters of the capacity attribute
+
+  get capacity() {
+    return this._capacity;
+  };
+
+  static checkCapacity( capacity) {
+    const CAPACITY_MAX = 20;
+    if (!capacity) {
+      return new MandatoryValueConstraintViolation("A capacity must be provided!");
+    } else if (capacity === "") {
+      return new RangeConstraintViolation("The capacity must be a non-empty string!");
+    } else if (capacity > CAPACITY_MAX) {
+      return new StringLengthConstraintViolation(
+        `The value of the capacity must be at most ${CAPACITY_MAX} characters!`);
+    }
+    else {
+      return new NoConstraintViolation();
+    }
+  }
+
+  set capacity( capacity) {
+    console.log("capacity");
+    const validationResult = Klass.checkCapacity( capacity);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._capacity = capacity;
+    } else {
+      throw validationResult;
+    }
+    console.log("capacity completed");
+  }
+
+    //all basic constraints, getters, chechers, setters of the registeredMember attribute
+
+    get registeredMember() {
+      return this._registeredMember;
+    };
+  
+    static checkRegisteredMember( registeredMember) {
+      if (!registeredMember || registeredMember === "") {
+        return new MandatoryValueConstraintViolation("A registredMember value must be provided!");
+      } else {
+        return new NoConstraintViolation();
+      }
+    }
+  
+    set registeredMember( registeredMember) {
+      console.log("registredMember");
+      const validationResult = Klass.checkRegisteredMember( registeredMember);
+      if (validationResult instanceof NoConstraintViolation) {
+        this._registeredMember = registeredMember;
+      } else {
+        throw validationResult;
+      }
+    }
 
 }
 
@@ -115,7 +277,12 @@ Klass.converter = {
   toFirestore: function (klass) {
     const data = {
       klassId: klass.klassId,
-
+      klassName: klass.klassName,
+      instructor: klass.instructor,
+      startDate: klass.startDate,
+      capacity: klass.capacity,
+      registeredMember: klass.registeredMember,
+      //endDate: klass.endDate
     };
     return data;
   },
@@ -144,10 +311,10 @@ Klass.add = async function (slots) {
   } catch (e) {
     console.error(`${e.constructor.name}: ${e.message}`);
     klass = null;
-    console.log("class read");
   }
   if (klass) {
     try {
+      console.log("klass Added");
       const klassDocRef = fsDoc(fsDb, "klasses", klass.klassId).withConverter(Klass.converter);
       setDoc(klassDocRef, klass);
       console.log(`klass record "${klass.klassId}" created!`);
@@ -214,7 +381,26 @@ Klass.update = async function (slots) {
       if (validationResult instanceof NoConstraintViolation) updatedSlots.klassName = slots.klassName;
       else throw validationResult;
     }
-
+    if (klassBeforeUpdate.instructor !== slots.instructor) {
+      validationResult = Klass.checkInstructor(slots.instructor);
+      if (validationResult instanceof NoConstraintViolation) updatedSlots.instructor = slots.instructor;
+      else throw validationResult;
+    }
+    if (klassBeforeUpdate.startDate !== slots.startDate) {
+      validationResult = Klass.checkStartDate(slots.startDate);
+      if (validationResult instanceof NoConstraintViolation) updatedSlots.startDate = slots.startDate;
+      else throw validationResult;
+    }
+    if (klassBeforeUpdate.capacity !== slots.capacity) {
+      validationResult = Klass.checkCapacity(slots.capacity);
+      if (validationResult instanceof NoConstraintViolation) updatedSlots.capacity = slots.capacity;
+      else throw validationResult;
+    }
+    if (klassBeforeUpdate.registredMembers !== slots.registredMembers) {
+      validationResult = Klass.checkRegisteredMember(slots.registredMembers);
+      if (validationResult instanceof NoConstraintViolation) updatedSlots.registredMembers = slots.registredMembers;
+      else throw validationResult;
+    }
 
   } catch (e) {
     noConstraintViolated = false;

@@ -7,43 +7,43 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Klass from "../../m/Klass.mjs";
+import Schedule from "../../m/Schedule.mjs";
 
 /***************************************************************
  Load data
  ***************************************************************/
-const KlassRecords = await Klass.retrieveAll();
+const ScheduleRecords = await Schedule.retrieveAll();
 
 /***************************************************************
  Declare variables for accessing UI elements
  ***************************************************************/
-const formEl = document.forms["Klass"],
+const formEl = document.forms["Schedule"],
   deleteButton = formEl["commit"],
-  selectKlassEl = formEl["selectKlass"];
+  selectScheduleEl = formEl["selectSchedule"];
 let cancelListener = null;
 
 
 /***************************************************************
  Set up select element
  ***************************************************************/
-for (const KlassRec of KlassRecords) {
+for (const ScheduleRec of ScheduleRecords) {
   const optionEl = document.createElement("option");
-  optionEl.text = KlassRec.klassName;
-  optionEl.value = KlassRec.klassId;
-  selectKlassEl.add(optionEl, null);
+  optionEl.text = ScheduleRec.scheduleName;
+  optionEl.value = ScheduleRec.scheduleId;
+  selectScheduleEl.add(optionEl, null);
 }
 
 /*******************************************************************
  Setup listener on the selected person record synchronising DB with UI
  ******************************************************************/
 // set up listener to document changes on selected person record
-selectKlassEl.addEventListener("change", async function () {
-  const klassKey = selectKlassEl.value;
-  if (klassKey) {
+selectScheduleEl.addEventListener("change", async function () {
+  const scheduleKey = selectScheduleEl.value;
+  if (scheduleKey) {
     // cancel record listener if a previous listener exists
     if (cancelListener) cancelListener();
     // add listener to selected person, returning the function to cancel listener
-    cancelListener = await Klass.observeChanges(klassKey);
+    cancelListener = await Schedule.observeChanges(scheduleKey);
   }
 });
 
@@ -52,11 +52,11 @@ selectKlassEl.addEventListener("change", async function () {
  ******************************************************************/
 // set an event handler for the delete button
 deleteButton.addEventListener("click", async function () {
-  const klassId = selectKlassEl.value;
-  if (!klassId) return;
-  if (confirm("Do you really want to delete this Klass record?")) {
-    await Klass.destroy(klassId);
+  const scheduleId = selectScheduleEl.value;
+  if (!scheduleId) return;
+  if (confirm("Do you really want to delete this schedule record?")) {
+    await Schedule.destroy(scheduleId);
     // remove deleted Person from select options
-    selectKlassEl.remove(selectKlassEl.selectedIndex);
+    selectScheduleEl.remove(selectScheduleEl.selectedIndex);
   }
 });
