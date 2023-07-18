@@ -5,9 +5,19 @@
         "price": "240 Euro",
         "duration": 3,
         "membershipAccess": [
-            1,
-            2,
-            3
+            "1",
+            "2",
+            "3"
+        ]
+    },
+    {
+        "membershipId": "2",
+        "membershipName": "Season Plan",
+        "price": "100 Euro",
+        "duration": 3,
+        "membershipAccess": [
+            "1",
+            "3"
         ]
     }
 ]

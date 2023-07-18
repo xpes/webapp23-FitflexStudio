@@ -17,7 +17,7 @@ import { fsDb } from "../initFirebase.mjs";
 //import { doc as snfsDoc, getDoc as snGetDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import {
   collection as fsColl, deleteDoc, doc as fsDoc, getDoc, getDocs, onSnapshot,
-  orderBy, query as fsQuery, setDoc, updateDoc
+  orderBy, query as fsQuery, setDoc, updateDoc, limit, startAt
 }
   from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import { Enumeration } from "../../lib/Enumeration.mjs";
@@ -80,7 +80,7 @@ class Person {
         validationResult = new MandatoryValueConstraintViolation(
           "A value for the person ID must be provided!");
       } else {
-        const personDocSn = await getDoc(fsDoc(fsDb, "persons", personId));
+        const personDocSn = await getDoc(fsDoc(fsDb, "persons", personId.toString()));
         if (personDocSn.exists()) {
           console.log("The person ID already exist");
           validationResult = new UniquenessConstraintViolation(
@@ -96,7 +96,7 @@ class Person {
   set personId(personId) {
     var validationResult = Person.checkPersonId(personId);
     if (validationResult instanceof NoConstraintViolation) {
-      this._personId = personId;
+      this._personId = parseInt(personId);
     } else {
       throw validationResult;
     }
@@ -267,7 +267,6 @@ class Person {
     return this._role;
   }
   static checkRole(role) {
-    console.log("Max " + PersonRoleEL.MAX)
     if (role === undefined || role === "") {
       return new NoConstraintViolation();  // category is optional
     } else if (parseInt(role) < 1 || parseInt(role) > PersonRoleEL.MAX) {
@@ -294,13 +293,10 @@ class Person {
   }
   static checkTrainerId(trainerId, role) {
     console.log(trainerId + " " + role + " " + PersonRoleEL.TRAINER);
-    if (role === PersonRoleEL.TRAINER && !trainerId) {
+    if (parseInt(role) === PersonRoleEL.TRAINER && !trainerId) {
       return new MandatoryValueConstraintViolation(
         "A training ID must be provided for a Trainer!");
-    } else if (role !== PersonRoleEL.TRAINER && trainerId) {
-      return new ConstraintViolation("A training ID must not " +
-        "be provided if the role is not a Trainer!");
-    } else if (trainerId && (typeof (trainerId) !== "string" || trainerId.trim() === "")) {
+    } else if (parseInt(role) === PersonRoleEL.TRAINER && trainerId && (typeof (trainerId) !== "string" || trainerId.trim() === "")) {
       return new RangeConstraintViolation(
         "The taining ID must be a non-empty string!");
     } else {
@@ -323,13 +319,10 @@ class Person {
     return this._trainerCategory;
   }
   static checkTrainerCategory(trainerCategory, role) {
-    if (role === PersonRoleEL.TRAINER && !trainerCategory) {
+    if (parseInt(role) === PersonRoleEL.TRAINER && !trainerCategory) {
       return new MandatoryValueConstraintViolation(
         "A training category must be provided for a Trainer!");
-    } else if (role !== PersonRoleEL.TRAINER && trainerCategory) {
-      return new ConstraintViolation("A training category must not " +
-        "be provided if the role is not a Trainer!");
-    } else if (parseInt(trainerCategory) < 1 || parseInt(trainerCategory) > TrainerCategoryEL.MAX) {
+    } else if (parseInt(role) === PersonRoleEL.TRAINER && parseInt(trainerCategory) < 1 || parseInt(trainerCategory) > TrainerCategoryEL.MAX) {
       return new RangeConstraintViolation(
         "Invalid value for  trainer category: " + trainerCategory);
     } else {
@@ -352,13 +345,12 @@ class Person {
     return this._memberId;
   }
   static checkMemberId(memberId, role) {
-    if (role === PersonRoleEL.MEMBER && !memberId) {
+    console.log(memberId + " " + role);
+    console.log(parseInt(role) !== PersonRoleEL.MEMBER);
+    if (parseInt(role) === PersonRoleEL.MEMBER && !memberId) {
       return new MandatoryValueConstraintViolation(
         "A member ID must be provided for a Member!");
-    } else if (role !== PersonRoleEL.MEMBER && memberId) {
-      return new ConstraintViolation("A member ID must not " +
-        "be provided if the role is not a Member!");
-    } else if (memberId && (typeof (memberId) !== "string" || memberId.trim() === "")) {
+    } else if (parseInt(role) === PersonRoleEL.MEMBER && memberId && (typeof (memberId) !== "string" || memberId.trim() === "")) {
       return new RangeConstraintViolation(
         "The member ID must be a non-empty string!");
     } else {
@@ -381,13 +373,11 @@ class Person {
     return this._membershipType;
   }
   static checkMembershipType(membershipType, role) {
-    if (role === PersonRoleEL.MEMBER && !membershipType) {
+    console.log(membershipType + " " + role);
+    if (parseInt(role) === PersonRoleEL.MEMBER && !membershipType) {
       return new MandatoryValueConstraintViolation(
         "A membership type must be provided for a Member!");
-    } else if (role !== PersonRoleEL.MEMBER && membershipType) {
-      return new ConstraintViolation("A membership type must not " +
-        "be provided if the role is not a Member!");
-    } else if (membershipType && (typeof (membershipType) !== "string")) {
+    } else if (parseInt(role) === PersonRoleEL.MEMBER && membershipType && (typeof (membershipType) !== "string")) {
       return new RangeConstraintViolation(
         "The membership type must be non-empty!");
     } else {
@@ -431,12 +421,14 @@ Person.converter = {
     };
     if (person.role) {
       data["role"] = person.role;
-      switch (person.role) {
+      switch (parseInt(person.role)) {
         case PersonRoleEL.TRAINER:
+          console.log("Switch " + PersonRoleEL.TRAINER + " " + person.role);
           data["trainerId"] = person.trainerId;
           data["trainerCategory"] = person.trainerCategory;
           break;
         case PersonRoleEL.MEMBER:
+          console.log("Switch " + PersonRoleEL.MEMBER + " " + person.role);
           data["memberId"] = person.memberId;
           data["membershipType"] = person.membershipType;
           break;
@@ -460,7 +452,7 @@ Person.converter = {
     };
     if (person.role) {
       data["role"] = person.role;
-      switch (person.role) {
+      switch (parseInt(person.role)) {
         case PersonRoleEL.TRAINER:
           data["trainerId"] = person.trainerId;
           data["trainerCategory"] = person.trainerCategory;
@@ -489,17 +481,20 @@ Person.add = async function (slots) {
     // invoke asynchronous ID/uniqueness check
     let validationResult = await Person.checkPersonIdAsId(person.personId);
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
-    console.log("Membersip ref ID " + person.membershipType);
-    validationResult = await Membership.checkMembershipIdAsIdRef(person.membershipType);
-    console.log("completed refID check " + validationResult.message);
-    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+    if (person.role === 2) {
+      console.log("Membersip ref ID " + person.membershipType);
+      validationResult = await Membership.checkMembershipIdAsIdRef(person.membershipType);
+      console.log("completed refID check " + validationResult.message);
+      if (!validationResult instanceof NoConstraintViolation) throw validationResult.message;
+    }
   } catch (e) {
     console.error(`${e.constructor.name}: ${e.message}`);
     person = null;
   }
   if (person) {
     try {
-      const personDocRef = fsDoc(fsDb, "persons", person.personId).withConverter(Person.converter);
+      console.log(person);
+      const personDocRef = fsDoc(fsDb, "persons", person.personId.toString()).withConverter(Person.converter);
       await setDoc(personDocRef, person);
       console.log(`person record "${person.personId}" created!`);
     } catch (e) {
@@ -539,12 +534,42 @@ Person.retrieveAll = async function (order) {
     console.error(`Error retrieving person records: ${e}`);
   }
 };
+
+/**
+ * Load all person records from Firestore
+ * @param params: {object}
+ * @returns {Promise<*>} bookRecs: {array}
+ */
+Person.retrieveBlock = async function (params) {
+  try {
+    let personsCollRef = fsColl(fsDb, "persons");
+    // set limit and order in query
+    personsCollRef = fsQuery(personsCollRef, limit(5));
+    if (params.order) personsCollRef = fsQuery(personsCollRef, orderBy(params.order));
+    // set pagination "startAt" cursor
+    if (params.cursor) {
+      personsCollRef = fsQuery(personsCollRef, startAt(params.cursor));
+    }
+    const personsRecs = (await getDocs(personsCollRef
+      .withConverter(Person.converter))).docs.map(d => d.data());
+    if (personsRecs.length) {
+      console.log(`Block of persons records retrieved! (cursor: ${personsRecs[0][params.order]})`);
+    }
+    return personsRecs;
+  } catch (e) {
+    console.error(`Error retrieving all persons records: ${e}`);
+  }
+};
+
+
+
 /**
  * Update a Firestore document in the Firestore collection "persons"
  * @param slots: {object}
  * @returns {Promise<void>}
  */
 Person.update = async function (slots) {
+  console.log(slots);
   let noConstraintViolated = true,
     validationResult = null,
     personBeforeUpdate = null;
@@ -593,12 +618,45 @@ Person.update = async function (slots) {
       if (validationResult instanceof NoConstraintViolation) updatedSlots.iban = slots.iban;
       else throw validationResult;
     }
-
+    if (personBeforeUpdate.role !== slots.role) {
+      console.log("role value " + slots.role);
+      validationResult = Person.checkRole(slots.role);
+      if (validationResult instanceof NoConstraintViolation) updatedSlots.role = slots.role;
+      else throw validationResult;
+    }
+    if (slots.role === "1") {
+      if (personBeforeUpdate.trainerId !== slots.trainerId) {
+        console.log("membershipType updated " + slots.trainerId);
+        validationResult = Person.checkTrainerId(slots.trainerId, slots.role);
+        if (validationResult instanceof NoConstraintViolation) updatedSlots.trainerId = slots.trainerId;
+        else throw validationResult;
+      }
+      if (personBeforeUpdate.trainerCategory !== slots.trainerCategory) {
+        console.log("membershipType updated " + slots.trainerCategory);
+        validationResult = Person.checkTrainerCategory(slots.trainerCategory, slots.role);
+        if (validationResult instanceof NoConstraintViolation) updatedSlots.trainerCategory = slots.trainerCategory;
+        else throw validationResult;
+      }
+    } else if (slots.role === "2") {
+      if (personBeforeUpdate.memberId !== slots.memberId) {
+        console.log("membershipType updated " + slots.memberId);
+        validationResult = Person.checkMemberId(slots.memberId, slots.role);
+        if (validationResult instanceof NoConstraintViolation) updatedSlots.memberId = slots.memberId;
+        else throw validationResult;
+      }
+      if (personBeforeUpdate.membershipType !== slots.membershipType) {
+        console.log("membershipType updated " + slots.membershipType);
+        validationResult = Person.checkMembershipType(slots.membershipType, slots.role);
+        if (validationResult instanceof NoConstraintViolation) updatedSlots.membershipType = slots.membershipType;
+        else throw validationResult;
+      }
+    }
   } catch (e) {
     noConstraintViolated = false;
     console.error(`${e.constructor.name}: ${e.message}`);
   }
   if (noConstraintViolated) {
+    console.log(updatedSlots);
     const updatedProperties = Object.keys(updatedSlots);
     if (updatedProperties.length) {
       await updateDoc(personDocRef, updatedSlots);
@@ -677,4 +735,4 @@ Person.observeChanges = async function (personId) {
 }
 
 export default Person;
-export { GenderEL };
+export { GenderEL, PersonRoleEL, TrainerCategoryEL };

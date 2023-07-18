@@ -226,8 +226,112 @@ function createModalFromChange(change) {
   divModalWindowEl.classList.add("show-modal");
 }
 
+// *************** Multiple Selection Widget ****************************************
+/**
+ * Create an input/button elements combo that creates associations between a "domain
+ * object" and a "target object". This UI component checks/retrieves target objects
+ * and adds them to a list (ul element) of ID references.
+ * 1) creates an input field of "number" type, where ID references are entered,
+ * 2) creates a button that adds li elements with ID reference's data to the list (ul),
+ * 3) creates an ul element containing the association list
+ * 4) each list item includes a button allowing each item to remove itself from the
+ *    association list
+ * @param {object} formEl The container form
+ * @param {array} idRefs A map of objects, which is used to create the list of ID references
+ * @param {string} inputEl Input element's name attribute
+ * @param {string} idRefDomainName Domain object's attribute
+ * @param {string} idRefTargetName Target object's attribute
+ * @param {function} checkerMethod Method to check target object
+ * @param {function} retrieveMethod Method to retrieve data from target object
+ * @returns {Promise<void>}
+ */
+// set up event handler for adding/removing multiple ID reference to associate 2 objects
+async function createMultiSelectionWidget(formEl, idRefs, inputEl,
+  idRefDomainName, idRefTargetName,
+  checkerMethod, retrieveMethod) {
+  const widgetEl = formEl.querySelector(".MultiSelectionWidget");
+  const labelEl = document.createElement("label");
+  const inputNumEl = document.createElement("input");
+  const btnEl = document.createElement("button");
+  const listEl = document.createElement("ul");
+  inputNumEl.setAttribute("type", "number");
+  inputNumEl.setAttribute("placeholder", "Enter ID");
+  inputNumEl.setAttribute("name", "authors");
+  btnEl.textContent = "add";
+  labelEl.appendChild(inputNumEl);
+  labelEl.appendChild(btnEl);
+  labelEl.prepend("Authors: ");
+  widgetEl.appendChild(labelEl);
+  widgetEl.appendChild(listEl);
+  // setup event handler for adding a new ID reference
+  btnEl.addEventListener("click", async function () {
+    const listEl = widgetEl.children[1]; // ul
+    const idReference = formEl[inputEl].value;
+    // if new ID reference is not empty or zero
+    if (idReference && parseInt(idReference) !== 0) {
+      let responseValidation = await checkerMethod(idReference); // invoke checker
+      if (responseValidation.message) {
+        formEl[inputEl].setCustomValidity(responseValidation.message);
+      } else { // if checker passes
+        // check if new ID reference has been already added
+        const listOfIdRefs = getListOfIdRefs(listEl),
+          alreadyAdded = !!listOfIdRefs
+            .find(a => a[idRefDomainName] === parseInt(idReference));
+        if (!alreadyAdded) { // if new ID reference has not yet added
+          formEl[inputEl].setCustomValidity("");
+          // retrieve target object
+          const targetObjt = await retrieveMethod(idReference);
+          // if target object is retrieved successfully, add ID reference to list
+          if (targetObjt) {
+            listEl.appendChild(addItemToListOfSelectedItems(targetObjt, idRefTargetName, "added"));
+            formEl[inputEl].value = "";
+            formEl[inputEl].focus();
+          }
+        } else { // if ID reference was already added
+          formEl[inputEl].setCustomValidity("ID reference has been already added!");
+        }
+      }
+    } else { // clear form if ID reference is not allowed
+      formEl[inputEl].value = "";
+    }
+  });
+  // setup event handler for removing an ID reference from list
+  listEl.addEventListener("click", function (e) {
+    if (e.target.tagName === "BUTTON") {  // delete button
+      const btnEl = e.target,
+        listItemEl = btnEl.parentNode;
+      if (listItemEl.classList.contains("removed")) {
+        // undoing a previous removal
+        listItemEl.classList.remove("removed");
+        // change button text
+        btnEl.textContent = "✕";
+      } else if (listItemEl.classList.contains("added")) {
+        listItemEl.remove();
+      } else {
+        // removing an ordinary item
+        listItemEl.classList.add("removed");
+        // change button text
+        btnEl.textContent = "undo";
+      }
+    }
+  });
+  // fill loaded target ID references with
+  if (idRefs.length) {
+    for (const aId of idRefs) {
+      const listEl = widgetEl.children[1];
+      listEl.appendChild(addItemToListOfSelectedItems(aId, "id"));
+    }
+  }
+  /** get references of associated objects from list **/
+  function getListOfIdRefs(listEl) {
+    const listItemEls = Array.from(listEl.children);
+    return listItemEls.map(a => JSON.parse(a.getAttribute("data-value")));
+  }
+}
+
+
 export {
-  isNonEmptyString, isIntegerOrIntegerString, createOption,
+  isNonEmptyString, isIntegerOrIntegerString, createOption, createMultiSelectionWidget,
   fillSelectWithOptions, createChoiceWidget, showProgressBar, hideProgressBar,
   createModalFromChange
 };

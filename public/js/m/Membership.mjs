@@ -10,13 +10,13 @@
  */
 import { fsDb } from "../initFirebase.mjs";
 import {
-    collection as fsColl, deleteDoc, doc as fsDoc, getDoc, getDocs, onSnapshot,
-    orderBy, query as fsQuery, setDoc, updateDoc
+    collection as fsColl, doc as fsDoc, getDoc, getDocs, orderBy, onSnapshot,
+    query as fsQuery, setDoc, updateDoc, where, writeBatch, deleteField
 }
     from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import { Enumeration } from "../../lib/Enumeration.mjs";
 import {
-    NoConstraintViolation, MandatoryValueConstraintViolation, IntervalConstraintViolation,
+    NoConstraintViolation, MandatoryValueConstraintViolation, ReferentialIntegrityConstraintViolation,
     RangeConstraintViolation, UniquenessConstraintViolation, StringLengthConstraintViolation
 } from "../../lib/errorTypes.mjs";
 
@@ -279,6 +279,32 @@ Membership.retrieveAll = async function (order) {
         console.error(`Error retrieving membership records: ${e}`);
     }
 };
+
+/**
+ * Load all membership records from Firestore
+ * @param params: {object}
+ * @returns {Promise<*>} memberRecs: {array}
+ */
+Membership.retrieveBlock = async function (params) {
+    try {
+        let membershipsCollRef = fsColl(fsDb, "memberships");
+        // set limit and order in query
+        membershipsCollRef = fsQuery(membershipsCollRef, limit(21));
+        if (params.order) membershipsCollRef = fsQuery(membershipsCollRef, orderBy(params.order));
+        // set pagination "startAt" cursor
+        if (params.cursor) {
+            membershipsCollRef = fsQuery(membershipsCollRef, startAt(params.cursor));
+        }
+        const membershipRecs = (await getDocs(membershipsCollRef
+            .withConverter(Membership.converter))).docs.map(d => d.data());
+        if (membershipRecs.length) {
+            console.log(`Block of book records retrieved! (cursor: ${membershipRecs[0][params.order]})`);
+        }
+        return membershipRecs;
+    } catch (e) {
+        console.error(`Error retrieving all book records: ${e}`);
+    }
+};
 /**
  * Update a Firestore document in the Firestore collection "memberships"
  * @param slots: {object}
@@ -288,10 +314,10 @@ Membership.update = async function (slots) {
     let noConstraintViolated = true,
         validationResult = null,
         membershipBeforeUpdate = null;
-    const membershipDocRef = fsDoc(fsDb, "memberships", slots.membershipId).withConverter(memberhip.converter),
+    const membershipDocRef = fsDoc(fsDb, "memberships", slots.membershipId).withConverter(Membership.converter),
         updatedSlots = {};
     try {
-        // retrieve up-to-date book record
+        // retrieve up-to-date membership record
         const membershipDocSn = await getDoc(membershipDocRef);
         membershipBeforeUpdate = membershipDocSn.data();
     } catch (e) {
@@ -299,38 +325,23 @@ Membership.update = async function (slots) {
     }
     try {
         if (membershipBeforeUpdate.membershipName !== slots.membershipName) {
-            validationResult = Membership.checkPersonName(slots.membershipName);
+            validationResult = Membership.checkMembershipName(slots.membershipName);
             if (validationResult instanceof NoConstraintViolation) updatedSlots.membershipName = slots.membershipName;
             else throw validationResult;
         }
-        if (membershipBeforeUpdate.gender !== slots.gender) {
-            validationResult = Membership.checkGender(slots.gender);
-            if (validationResult instanceof NoConstraintViolation) updatedSlots.gender = slots.gender;
+        if (membershipBeforeUpdate.price !== slots.price) {
+            validationResult = Membership.checkPrice(slots.price);
+            if (validationResult instanceof NoConstraintViolation) updatedSlots.price = slots.price;
             else throw validationResult;
         }
-        if (membershipBeforeUpdate.birthDate !== slots.birthDate) {
-            validationResult = Membership.checkBirthDate(slots.birthDate);
-            if (validationResult instanceof NoConstraintViolation) updatedSlots.birthDate = slots.birthDate;
+        if (membershipBeforeUpdate.duration !== slots.duration) {
+            validationResult = Membership.checkDuration(slots.duration);
+            if (validationResult instanceof NoConstraintViolation) updatedSlots.duration = slots.duration;
             else throw validationResult;
         }
-        if (membershipBeforeUpdate.email !== slots.email) {
-            validationResult = Membership.checkEmail(slots.email);
-            if (validationResult instanceof NoConstraintViolation) updatedSlots.email = slots.email;
-            else throw validationResult;
-        }
-        if (membershipBeforeUpdate.phoneNumber !== slots.phoneNumber) {
-            validationResult = Membership.checkPhoneNumber(slots.phoneNumber);
-            if (validationResult instanceof NoConstraintViolation) updatedSlots.phoneNumber = slots.phoneNumber;
-            else throw validationResult;
-        }
-        if (membershipBeforeUpdate.address !== slots.address) {
-            validationResult = Membership.checkAddress(slots.address);
-            if (validationResult instanceof NoConstraintViolation) updatedSlots.address = slots.address;
-            else throw validationResult;
-        }
-        if (membershipBeforeUpdate.iban !== slots.iban) {
-            validationResult = Membership.checkIban(slots.iban);
-            if (validationResult instanceof NoConstraintViolation) updatedSlots.iban = slots.iban;
+        if (membershipBeforeUpdate.membershipAccess !== slots.membershipAccess) {
+            validationResult = Membership.checkMembershipAccess(slots.membershipAccess);
+            if (validationResult instanceof NoConstraintViolation) updatedSlots.membershipAccess = slots.membershipAccess;
             else throw validationResult;
         }
 
@@ -354,23 +365,24 @@ Membership.update = async function (slots) {
  * @returns {Promise<void>}
  */
 Membership.destroy = async function (membershipId) {
-    const personsCollRef = fsColl(fsDb, "persons"),
-        q = fsQuery(personsCollRef, where("membershipType", "==", membershipId)),
+    const membersCollRef = fsColl(fsDb, "persons"),
+        q = await fsQuery(membersCollRef, where("membershipType", "==", membershipId)),
         membershipDocRef = fsDoc(fsColl(fsDb, "memberships"), membershipId);
     try {
-        const personQrySns = (await getDocs(q)),
+        const membersQrySns = (await getDocs(q)),
             batch = writeBatch(fsDb); // initiate batch write
-        // iterate and delete associations with book records
-        await Promise.all(personQrySns.docs.map(d => {
-            batch.update(fsDoc(personsCollRef, d.id), {
+        // iterate ID references (foreign keys) of master class objects (books) and
+        // update derived inverse reference property
+        await Promise.all(membersQrySns.docs.map(d => {
+            batch.update(fsDoc(membersCollRef, d.id), {
                 membershipType: deleteField()
             });
         }));
         batch.delete(membershipDocRef); // delete publisher record
-        batch.commit(); // finish batch write
-        console.log(`Membership record "${membershipId}" deleted!`);
+        await batch.commit(); // finish batch write
+        console.log(`membership record "${membershipId}" deleted!`);
     } catch (e) {
-        console.error(`Error deleting Membership record: ${e}`);
+        console.error(`Error deleting membership record: ${e}`);
     }
 };
 /*******************************************
@@ -382,7 +394,7 @@ Membership.destroy = async function (membershipId) {
 Membership.generateTestData = async function () {
     try {
         console.log("Generating test data...");
-        const response = await fetch("../../test-data/memberships.json");
+        const response = await fetch("../../test-data/membership.json");
         const membershipRecs = await response.json();
         await Promise.all(membershipRecs.map(d => Membership.add(d)));
         console.log(`${membershipRecs.length} memberships saved.`);

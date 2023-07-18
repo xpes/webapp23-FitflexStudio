@@ -4,6 +4,7 @@
  */
 import Person from "../m/Person.mjs";
 import Klass from "../m/Klass.mjs";
+import Membership from "../m/Membership.mjs";
 
 /*******************************************
  *** Auxiliary methods for testing **********
@@ -17,6 +18,7 @@ function generateTestData() {
     console.log("In generate data clicked");
     Person.generateTestData();
     Klass.generateTestData();
+    Membership.generateTestData();
   } catch (e) {
     console.log(`${e.constructor.name}: ${e.message}`);
   }
@@ -29,6 +31,7 @@ function clearData() {
     try {
       Person.clearData(false);
       Klass.clearData(false);
+      Membership.clearData();
       console.log("All data cleared.");
     } catch (e) {
       console.log(`${e.constructor.name}: ${e.message}`);
@@ -36,4 +39,33 @@ function clearData() {
   }
 }
 
-export { generateTestData, clearData };
+/**
+ *  Undisplay all form fields classified with a Book segment name
+ *  from BookCategoryEL.labels
+ */
+function undisplayAllSegmentFields(domNode, segmentNames) {
+  if (!domNode) domNode = document;  // normally invoked for a form element
+  for (const segmentName of segmentNames) {
+    const fields = domNode.getElementsByClassName(segmentName);
+    for (const el of fields) {
+      el.style.display = "none";
+    }
+  }
+}
+/**
+ *  Display the form fields classified with a Book segment name
+ *  from BookCategoryEL.labels
+ */
+function displaySegmentFields(domNode, segmentNames, segmentIndex) {
+  if (!domNode) domNode = document;  // normally invoked for a form element
+  for (let i = 0; i < segmentNames.length; i++) {
+    const fields = domNode.getElementsByClassName(segmentNames[i]);
+    for (const el of fields) {
+      el.style.display = (i === segmentIndex - 1) ? "block" : "none";
+    }
+  }
+}
+
+
+
+export { generateTestData, clearData, undisplayAllSegmentFields, displaySegmentFields };
