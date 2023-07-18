@@ -30,5 +30,5 @@
    row.insertCell().textContent = KlassRec.instructor;
    row.insertCell().textContent = KlassRec.startDate;
    row.insertCell().textContent = KlassRec.capacity;
-   row.insertCell().textContent = KlassRec.registeredMember;
+   //row.insertCell().textContent = KlassRec.registeredMember;
  }

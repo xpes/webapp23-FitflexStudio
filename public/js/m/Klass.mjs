@@ -145,13 +145,13 @@ class Klass {
      return this._instructor;
    };
    
-   static checkInstructor( instructor) {
-     if (!instructor || instructor === "") {
-       return new MandatoryValueConstraintViolation("An instructor value must be provided!");
-     } else {
-       return new NoConstraintViolation();
-     }
-   }
+  //  static checkInstructor( instructor) {
+  //    if (!instructor || instructor === "") {
+  //      return new MandatoryValueConstraintViolation("An instructor value must be provided!");
+  //    } else {
+  //      return new NoConstraintViolation();
+  //    }
+  //  }
    
    set Instructor( instructor) {
      const validationResult = Klass.checkInstructor( instructor);
@@ -282,7 +282,7 @@ Klass.converter = {
       startDate: klass.startDate,
       capacity: klass.capacity,
       registeredMember: klass.registeredMember,
-      //endDate: klass.endDate
+
     };
     return data;
   },

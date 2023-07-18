@@ -43,7 +43,7 @@
  });
  
  formEl["capacity"].addEventListener("input", function () {
-   formEl["capacity"].setCustomValidity(Klass.checkCapability(formEl["capacity"].value).message);
+   formEl["capacity"].setCustomValidity(Klass.checkCapacity(formEl["capacity"].value).message);
    formEl["capacity"].reportValidity();
  });
  formEl["registeredMember"].addEventListener("input", function () {

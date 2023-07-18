@@ -34,10 +34,10 @@ formEl["klassName"].addEventListener("input", function () {
     formEl["klassName"].setCustomValidity(Klass.checkKlassName(formEl["klassName"].value).message);
     formEl["klassName"].reportValidity();
 });
-formEl["instructor"].addEventListener("input", function () {
-    formEl["instructor"].setCustomValidity(Klass.checkInstructor(formEl["instructor"].value).message);
-    formEl["instructor"].reportValidity();
-});
+// formEl["instructor"].addEventListener("input", function () {
+//     formEl["instructor"].setCustomValidity(Klass.checkInstructor(formEl["instructor"].value).message);
+//     formEl["instructor"].reportValidity();
+// });
 formEl["startDate"].addEventListener("input", function () {
     formEl["startDate"].setCustomValidity(Klass.checkStartDate(formEl["startDate"].value).message);
     formEl["startDate"].reportValidity();
@@ -50,9 +50,6 @@ formEl["registeredMember"].addEventListener("input", function () {
     formEl["registeredMember"].setCustomValidity(Klass.checkRegisteredMember(formEl["registeredMember"].value).message);
     formEl["registeredMember"].reportValidity();
 });
-
-
-
 
 /******************************************************************
  Add event listeners for the create/submit button
@@ -71,7 +68,7 @@ createButton.addEventListener("click", async function () {
     showProgressBar(progressEl);
     formEl["klassId"].setCustomValidity((await Klass.checkKlassIdAsId(slots.klassId)).message);
     formEl["klassName"].setCustomValidity(Klass.checkKlassName(slots.klassName).message);
-    formEl["instructor"].setCustomValidity(Klass.checkInstructor(slots.gender).message);
+    //formEl["instructor"].setCustomValidity(Klass.checkInstructor(slots.instructor).message);
     formEl["startDate"].setCustomValidity(Klass.checkStartDate(slots.startDate).message);
     formEl["capacity"].setCustomValidity(Klass.checkCapacity(slots.capacity).message);
     formEl["registeredMember"].setCustomValidity(Klass.checkRegisteredMember(slots.registeredMember).message);
