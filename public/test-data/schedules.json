@@ -1,0 +1,183 @@
+[
+  {
+    "scheduleId": "1",
+    "klassName1": "boxing",
+    "instructor1": "Franke jirak",
+    "scheduleWeek": "5",
+    "scheduleTime": "18h-20h",
+    "duration": "2h"
+
+  },
+  {
+    "scheduleId": "2",
+    "klassName1": "yoga",
+    "instructor1": "Michelle Putz",
+    "scheduleWeek": "3",
+    "scheduleTime": "07h-08h",
+    "duration": "1h"
+
+  },
+  {
+    "scheduleId": "3",
+    "klassName1": "yoga",
+    "instructor1": "Michelle Putz",
+    "scheduleWeek": "7",
+    "scheduleTime": "07h-08h",
+    "duration": "1h"
+
+  },
+  {
+    "scheduleId": "4",
+    "klassName1": "boxing",
+    "instructor1": "Franke jirak",
+    "scheduleWeek": "2",
+    "scheduleTime": "19h-21h",
+    "duration": "2h"
+
+  },
+  {
+    "scheduleId": "5",
+    "klassName1": "karate",
+    "instructor1": "Jolina puznik",
+    "scheduleWeek": "7",
+    "scheduleTime": "14h-15h30",
+    "duration": "1h30"
+
+  },
+  {
+    "scheduleId": "6",
+    "klassName1": "karate",
+    "instructor1": "Jolina puznik",
+    "scheduleWeek": "5",
+    "scheduleTime": "19h-20h30",
+    "duration": "1h30"
+
+  },
+  {
+    "scheduleId": "7",
+    "klassName1": "karate",
+    "instructor1": "Jolina puznik",
+    "scheduleWeek": "3",
+    "scheduleTime": "20h-21h30",
+    "duration": "1h30"
+
+  },
+  {
+    "scheduleId": "8",
+    "klassName1": "yoga",
+    "instructor1": "Michelle Putz",
+    "scheduleWeek": "1",
+    "scheduleTime": "07h30-08h30",
+    "duration": "1h"
+
+  },
+  {
+    "scheduleId": "9",
+    "klassName1": "zumba",
+    "instructor1": "Jolina puznik",
+    "scheduleWeek": "1",
+    "scheduleTime": "19h30-20h30",
+    "duration": "1h"
+
+  },
+
+  {
+    "scheduleId": "10",
+    "klassName1": "zumba",
+    "instructor1": "Jolina puznik",
+    "scheduleWeek": "2",
+    "scheduleTime": "21h30-22h30",
+    "duration": "1h"
+
+  },
+
+  {
+    "scheduleId": "11",
+    "klassName1": "zumba",
+    "instructor1": "Jolina puznik",
+    "scheduleWeek": "5",
+    "scheduleTime": "21h-22h",
+    "duration": "1h"
+  },
+
+  {
+    "scheduleId": "12",
+    "klassName1": "konguJump",
+    "instructor1": "Tiffany dietmart",
+    "scheduleWeek": "4",
+    "scheduleTime": "20h-21h",
+    "duration": "1h"
+  },
+  {
+    "scheduleId": "13",
+    "klassName1": "konguJump",
+    "instructor1": "Tiffany dietmart",
+    "scheduleWeek": "6",
+    "scheduleTime": "19h-20h",
+    "duration": "1h"
+  },
+
+  {
+    "scheduleId": "14",
+    "klassName1": "konguJump",
+    "instructor1": "Tiffany dietmart",
+    "scheduleWeek": "2",
+    "scheduleTime": "20h-21h",
+    "duration": "1h"
+  },
+
+  {
+    "scheduleId": "15",
+    "klassName1": "bbb",
+    "instructor1": "Tiffany dietmart",
+    "scheduleWeek": "1",
+    "scheduleTime": "21h-22h",
+    "duration": "1h"
+  },
+
+  {
+    "scheduleId": "16",
+    "klassName1": "bbb",
+    "instructor1": "Tiffany dietmart",
+    "scheduleWeek": "3",
+    "scheduleTime": "20h-21h",
+    "duration": "1h"
+  },
+
+  {
+    "scheduleId": "17",
+    "klassName1": "bbb",
+    "instructor1": "Tiffany dietmart",
+    "scheduleWeek": "7",
+    "scheduleTime": "18h-19h",
+    "duration": "1h"
+  },
+
+  {
+    "scheduleId": "18",
+    "klassName1": "karate",
+    "instructor1": "Jolina puznik",
+    "scheduleWeek": "2",
+    "scheduleTime": "21h-22h",
+    "duration": "1h"
+  },
+
+  {
+    "scheduleId": "19",
+    "klassName1": "zumba",
+    "instructor1": "Jolina puznik",
+    "scheduleWeek": "5",
+    "scheduleTime": "20h-21h",
+    "duration": "1h"
+  },
+
+  {
+    "scheduleId": "20",
+    "klassName1": "yoga",
+    "instructor1": "Michelle Putz",
+    "scheduleWeek": "4",
+    "scheduleTime": "20h-21h",
+    "duration": "1h"
+  }
+
+]

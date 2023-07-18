@@ -28,25 +28,30 @@ const formEl = document.forms["Klass"],
 formEl["klassId"].addEventListener("input", function () {
     // do not yet check the ID constraint, only before commit
     formEl["klassId"].setCustomValidity(Klass.checkKlassId(formEl["klassId"].value).message);
+    formEl["klassId"].reportValidity();
 });
 formEl["klassName"].addEventListener("input", function () {
     formEl["klassName"].setCustomValidity(Klass.checkKlassName(formEl["klassName"].value).message);
+    formEl["klassName"].reportValidity();
 });
 formEl["instructor"].addEventListener("input", function () {
     formEl["instructor"].setCustomValidity(Klass.checkInstructor(formEl["instructor"].value).message);
+    formEl["instructor"].reportValidity();
 });
 formEl["startDate"].addEventListener("input", function () {
     formEl["startDate"].setCustomValidity(Klass.checkStartDate(formEl["startDate"].value).message);
-});
-formEl["endDate"].addEventListener("input", function () {
-    formEl["endDate"].setCustomValidity(Klass.checkEndDate(formEl["endDate"].value).message);
+    formEl["startDate"].reportValidity();
 });
 formEl["capacity"].addEventListener("input", function () {
     formEl["capacity"].setCustomValidity(Klass.checkCapacity(formEl["capacity"].value).message);
+    formEl["capacity"].reportValidity();
 });
-formEl["registeredMembers"].addEventListener("input", function () {
-    formEl["registeredMembers"].setCustomValidity(Klass.checkRegisteredMembers(formEl["registeredMembers"].value).message);
+formEl["registeredMember"].addEventListener("input", function () {
+    formEl["registeredMember"].setCustomValidity(Klass.checkRegisteredMember(formEl["registeredMember"].value).message);
+    formEl["registeredMember"].reportValidity();
 });
+
+
 
 
 /******************************************************************
@@ -58,23 +63,21 @@ createButton.addEventListener("click", async function () {
         klassName: formEl["klassName"].value,
         instructor: formEl["instructor"].value,
         startDate: formEl["startDate"].value,
-        endDate: formEl["endDate"].value,
-        capaity: formEl["capacity"].value,
+        capacity: formEl["capacity"].value,
         registeredMember: formEl["registeredMember"].value,
 
     };
     // check constraints and set error messages
     showProgressBar(progressEl);
     formEl["klassId"].setCustomValidity((await Klass.checkKlassIdAsId(slots.klassId)).message);
-    formEl["klassName"].setCustomValidity(Klass.checkPersonName(slots.klassName).message);
-    formEl["instructor"].setCustomValidity(Klass.checkGender(slots.gender).message);
-    formEl["birthDate"].setCustomValidity(Person.checkBirthDate(slots.birthDate).message);
-    formEl["email"].setCustomValidity(Person.checkEmail(slots.email).message);
-    formEl["phoneNumber"].setCustomValidity(Person.checkPhoneNumber(slots.phoneNumber).message);
-    formEl["address"].setCustomValidity(Person.checkAddress(slots.address).message);
-    formEl["IBAN"].setCustomValidity(Person.checkIban(slots.iban).message);
+    formEl["klassName"].setCustomValidity(Klass.checkKlassName(slots.klassName).message);
+    formEl["instructor"].setCustomValidity(Klass.checkInstructor(slots.gender).message);
+    formEl["startDate"].setCustomValidity(Klass.checkStartDate(slots.startDate).message);
+    formEl["capacity"].setCustomValidity(Klass.checkCapacity(slots.capacity).message);
+    formEl["registeredMember"].setCustomValidity(Klass.checkRegisteredMember(slots.registeredMember).message);
+
     if (formEl.checkValidity()) {
-        await Person.add(slots);
+        await Klass.add(slots);
         formEl.reset();
     }
     hideProgressBar(progressEl);

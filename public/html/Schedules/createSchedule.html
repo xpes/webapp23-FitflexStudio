@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>FitFlexStudio: Create Schedule</title>
+  <link rel="stylesheet" href="../../css/normalize.css" />
+  <link rel="stylesheet" href="../../css/main.css" />
+  <script src="../../js/v/Schedules/createSchedule.mjs" type="module"></script>
+</head>
+
+<body>
+  <header>
+    <div class="wrapper clearfix">
+      <div class="title">
+        <h1>Create a new schedule record</h1>
+      </div>
+      <div id="login-management" hidden="hidden"></div>
+      <nav>
+        <ul>
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="schedules.html">Person</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="wrapper clearfix">
+      <form id="Schedule">
+        <div><label>Schedule Id: <input name="scheduleId" /></label></div>
+        <div><label>Class Name: <input name="klassName1" /></label></div>
+        <div><label>Instructor: <input name="instructor1"></input></label></div>
+        <div><label>Schedule Week: <select name="scheduleWeek"/></select></div>
+        <div><label>Schedule Time: <input name="scheduleTime"/></input></div>
+        <div><label>Duration: <input name="duration" /></label></div>
+
+        <div>
+          <button name="commit" type="button">Create</button>
+          <progress hidden="hidden" max="100">%</progress>
+        </div>
+      </form>
+    </div>
+  </main>
+  <br>
+  <footer>
+    <div class="wrapper clearfix">
+      <a href="schedules.html">« Back to schedule management</a>
+    </div>
+  </footer>
+</body>
+
+</html>
