@@ -28,7 +28,6 @@ const previousBtnEl = document.getElementById("previousPage"),
   nextBtnEl = document.getElementById("nextPage");
 startAtRefs.push(cursor);
 previousBtnEl.disabled = true;
-//const MembershipRecords = await Membership.retrieveAll();
 
 /**
  * "Previous" button

@@ -42,11 +42,17 @@ const WeekEL = new Enumeration({ "Mon": "Monday", "Tue": "Tuesday", "Wed": "Wedn
 
 class Schedule {
   // record parameter with the ES6 syntax for function parameter destructuring
-  constructor({ scheduleId, klassId, klassName, instructor, scheduleWeek, scheduleTime, duration }) {
+  constructor({ scheduleId, klassId, klassName, startDate, endDate, instructor, scheduleWeek, scheduleTime, duration }) {
     this.scheduleId = scheduleId;
     if (klassId) this.klassId = klassId;
     if (klassName || klassId) {
        this.klassName = klassName;
+    }
+    if (startDate || klassId) {
+      this.startDate = startDate;
+    }
+    if (endDate || klassId) {
+      this.endDate = endDate;
     }
     if (instructor || klassId) {
       this.instructor = instructor;
@@ -163,6 +169,58 @@ class Schedule {
       }
     }
 
+    //all basic constraints, getters, chechers, setters of the personName attribute
+  get startDate() {
+    return this._startDate;
+  };
+
+  static checkStartDate(startDate) {
+    
+    if (!startDate) {
+      return new MandatoryValueConstraintViolation("A class name must be provided!");
+    } else if (startDate === "") {
+      return new RangeConstraintViolation("The name must be a non-empty string!");
+    } else {
+      return new NoConstraintViolation();
+    }
+  }
+
+  set startDate(startDate) {
+    console.log("startDate");
+    const validationResult = Schedule.checkStartDate(startDate);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._startDate = startDate;
+    } else {
+      throw validationResult;
+    }
+  }
+
+      //all basic constraints, getters, chechers, setters of the personName attribute
+
+  get endDate() {
+    return this._endDate;
+  };
+
+  static checkEndDate(endDate) {
+    
+    if (!endDate) {
+      return new MandatoryValueConstraintViolation("A class name must be provided!");
+    } else if (endDate === "") {
+      return new RangeConstraintViolation("The name must be a non-empty string!");
+    } else {
+      return new NoConstraintViolation();
+    }
+  }
+
+  set endDate(endDate) {
+    console.log("endDate");
+    const validationResult = Schedule.checkEndDate(endDate);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._endDate = endDate;
+    } else {
+      throw validationResult;
+    }
+  }
   //all basic constraints, getters, chechers, setters of the instructor attribute
 
    get Instructor() {
@@ -240,7 +298,7 @@ class Schedule {
   }
 
   set duration(duration) {
-    console.log("duration");
+    //console.log("duration");
     const validationResult = Schedule.checkDuration (duration);
     if (validationResult instanceof NoConstraintViolation) {
       this._duration = duration;
@@ -260,6 +318,8 @@ Schedule.converter = {
     const data = {
       scheduleId: schedule.scheduleId,
       klassName: schedule.klassName,
+      startDate: schedule.startDate,
+      endDate: schedule.endDate,
       instructor: schedule.instructor,
       scheduleWeek: schedule.scheduleWeek,
       scheduleTime: schedule.scheduleTime,
@@ -273,6 +333,8 @@ Schedule.converter = {
     const data = {
       scheduleId: schedule.scheduleId,
       klassName: schedule.klassName,
+      startDate: schedule.startDate,
+      endDate: schedule.endDate,
       instructor: schedule.instructor,
       scheduleWeek: schedule.scheduleWeek,
       scheduleTime: schedule.scheduleTime,
@@ -298,12 +360,31 @@ Schedule.add = async function (slots) {
     console.log(`schedule creating new schedule ` + slots);
     // invoke asynchronous ID/uniqueness check
     let validationResult = await Schedule.checkScheduleIdAsId(Schedule.scheduleId);
+
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
     validationResult = await Klass.checkKlassId(Klass.klassId);
+
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
     validationResult = await Klass.checkKlassName(Klass.klassName);
+
+    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+    validationResult = await Klass.checkStartDate(Klass.startDate);
+
+    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+    validationResult = await Klass.checkEndDate(Klass.endDate);
+
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
     validationResult = await Klass.checkInstructor(Klass.instructor);
+
+    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+    validationResult = await Klass.checkScheduleWeek(Klass.scheduleWeek);
+
+    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+    validationResult = await Klass.checkScheduleTime(Klass.scheduleTime);
+
+    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+    validationResult = await Klass.checkDuration(Klass.duration);
+
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
   } catch (e) {
     console.error(`${e.constructor.name}: ${e.message}`);
@@ -357,6 +438,27 @@ Schedule.retrieveAll = async function (order) {
   }
 };
 
+Schedule.retrieveBlock = async function (params) {
+  try {
+    let schedulesCollRef = fsColl(fsDb, "schedules");
+    // set limit and order in query
+    schedulesCollRef = fsQuery(schedulesCollRef, limit(5));
+    if (params.order) schedulesCollRef = fsQuery(schedulesCollRef, orderBy(params.order));
+    // set pagination "startAt" cursor
+    if (params.cursor) {
+      schedulesCollRef = fsQuery(schedulesCollRef, startAt(params.cursor));
+    }
+    const schedulesRecs = (await getDocs(schedulesCollRef
+      .withConverter(Schedule.converter))).docs.map(d => d.data());
+    if (schedulesRecs.length) {
+      console.log(`Block of schedule records retrieved! (cursor: ${schedulesRecs[0][params.order]})`);
+    }
+    return schedulesRecs;
+  } catch (e) {
+    console.error(`Error retrieving all schedules records: ${e}`);
+  }
+};
+
 /**
  * Update a Firestore document in the Firestore collection "persons"
  * @param slots: {object}
@@ -379,6 +481,16 @@ Schedule.update = async function (slots) {
     if (scheduleBeforeUpdate.klassName !== slots.klassName) {
       validationResult = Schedule.checkKlassName(slots.klassName);
       if (validationResult instanceof NoConstraintViolation) updatedSlots.klassName = slots.klassName;
+      else throw validationResult;
+    }
+    if (scheduleBeforeUpdate.startDate !== slots.startDate) {
+      validationResult = Schedule.checkStartDate(slots.startDate);
+      if (validationResult instanceof NoConstraintViolation) updatedSlots.klassName = slots.klassName;
+      else throw validationResult;
+    }
+    if (scheduleBeforeUpdate.endDate !== slots.endDate) {
+      validationResult = Schedule.checkEndDate(slots.endDate);
+      if (validationResult instanceof NoConstraintViolation) updatedSlots.endDate = slots.endDate;
       else throw validationResult;
     }
     if (scheduleBeforeUpdate.instructor !== slots.instructor) {

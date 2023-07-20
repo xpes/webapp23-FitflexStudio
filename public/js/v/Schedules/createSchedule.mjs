@@ -34,10 +34,21 @@ formEl["scheduleId"].addEventListener("input", function () {
 });
 
 
-
 formEl["klassName"].addEventListener("input", function () {
     formEl["klassName"].setCustomValidity(Schedule.checkKlassName(formEl["klassName"].value).message);
     formEl["klassName"].reportValidity();
+});
+
+
+formEl["startDate"].addEventListener("input", function () {
+    formEl["startDate"].setCustomValidity(Schedule.checkStartDate(formEl["startDate"].value).message);
+    formEl["startDate"].reportValidity();
+});
+
+
+formEl["endDate"].addEventListener("input", function () {
+    formEl["endDate"].setCustomValidity(Schedule.checkEndDate(formEl["endDate"].value).message);
+    formEl["endDate"].reportValidity();
 });
 
 formEl["instructor"].addEventListener("input", function () {
@@ -67,8 +78,9 @@ Add event listeners for the create/submit button
 createButton.addEventListener("click", async function () {
 const slots = {
     scheduleId: formEl["scheduleId"].value,
-    //klassId: formEl["klassId"].value,
     klassName: formEl["klassName"].value,
+    startDate: formEl["startDate"].value,
+    endDate: formEl["endDate"].value,
     instructor: formEl["instructor"].value,
     scheduleWeek: formEl["scheduleWeek"].value,
     scheduleTime: formEl["scheduleTime"].value,
@@ -80,6 +92,8 @@ formEl["scheduleId"].setCustomValidity((await Schedule.checkScheduleIdAsId(slots
 formEl["scheduleId"].reportValidity();
 //formEl["klassId"].setCustomValidity(Schedule.checkKlassId(slots.klassId).message);
 formEl["klassName"].setCustomValidity(Schedule.checkKlassName(slots.klassName).message);
+formEl["startDate"].setCustomValidity(Schedule.checkStartDate(slots.startDate).message);
+formEl["endDate"].setCustomValidity(Schedule.checkEndDate(slots.endDate).message);
 formEl["instructor"].setCustomValidity(Schedule.checkInstructor(slots.instructor).message);
 formEl["scheduleWeek"].setCustomValidity(Schedule.checkScheduleWeek(slots.scheduleWeek).message);
 formEl["scheduleTime"].setCustomValidity(Schedule.checkScheduleTime(slots.scheduleTime).message);
