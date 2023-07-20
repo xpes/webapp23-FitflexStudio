@@ -11,7 +11,10 @@
  import Schedule, { WeekEL } from "../../m/Schedule.mjs";
  import { fillSelectWithOptions } from "../../../lib/util.mjs";
  import { showProgressBar, hideProgressBar } from "../../../lib/util.mjs";
+ import klass from "../../m/Klass.mjs";
  
+ const KlassRecords = await klass.retrieveAll();
+
  /***************************************************************
  Declare variables for accessing UI elements
  ***************************************************************/
@@ -29,14 +32,17 @@ formEl["scheduleId"].addEventListener("input", function () {
     formEl["scheduleId"].setCustomValidity(Schedule.checkScheduleId(formEl["scheduleId"].value).message);
     formEl["scheduleId"].reportValidity();
 });
-formEl["klassName1"].addEventListener("input", function () {
-    formEl["klassName1"].setCustomValidity(Schedule.checkKlassName1(formEl["klassName1"].value).message);
-    formEl["klassName1"].reportValidity();
+
+
+
+formEl["klassName"].addEventListener("input", function () {
+    formEl["klassName"].setCustomValidity(Schedule.checkKlassName(formEl["klassName"].value).message);
+    formEl["klassName"].reportValidity();
 });
 
-formEl["instructor1"].addEventListener("input", function () {
-    formEl["instructor1"].setCustomValidity(Schedule.checkInstructor1(formEl["instructor1"].value).message);
-    formEl["instructor1"].reportValidity();
+formEl["instructor"].addEventListener("input", function () {
+    formEl["instructor"].setCustomValidity(Schedule.checkInstructor(formEl["instructor"].value).message);
+    formEl["instructor"].reportValidity();
 });
 
 formEl["scheduleWeek"].addEventListener("input", function () {
@@ -61,6 +67,7 @@ Add event listeners for the create/submit button
 createButton.addEventListener("click", async function () {
 const slots = {
     scheduleId: formEl["scheduleId"].value,
+    //klassId: formEl["klassId"].value,
     klassName: formEl["klassName"].value,
     instructor: formEl["instructor"].value,
     scheduleWeek: formEl["scheduleWeek"].value,
@@ -71,6 +78,7 @@ const slots = {
 showProgressBar(progressEl);
 formEl["scheduleId"].setCustomValidity((await Schedule.checkScheduleIdAsId(slots.scheduleId)).message);
 formEl["scheduleId"].reportValidity();
+//formEl["klassId"].setCustomValidity(Schedule.checkKlassId(slots.klassId).message);
 formEl["klassName"].setCustomValidity(Schedule.checkKlassName(slots.klassName).message);
 formEl["instructor"].setCustomValidity(Schedule.checkInstructor(slots.instructor).message);
 formEl["scheduleWeek"].setCustomValidity(Schedule.checkScheduleWeek(slots.scheduleWeek).message);

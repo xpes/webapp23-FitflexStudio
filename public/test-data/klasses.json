@@ -16,42 +16,6 @@
     "startDate": "2023-06-15",
     "capacity": "20",
     "registeredMember": "jihuztrdtzuio"
-  },
-
-  {
-    "klassId": "3",
-    "klassName": "kangooJump",
-    "instructor": "philip conticini",
-    "startDate": "2023-01-15",
-    "capacity": "20",
-    "registeredMember": "jihuztrdtzuio"
-  },
-
-  {
-    "klassId": "4",
-    "klassName": "bbb",
-    "instructor": "Michelle Putz",
-    "startDate": "2023-01-15",
-    "capacity": "20",
-    "registeredMember": "jihuztrdtzuio"
-  },
-
-  {
-    "klassId": "5",
-    "klassName": "boxing",
-    "instructor": "Michael konrad",
-    "startDate": "2023-01-15",
-    "capacity": "20",
-    "registeredMember": "jihuztrdtzuio"
-  },
-
-  {
-    "klassId": "6",
-    "klassName": "bachata",
-    "instructor": "Natalia safina",
-    "startDate": "2023-01-15",
-    "capacity": "20",
-    "registeredMember": "jihuztrdtzuio"
   }
   
 ]

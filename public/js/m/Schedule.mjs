@@ -27,7 +27,7 @@ import {
 } from "../../lib/errorTypes.mjs";
 
 import { createModalFromChange } from "../../lib/util.mjs";
-
+import Klass from "../../js/m/Klass.mjs";
 
 /**
  * Define Enumerations
@@ -42,10 +42,15 @@ const WeekEL = new Enumeration({ "Mon": "Monday", "Tue": "Tuesday", "Wed": "Wedn
 
 class Schedule {
   // record parameter with the ES6 syntax for function parameter destructuring
-  constructor({ scheduleId, klassName1, instructor1, scheduleWeek, scheduleTime, duration }) {
+  constructor({ scheduleId, klassId, klassName, instructor, scheduleWeek, scheduleTime, duration }) {
     this.scheduleId = scheduleId;
-    this.klassName1 = klassName1;
-    this.instructor1 = instructor1;
+    if (klassId) this.klassId = klassId;
+    if (klassName || klassId) {
+       this.klassName = klassName;
+    }
+    if (instructor || klassId) {
+      this.instructor = instructor;
+    }
     this.scheduleWeek = scheduleWeek;
     this.scheduleTime = scheduleTime;
     this.duration = duration;
@@ -106,56 +111,76 @@ class Schedule {
       throw validationResult;
     }
   }
+  //all basic constraints, getters, chechers, setters of the klassId attribute
 
+  get klassId() {
+    return this._klassId;
+  }
+  static checkKlassId(klassId) {
+      
+    if (!klassId) {
+      return new MandatoryValueConstraintViolation("A class name must be provided!");
+    } else if (klassId === "") {
+      return new RangeConstraintViolation("The name must be a non-empty string!");
+    } else {
+      return new NoConstraintViolation();
+    }
+  }
+  
+  set klassId(klassId) {
+    console.log("In klass Id");
+    var validationResult = Schedule.checkklassId(klassId, this.role);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._klassId = klassId;
+    } else {
+      throw validationResult;
+    }
+  }
     //all basic constraints, getters, chechers, setters of the personName attribute
 
-    get klassName1() {
-      return this._klassName1;
+    get klassName() {
+      return this._klassName;
     };
   
-    static checkKlassName1(klassName1) {
-      const klassName1_LENGTH_MAX = 50;
-      if (!klassName1) {
+    static checkKlassName(klassName) {
+      
+      if (!klassName) {
         return new MandatoryValueConstraintViolation("A class name must be provided!");
-      } else if (klassName1 === "") {
+      } else if (klassName === "") {
         return new RangeConstraintViolation("The name must be a non-empty string!");
-      } else if (klassName1.length > klassName1_LENGTH_MAX) {
-        return new StringLengthConstraintViolation(
-          `The value of the class must be at most ${klassName1_LENGTH_MAX} characters!`);
-      }
-      else {
+      } else {
         return new NoConstraintViolation();
       }
     }
   
-    set klassName1(klassName1) {
-      console.log("klassName1");
-      const validationResult = Schedule.checkKlassName1(klassName1);
+    set klassName(klassName) {
+      console.log("klassName");
+      const validationResult = Schedule.checkKlassName(klassName);
       if (validationResult instanceof NoConstraintViolation) {
-        this._klassName1 = klassName1;
+        this._klassName = klassName;
       } else {
         throw validationResult;
       }
     }
 
-        //all basic constraints, getters, chechers, setters of the instructor attribute
+  //all basic constraints, getters, chechers, setters of the instructor attribute
 
-   get Instructor1() {
-     return this._instructor1;
+   get Instructor() {
+     return this._instructor;
    };
    
-   static checkInstructor(instructor1) {
-     if (!instructor1 || instructor1 === "") {
+   static checkInstructor(instructor) {
+     if (!instructor || instructor === "") {
        return new MandatoryValueConstraintViolation("An instructor value must be provided!");
      } else {
        return new NoConstraintViolation();
      }
    }
    
-   set Instructor1(instructor1) {
-     const validationResult = Schedule.checkInstructor(instructor1);
+   set Instructor(instructor) {
+     const validationResult = Schedule.checkInstructor(instructor);
      if (validationResult instanceof NoConstraintViolation) {
-       this._instructor1 = instructor1;
+       this._instructor = instructor;
      } else {
        throw validationResult;
      }
@@ -233,18 +258,27 @@ class Schedule {
 Schedule.converter = {
   toFirestore: function (schedule) {
     const data = {
-      scheduleId: Schedule.scheduleId,
-      klassName1: Schedule.klassName1,
-      instructor1: Schedule.instructor1,
-      scheduleWeek: Schedule.scheduleWeek,
-      scheduleTime: Schedule.scheduleTime,
-      duration: Schedule.duration,
-      //endDate: klass.endDate
+      scheduleId: schedule.scheduleId,
+      klassName: schedule.klassName,
+      instructor: schedule.instructor,
+      scheduleWeek: schedule.scheduleWeek,
+      scheduleTime: schedule.scheduleTime,
+      duration: schedule.duration,
     };
     return data;
   },
   fromFirestore: function (snapshot, options) {
-    const data = snapshot.data(options);
+    const schedule = snapshot.data(options);
+    console.log(schedule.scheduleId);
+    const data = {
+      scheduleId: schedule.scheduleId,
+      klassName: schedule.klassName,
+      instructor: schedule.instructor,
+      scheduleWeek: schedule.scheduleWeek,
+      scheduleTime: schedule.scheduleTime,
+      duration: schedule.duration,
+    };
+    console.log(data);
     return new Schedule(data);
   },
 };
@@ -265,6 +299,12 @@ Schedule.add = async function (slots) {
     // invoke asynchronous ID/uniqueness check
     let validationResult = await Schedule.checkScheduleIdAsId(Schedule.scheduleId);
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+    validationResult = await Klass.checkKlassId(Klass.klassId);
+    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+    validationResult = await Klass.checkKlassName(Klass.klassName);
+    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+    validationResult = await Klass.checkInstructor(Klass.instructor);
+    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
   } catch (e) {
     console.error(`${e.constructor.name}: ${e.message}`);
     schedule = null;
@@ -274,6 +314,9 @@ Schedule.add = async function (slots) {
       console.log("schedule Added");
       const scheduleDocRef = fsDoc(fsDb, "schedules", Schedule.scheduleId).withConverter(Schedule.converter);
       setDoc(scheduleDocRef, schedule);
+      klassCollRef = fsColl( fsDb, "klasses")
+        .withConverter( Klass.converter),
+
       console.log(`schedule record "${Schedule.scheduleId}" created!`);
     } catch (e) {
       console.error(`${e.constructor.name}: ${e.message} + ${e}`);
@@ -333,14 +376,14 @@ Schedule.update = async function (slots) {
     console.error(`${e.constructor.name}: ${e.message}`);
   }
   try {
-    if (scheduleBeforeUpdate.klassName1 !== slots.klassName1) {
-      validationResult = Schedule.checkKlassName1(slots.klassName1);
-      if (validationResult instanceof NoConstraintViolation) updatedSlots.klassName1 = slots.klassName1;
+    if (scheduleBeforeUpdate.klassName !== slots.klassName) {
+      validationResult = Schedule.checkKlassName(slots.klassName);
+      if (validationResult instanceof NoConstraintViolation) updatedSlots.klassName = slots.klassName;
       else throw validationResult;
     }
-    if (scheduleBeforeUpdate.instructor1 !== slots.instructor1) {
-      validationResult = Schedule.checkInstructor1(slots.instructor1);
-      if (validationResult instanceof NoConstraintViolation) updatedSlots.instructor1 = slots.instructor1;
+    if (scheduleBeforeUpdate.instructor !== slots.instructor) {
+      validationResult = Schedule.checkInstructor(slots.instructor);
+      if (validationResult instanceof NoConstraintViolation) updatedSlots.instructor = slots.instructor;
       else throw validationResult;
     }
     if (scheduleBeforeUpdate.scheduleTime !== slots.scheduleTime) {
@@ -426,7 +469,7 @@ Schedule.observeChanges = async function (scheduleId) {
     return onSnapshot(scheduleDocRef, function (snapshot) {
       console.log("In snapshot function");
       // create object with original document data
-      const originalData = { itemName: "schedule", description: `${scheduleRec.klassName1} (classId: ${scheduleRec.scheduleId})` };
+      const originalData = { itemName: "schedule", description: `${scheduleRec.klassName} (classId: ${scheduleRec.scheduleId})` };
       console.log("orginal before " + originalData);
       if (!snapshot.data()) { // removed: if snapshot has not data
         originalData.type = "REMOVED";

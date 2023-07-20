@@ -27,17 +27,17 @@
  fillSelectWithOptions(formEl.scheduleWeek, WeekEL.labels);
  
  // add event listeners for responsive validation
- formEl["klassName1"].addEventListener("input", function () {
-   formEl["klassName1"].setCustomValidity(Schedule.checkKlassName1(formEl["klassName1"].value).message);
-   formEl["klassName1"].reportValidity();
+ formEl["klassName"].addEventListener("input", function () {
+   formEl["klassName"].setCustomValidity(Schedule.checkKlassName(formEl["klassName"].value).message);
+   formEl["klassName"].reportValidity();
  });
- formEl["instructor1"].addEventListener("input", function () {
-   formEl["instructor1"].setCustomValidity(Schedule.checkInstructor1(formEl["instructor1"].value).message);
-   formEl["instructor1"].reportValidity();
+ formEl["instructor"].addEventListener("input", function () {
+   formEl["instructor"].setCustomValidity(Schedule.checkInstructor(formEl["instructor"].value).message);
+   formEl["instructor"].reportValidity();
  });
- formEl["scheduleWeek1"].addEventListener("input", function () {
-   formEl["scheduleWeek1"].setCustomValidity(Schedule.checkScheduleWeek1(formEl["scheduleWeek1"].value).message);
-   formEl["scheduleWeek1"].reportValidity();
+ formEl["scheduleWeek"].addEventListener("input", function () {
+   formEl["scheduleWeek"].setCustomValidity(Schedule.checkScheduleWeek(formEl["scheduleWeek"].value).message);
+   formEl["scheduleWeek"].reportValidity();
  });
  
  formEl["scheduleTime"].addEventListener("input", function () {
@@ -58,7 +58,7 @@
  for (const MemberRec of MemberRecords) {
    console.log("selection " + MemberRec.ScheduleId);
    const optionEl = document.createElement("option");
-   optionEl.text = MemberRec.KlassName1;
+   optionEl.text = MemberRec.KlassName;
    optionEl.value = MemberRec.ScheduleId;
    selectMemberEl.add(optionEl, null);
  }
@@ -70,7 +70,7 @@
      // retrieve up-to-date Schedule record
      cancelListener = await Schedule.observeChanges(memberId);
      const ScheduleRecord = await Schedule.retrieve(memberId);
-     for (const field of ["ScheduleId", "klassName1", "instructor1", "scheduleWeek", "scheduleTime", "duration"]) {
+     for (const field of ["ScheduleId", "klassName", "instructor", "scheduleWeek", "scheduleTime", "duration"]) {
        formEl[field].value = ScheduleRecord[field] !== undefined ? ScheduleRecord[field] : "";
        // delete custom validation error message which may have been set before
        formEl[field].setCustomValidity("");
@@ -89,8 +89,8 @@
    const formEl = document.forms["Schedule"];
    const slots = {
      ScheduleId: formEl["ScheduleId"].value,
-     klassName1: formEl["klassName1"].value,
-     instructor1: formEl["instructor1"].value,
+     klassName: formEl["klassName"].value,
+     instructor: formEl["instructor"].value,
      scheduleWeek: formEl["scheduleWeek"].value,
      scheduleTime: formEl["scheduleTime"].value,
      duration: formEl["duration"].value
@@ -98,11 +98,11 @@
 
      MemberIdRef = selectMemberEl.value;
    // set error messages in case of constraint violations
-   formEl["klassName1"].addEventListener("input", function () {
-     formEl["klassName1"].setCustomValidity(Schedule.checkKlassName1(formEl["klassName1"].value).message);
+   formEl["klassName"].addEventListener("input", function () {
+     formEl["klassName"].setCustomValidity(Schedule.checkKlassName(formEl["klassName"].value).message);
    });
-   formEl["instructor1"].addEventListener("input", function () {
-     formEl["instructor1"].setCustomValidity(Schedule.checkInstructor1(formEl["instructor1"].value).message);
+   formEl["instructor"].addEventListener("input", function () {
+     formEl["instructor"].setCustomValidity(Schedule.checkInstructor(formEl["instructor"].value).message);
    });
    formEl["scheduleWeek"].addEventListener("input", function () {
      formEl["scheduleWeek"].setCustomValidity(Schedule.checkScheduleWeek(formEl["scheduleWeek"].value).message);
@@ -121,7 +121,7 @@
    if (formEl.checkValidity()) {
      Schedule.update(slots);
      // update the selection list option element
-     selectMemberEl.options[selectMemberEl.selectedIndex].text = slots.klassName1;
+     selectMemberEl.options[selectMemberEl.selectedIndex].text = slots.klassName;
      formEl.reset();
    }
  });

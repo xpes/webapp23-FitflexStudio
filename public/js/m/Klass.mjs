@@ -248,16 +248,16 @@ class Klass {
       return this._registeredMember;
     };
   
-    static checkRegisteredMember( registeredMember) {
+    static checkRegisteredMember(registeredMember) {
       if (!registeredMember || registeredMember === "") {
-        return new MandatoryValueConstraintViolation("A registredMember value must be provided!");
+        return new MandatoryValueConstraintViolation("A registeredMember value must be provided!");
       } else {
         return new NoConstraintViolation();
       }
     }
   
     set registeredMember( registeredMember) {
-      console.log("registredMember");
+      console.log("registeredMember");
       const validationResult = Klass.checkRegisteredMember( registeredMember);
       if (validationResult instanceof NoConstraintViolation) {
         this._registeredMember = registeredMember;
@@ -275,21 +275,31 @@ class Klass {
 
 Klass.converter = {
   toFirestore: function (klass) {
+    console.log(klass);
     const data = {
       klassId: klass.klassId,
       klassName: klass.klassName,
       instructor: klass.instructor,
       startDate: klass.startDate,
       capacity: klass.capacity,
-      registeredMember: klass.registeredMember,
-
+      registeredMember: klass.registeredMember
     };
+    console.log(data);
     return data;
   },
   fromFirestore: function (snapshot, options) {
-    const data = snapshot.data(options);
+    const klass = snapshot.data(options);
+    var data = {
+      klassId: klass.klassId,
+      klassName: klass.klassName,
+      instructor: klass.instructor,
+      startDate: klass.startDate,
+      capacity: klass.capacity,
+      registeredMember: klass.registeredMember
+    };
+    console.log(data);
     return new Klass(data);
-  },
+  }
 };
 
 /**
@@ -357,6 +367,27 @@ Klass.retrieveAll = async function (order) {
   }
 };
 
+Klass.retrieveBlock = async function (params) {
+  try {
+    let klassesCollRef = fsColl(fsDb, "klasses");
+    // set limit and order in query
+    klassesCollRef = fsQuery(klassesCollRef, limit(5));
+    if (params.order) klassesCollRef = fsQuery(klassesCollRef, orderBy(params.order));
+    // set pagination "startAt" cursor
+    if (params.cursor) {
+      klassesCollRef = fsQuery(klassesCollRef, startAt(params.cursor));
+    }
+    const klassesRecs = (await getDocs(klassesCollRef
+      .withConverter(Klass.converter))).docs.map(d => d.data());
+    if (klassesRecs.length) {
+      console.log(`Block of persons records retrieved! (cursor: ${klassesRecs[0][params.order]})`);
+    }
+    return klassesRecs;
+  } catch (e) {
+    console.error(`Error retrieving all persons records: ${e}`);
+  }
+};
+
 /**
  * Update a Firestore document in the Firestore collection "persons"
  * @param slots: {object}
@@ -396,9 +427,9 @@ Klass.update = async function (slots) {
       if (validationResult instanceof NoConstraintViolation) updatedSlots.capacity = slots.capacity;
       else throw validationResult;
     }
-    if (klassBeforeUpdate.registredMembers !== slots.registredMembers) {
-      validationResult = Klass.checkRegisteredMember(slots.registredMembers);
-      if (validationResult instanceof NoConstraintViolation) updatedSlots.registredMembers = slots.registredMembers;
+    if (klassBeforeUpdate.registeredMember !== slots.registeredMember) {
+      validationResult = Klass.checkRegisteredMember(slots.registeredMember);
+      if (validationResult instanceof NoConstraintViolation) updatedSlots.registeredMember = slots.registeredMember;
       else throw validationResult;
     }
 
