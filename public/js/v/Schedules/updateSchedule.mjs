@@ -31,6 +31,14 @@
    formEl["klassName"].setCustomValidity(Schedule.checkKlassName(formEl["klassName"].value).message);
    formEl["klassName"].reportValidity();
  });
+ formEl["startDate"].addEventListener("input", function () {
+  formEl["startDate"].setCustomValidity(Schedule.checkStartDate(formEl["startDate"].value).message);
+  formEl["startDate"].reportValidity();
+ });
+ formEl["endDate"].addEventListener("input", function () {
+  formEl["endDate"].setCustomValidity(Schedule.checkEndDate(formEl["endDate"].value).message);
+  formEl["endDate"].reportValidity();
+ });
  formEl["instructor"].addEventListener("input", function () {
    formEl["instructor"].setCustomValidity(Schedule.checkInstructor(formEl["instructor"].value).message);
    formEl["instructor"].reportValidity();

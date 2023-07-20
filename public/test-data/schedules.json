@@ -1,8 +1,10 @@
 [
   {
     "scheduleId": "1",
-    "klassName1": "boxing",
-    "instructor1": "Franke jirak",
+    "klassName": "boxing",
+    "startDate": "",
+    "endDate": "",
+    "instructor": "Franke jirak",
     "scheduleWeek": "5",
     "scheduleTime": "18h-20h",
     "duration": "2h"
@@ -10,8 +12,10 @@
   },
   {
     "scheduleId": "2",
-    "klassName1": "yoga",
-    "instructor1": "Michelle Putz",
+    "klassName": "yoga",
+    "startDate": "",
+    "endDate": "",
+    "instructor": "Michelle Putz",
     "scheduleWeek": "3",
     "scheduleTime": "07h-08h",
     "duration": "1h"
