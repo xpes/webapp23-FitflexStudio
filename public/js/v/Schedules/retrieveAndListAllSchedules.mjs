@@ -86,8 +86,6 @@ async function createBlock(startAt) {
       const row = tableBodyEl.insertRow();
       row.insertCell().textContent = ScheduleRec.scheduleId;
       row.insertCell().textContent = ScheduleRec.klassName;
-      row.insertCell().textContent = ScheduleRec.startDate;
-      row.insertCell().textContent = ScheduleRec.endDate;
       row.insertCell().textContent = ScheduleRec.instructor;
       row.insertCell().textContent = WeekEL.labels[ScheduleRec.scheduleWeek - 1];
       row.insertCell().textContent = ScheduleRec.scheduleTime;
