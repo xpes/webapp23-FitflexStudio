@@ -110,4 +110,11 @@ The purpose of the FitflexStudio app is to streamline and automate the managemen
 |   Nour Elhouda Benaida    |                     Enabling/disabling UI elements in start page based on authentication <br> Implementation of Sign out<br> Implementation of 404 page    <br> website draft https://fitflexstudio-12345.web.app/   | 
 |   Elias George            |                     Implementation of user authentication status<br> Redirection to Sign in/up page <br>  Email verification with customised page             | 
 
+## Separation of Work Assignment 7c4
+
+| Developpers | Work| 
+| --------------------| :--------------------: | 
+|   Nour Elhouda Benaida    |                     HTML/M/V/test-data/ of Klass <br> Logo creation<br> Firestore_rules   | 
+|   Elias George            |                     HTML/M/V/test-data/ of Person and MembershipOptions<br>               | 
+
 
