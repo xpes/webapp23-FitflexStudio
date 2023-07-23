@@ -42,21 +42,9 @@ const WeekEL = new Enumeration({ "Mon": "Monday", "Tue": "Tuesday", "Wed": "Wedn
 
 class Schedule {
   // record parameter with the ES6 syntax for function parameter destructuring
-  constructor({ scheduleId, klassId, klassName, startDate, endDate, instructor, scheduleWeek, scheduleTime, duration }) {
+  constructor({ scheduleId, klassIdRefs, scheduleWeek, scheduleTime, duration }) {
     this.scheduleId = scheduleId;
-    if (klassId) this.klassId = klassId;
-    if (klassName || klassId) {
-       this.klassName = klassName;
-    }
-    if (startDate || klassId) {
-      this.startDate = startDate;
-    }
-    if (endDate || klassId) {
-      this.endDate = endDate;
-    }
-    if (instructor || klassId) {
-      this.instructor = instructor;
-    }
+    this.klassIdRefs = klassIdRefs;
     this.scheduleWeek = scheduleWeek;
     this.scheduleTime = scheduleTime;
     this.duration = duration;
@@ -117,132 +105,23 @@ class Schedule {
       throw validationResult;
     }
   }
-  //all basic constraints, getters, chechers, setters of the klassId attribute
-
-  get klassId() {
-    return this._klassId;
-  }
-  static checkKlassId(klassId) {
-      
-    if (!klassId) {
-      return new MandatoryValueConstraintViolation("A class name must be provided!");
-    } else if (klassId === "") {
-      return new RangeConstraintViolation("The name must be a non-empty string!");
-    } else {
-      return new NoConstraintViolation();
-    }
-  }
-  
-  set klassId(klassId) {
-    console.log("In klass Id");
-    var validationResult = Schedule.checkklassId(klassId, this.role);
-    if (validationResult instanceof NoConstraintViolation) {
-      this._klassId = klassId;
-    } else {
-      throw validationResult;
-    }
-  }
     //all basic constraints, getters, chechers, setters of the personName attribute
 
-    get klassName() {
-      return this._klassName;
+    get klassIdRefs() {
+      return this._klassIdRefs;
     };
   
-    static checkKlassName(klassName) {
-      
-      if (!klassName) {
-        return new MandatoryValueConstraintViolation("A class name must be provided!");
-      } else if (klassName === "") {
-        return new RangeConstraintViolation("The name must be a non-empty string!");
-      } else {
-        return new NoConstraintViolation();
-      }
-    }
-  
-    set klassName(klassName) {
-      console.log("klassName");
-      const validationResult = Schedule.checkKlassName(klassName);
-      if (validationResult instanceof NoConstraintViolation) {
-        this._klassName = klassName;
-      } else {
-        throw validationResult;
-      }
+    addKlass(k){
+      this._klassIdRefs.push(k);
     }
 
-    //all basic constraints, getters, chechers, setters of the personName attribute
-  get startDate() {
-    return this._startDate;
-  };
-
-  static checkStartDate(startDate) {
-    
-    if (!startDate) {
-      return new MandatoryValueConstraintViolation("A class name must be provided!");
-    } else if (startDate === "") {
-      return new RangeConstraintViolation("The name must be a non-empty string!");
-    } else {
-      return new NoConstraintViolation();
+    removeKlass(k) {
+      this._klassIdRefs = this._klassIdRefs.filter( d => d.id !== k.id);
     }
-  }
 
-  set startDate(startDate) {
-    console.log("startDate");
-    const validationResult = Schedule.checkStartDate(startDate);
-    if (validationResult instanceof NoConstraintViolation) {
-      this._startDate = startDate;
-    } else {
-      throw validationResult;
-    }
-  }
-
-      //all basic constraints, getters, chechers, setters of the personName attribute
-
-  get endDate() {
-    return this._endDate;
-  };
-
-  static checkEndDate(endDate) {
-    
-    if (!endDate) {
-      return new MandatoryValueConstraintViolation("A class name must be provided!");
-    } else if (endDate === "") {
-      return new RangeConstraintViolation("The name must be a non-empty string!");
-    } else {
-      return new NoConstraintViolation();
-    }
-  }
-
-  set endDate(endDate) {
-    console.log("endDate");
-    const validationResult = Schedule.checkEndDate(endDate);
-    if (validationResult instanceof NoConstraintViolation) {
-      this._endDate = endDate;
-    } else {
-      throw validationResult;
-    }
-  }
-  //all basic constraints, getters, chechers, setters of the instructor attribute
-
-   get Instructor() {
-     return this._instructor;
-   };
-   
-   static checkInstructor(instructor) {
-     if (!instructor || instructor === "") {
-       return new MandatoryValueConstraintViolation("An instructor value must be provided!");
-     } else {
-       return new NoConstraintViolation();
-     }
-   }
-   
-   set Instructor(instructor) {
-     const validationResult = Schedule.checkInstructor(instructor);
-     if (validationResult instanceof NoConstraintViolation) {
-       this._instructor = instructor;
-     } else {
-       throw validationResult;
-     }
-   }
+    set klassIdRefs(k) {
+      this._klassIdRefs = k;
+    };
 
     //all basic constraints, getters, chechers, setters of the startDate attribute
   get scheduleWeek() {
@@ -317,10 +196,7 @@ Schedule.converter = {
   toFirestore: function (schedule) {
     const data = {
       scheduleId: schedule.scheduleId,
-      klassName: schedule.klassName,
-      startDate: schedule.startDate,
-      endDate: schedule.endDate,
-      instructor: schedule.instructor,
+      klassIdRefs: schedule.klassIdRefs,
       scheduleWeek: schedule.scheduleWeek,
       scheduleTime: schedule.scheduleTime,
       duration: schedule.duration,
@@ -332,10 +208,7 @@ Schedule.converter = {
     console.log(schedule.scheduleId);
     const data = {
       scheduleId: schedule.scheduleId,
-      klassName: schedule.klassName,
-      startDate: schedule.startDate,
-      endDate: schedule.endDate,
-      instructor: schedule.instructor,
+      klassIdRefs: schedule.klassIdRefs,
       scheduleWeek: schedule.scheduleWeek,
       scheduleTime: schedule.scheduleTime,
       duration: schedule.duration,
@@ -362,19 +235,12 @@ Schedule.add = async function (slots) {
     let validationResult = await Schedule.checkScheduleIdAsId(Schedule.scheduleId);
 
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
-    validationResult = await Klass.checkKlassId(Klass.klassId);
-
-    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
-    validationResult = await Klass.checkKlassName(Klass.klassName);
-
-    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
-    validationResult = await Klass.checkStartDate(Klass.startDate);
-
-    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
-    validationResult = await Klass.checkEndDate(Klass.endDate);
-
-    if (!validationResult instanceof NoConstraintViolation) throw validationResult;
-    validationResult = await Klass.checkInstructor(Klass.instructor);
+    for (const k of schedule.klassIdRefs) {
+      const validationResult = await Klass.checkKlassIdAsIdRef( String(k.id));
+      if (!validationResult instanceof NoConstraintViolation) {
+        throw validationResult;
+      }
+    }
 
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
     validationResult = await Klass.checkScheduleWeek(Klass.scheduleWeek);
@@ -464,11 +330,11 @@ Schedule.retrieveBlock = async function (params) {
  * @param slots: {object}
  * @returns {Promise<void>}
  */
-Schedule.update = async function (slots) {
+Schedule.update = async function ({ scheduleId, klassIdRefs, klassIdRefsToAdd, klassIdRefsToRemove, scheduleWeek, scheduleTime, duration }) {
   let noConstraintViolated = true,
     validationResult = null,
     scheduleBeforeUpdate = null;
-  const scheduleDocRef = fsDoc(fsDb, "schedules", slots.scheduleId).withConverter(Schedule.converter),
+  const scheduleDocRef = fsDoc(fsDb, "schedules", scheduleId).withConverter(Schedule.converter),
     updatedSlots = {};
   try {
     // retrieve up-to-date book record
@@ -478,25 +344,14 @@ Schedule.update = async function (slots) {
     console.error(`${e.constructor.name}: ${e.message}`);
   }
   try {
-    if (scheduleBeforeUpdate.klassName !== slots.klassName) {
-      validationResult = Schedule.checkKlassName(slots.klassName);
-      if (validationResult instanceof NoConstraintViolation) updatedSlots.klassName = slots.klassName;
-      else throw validationResult;
+    if (klassIdRefsToAdd) for (const klassIdRef of klassIdRefsToAdd) {
+      klassBeforeUpdate.addKlass(klassIdRef);
     }
-    if (scheduleBeforeUpdate.startDate !== slots.startDate) {
-      validationResult = Schedule.checkStartDate(slots.startDate);
-      if (validationResult instanceof NoConstraintViolation) updatedSlots.klassName = slots.klassName;
-      else throw validationResult;
+    if (klassIdRefsToRemove) for (const klassIdRef of klassIdRefsToRemove){
+      klassBeforeUpdate.removeKlass(klassIdRef);
     }
-    if (scheduleBeforeUpdate.endDate !== slots.endDate) {
-      validationResult = Schedule.checkEndDate(slots.endDate);
-      if (validationResult instanceof NoConstraintViolation) updatedSlots.endDate = slots.endDate;
-      else throw validationResult;
-    }
-    if (scheduleBeforeUpdate.instructor !== slots.instructor) {
-      validationResult = Schedule.checkInstructor(slots.instructor);
-      if (validationResult instanceof NoConstraintViolation) updatedSlots.instructor = slots.instructor;
-      else throw validationResult;
+    if (klassIdRefsToAdd || klassIdRefsToRemove){
+      updatedSlots.klassIdRefs = klassBeforeUpdate.klassIdRefs;
     }
     if (scheduleBeforeUpdate.scheduleTime !== slots.scheduleTime) {
       validationResult = Schedule.checkScheduleTime(slots.scheduleTime);
@@ -513,15 +368,29 @@ Schedule.update = async function (slots) {
     noConstraintViolated = false;
     console.error(`${e.constructor.name}: ${e.message}`);
   }
+
   if (noConstraintViolated) {
     const updatedProperties = Object.keys(updatedSlots);
     if (updatedProperties.length) {
+      try{
+        if (klassIdRefsToAdd) {
+          await Promise.all(klassIdRefsToAdd.map( async k => {
+            validationResult = await Klass.checkKlassIdAsIdRef( k.id);
+            if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+          }));
+        }
+     
       await updateDoc(scheduleDocRef, updatedSlots);
       console.log(`Property(ies) "${updatedProperties.toString()}" modified for schedule record "${slots.scheduleId}"`);
+    
+    } catch (e) {
+      console.error(`${e.constructor.name}: ${e.message}`);
+    }
     } else {
       console.log(`No property value changed for schedule record "${slots.scheduleId}"!`);
     }
   }
+
 };
 
 /**
@@ -599,4 +468,3 @@ Schedule.observeChanges = async function (scheduleId) {
 
 export default Schedule;
 export { WeekEL };
-

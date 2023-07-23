@@ -16,6 +16,14 @@
     "startDate": "2023-06-15",
     "capacity": "20",
     "registeredMember": "jihuztrdtzuio"
+  },
+  {
+    "klassId": "3",
+    "klassName": "bbb",
+    "instructor": "Mario Schuts",
+    "startDate": "2023-06-15",
+    "capacity": "14",
+    "registeredMember": "jihuztrdtzuio"
   }
   
 ]

@@ -2,9 +2,16 @@
   {
     "scheduleId": "1",
     "klassName": "boxing",
-    "startDate": "",
-    "endDate": "",
-    "instructor": "Franke jirak",
+    "authorIdRefs": [
+      {
+        "id": 1,
+        "name": "yoga"
+      },
+      {
+        "id": 2,
+        "name": "zumba"
+      }
+    ],
     "scheduleWeek": "5",
     "scheduleTime": "18h-20h",
     "duration": "2h"
@@ -13,9 +20,16 @@
   {
     "scheduleId": "2",
     "klassName": "yoga",
-    "startDate": "",
-    "endDate": "",
-    "instructor": "Michelle Putz",
+    "authorIdRefs": [
+      {
+        "id": 2,
+        "name": "zumba"
+      },
+      {
+        "id": 3,
+        "name": "bbb"
+      }
+    ],
     "scheduleWeek": "3",
     "scheduleTime": "07h-08h",
     "duration": "1h"

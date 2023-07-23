@@ -2,7 +2,7 @@
  * @fileOverview  View methods for the use case "update Member"
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
- * @author Elias George
+ * @author Nourelhouda Benaida
  */
 /***************************************************************
  Import classes and data types
@@ -26,23 +26,7 @@
  // set up the gender selection list
  fillSelectWithOptions(formEl.scheduleWeek, WeekEL.labels);
  
- // add event listeners for responsive validation
- formEl["klassName"].addEventListener("input", function () {
-   formEl["klassName"].setCustomValidity(Schedule.checkKlassName(formEl["klassName"].value).message);
-   formEl["klassName"].reportValidity();
- });
- formEl["startDate"].addEventListener("input", function () {
-  formEl["startDate"].setCustomValidity(Schedule.checkStartDate(formEl["startDate"].value).message);
-  formEl["startDate"].reportValidity();
- });
- formEl["endDate"].addEventListener("input", function () {
-  formEl["endDate"].setCustomValidity(Schedule.checkEndDate(formEl["endDate"].value).message);
-  formEl["endDate"].reportValidity();
- });
- formEl["instructor"].addEventListener("input", function () {
-   formEl["instructor"].setCustomValidity(Schedule.checkInstructor(formEl["instructor"].value).message);
-   formEl["instructor"].reportValidity();
- });
+
  formEl["scheduleWeek"].addEventListener("input", function () {
    formEl["scheduleWeek"].setCustomValidity(Schedule.checkScheduleWeek(formEl["scheduleWeek"].value).message);
    formEl["scheduleWeek"].reportValidity();
