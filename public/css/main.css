@@ -142,8 +142,11 @@ footer div.foot-content {
    Author's custom styles
    ========================================================================== */
 
+
 .logo {
-    opacity: 0.03;
+    margin-top: 5%;
+    width: 300px;
+    height: 100px;
 }
 
 footer div.foot-content {
