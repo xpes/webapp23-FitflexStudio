@@ -17,7 +17,7 @@ import { fsDb } from "../initFirebase.mjs";
 //import { doc as snfsDoc, getDoc as snGetDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import {
   collection as fsColl, deleteDoc, doc as fsDoc, getDoc, getDocs, onSnapshot,
-  orderBy, query as fsQuery, setDoc, updateDoc, limit, startAt, writeBatch, arrayUnion
+  orderBy, query as fsQuery, setDoc, updateDoc, limit, startAt, writeBatch, arrayUnion, arrayRemove
 }
   from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import { Enumeration } from "../../lib/Enumeration.mjs";
@@ -563,7 +563,7 @@ Person.add = async function (slots) {
       const personInverseRef = { id: person.personId, name: person.personName, role: person.role ? person.role : "" };
       let personInstRef = {};
       let personMemRef = {};
-      if (person.role === 1) {
+      if (person.role === "1") {
         personInstRef = { id: person.personId, name: person.personName };
       } else {
         personMemRef = { id: person.personId, name: person.personName };
@@ -573,7 +573,7 @@ Person.add = async function (slots) {
       await Promise.all(person.trainingClasses.map(a => {
         const klassDocRef = fsDoc(klassCollRef, String(a.id));
         //batch.update(klassDocRef, { people: arrayUnion(personInverseRef) });
-        //batch.update(klassDocRef, { instructor: arrayUnion(personInstRef) });
+        batch.update(klassDocRef, { instructor: arrayUnion(personInstRef) });
         batch.update(klassDocRef, { registeredMember: arrayUnion(personMemRef) });
       }));
       batch.commit(); // commit batch write
@@ -755,10 +755,34 @@ Person.update = async function (slots) {
  * @param personId: {string}
  * @returns {Promise<void>}
  */
+// Person.destroy = async function (personId) {
+//   try {
+//     await deleteDoc(fsDoc(fsDb, "persons", personId));
+//     console.log(`person record "${personId}" deleted!`);
+//   } catch (e) {
+//     console.error(`Error deleting book record: ${e}`);
+//   }
+// };
+
 Person.destroy = async function (personId) {
+  const personDocRef = fsDoc(fsDb, "persons", personId)
+    .withConverter(Person.converter),
+    klassesCollRef = fsColl(fsDb, "klasses")
+      .withConverter(Klass.converter);
   try {
-    await deleteDoc(fsDoc(fsDb, "persons", personId));
-    console.log(`person record "${personId}" deleted!`);
+    const personRec = (await getDoc(personDocRef
+      .withConverter(Person.converter))).data();
+    const inverseRef = { id: personRec.personId, name: personRec.personName };
+    const batch = writeBatch(fsDb); // initiate batch write object
+    // delete derived inverse reference property, Authors::/authoredBooks
+    await Promise.all(personRec.trainingClasses.map(aId => {
+      const klassDocRef = fsDoc(klassesCollRef, String(aId.id));
+      batch.update(klassDocRef, { instructor: arrayRemove(inverseRef) });
+      batch.update(klassDocRef, { registeredMember: arrayRemove(inverseRef) });
+    }));
+    batch.delete(personDocRef); // create book record (master)
+    batch.commit(); // commit batch write
+    console.log(`Person record "${personId}" deleted!`);
   } catch (e) {
     console.error(`Error deleting book record: ${e}`);
   }
