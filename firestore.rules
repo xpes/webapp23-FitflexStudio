@@ -47,5 +47,61 @@ service cloud.firestore {
       allow delete:
           if request.auth.token.email_verified == true;
     }
+
+
+        match /{klass}/{document=**}{
+      allow create:
+          if request.auth.token.email_verified == true
+          && request.resource.data.klassId != null ? checkMandatory(request.resource.data.klassId) : true
+          && request.resource.data.klassName != null ? checkMandatory(request.resource.data.klassName) : true
+          && request.resource.data.instructor != null ? checkMandatory(request.resource.data.instructor) : true
+          && request.resource.data.startDate != null ? checkMandatory(request.resource.data.startDate) : true
+          && request.resource.data.endDate != null ? checkMandatory(request.resource.data.endDate) : true
+          && request.resource.data.capacity != null ? checkMandatory(request.resource.data.capacity) : true
+          && request.resource.data.registreredMember != null ? checkMandatory(request.resource.data.registreredMember) : true
+          ;
+      
+      allow update:
+          if request.auth.token.email_verified == true
+          && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['klassId', 'klassName', 'instructor', 'startDate', 'endDate', 'capacity', 'registeredMember']))
+          && request.resource.data.klassId != null ? checkMandatory(request.resource.data.klassId) : true
+          && request.resource.data.klassName != null ? checkMandatory(request.resource.data.klassName) : true
+          && request.resource.data.instructor != null ? checkMandatory(request.resource.data.instructor) : true
+          && request.resource.data.startDate != null ? checkMandatory(request.resource.data.startDate) : true
+          && request.resource.data.endDate != null ? checkMandatory(request.resource.data.endDate) : true
+          && request.resource.data.capacity != null ? checkMandatory(request.resource.data.capacity) : true
+          && request.resource.data.registreredMember != null ? checkMandatory(request.resource.data.registreredMember) : true
+          ;
+          
+
+      allow delete:
+          if request.auth.token.email_verified == true;
+    }
+
+
+        match /{membership}/{document=**}{
+      allow create:
+          if request.auth.token.email_verified == true
+          && request.resource.data.membershipId != null ? checkMandatory(request.resource.data.membershipId) : true
+          && request.resource.data.membershipName != null ? checkMandatory(request.resource.data.membershipName) : true
+          && request.resource.data.price != null ? checkMandatory(request.resource.data.price) : true
+          && request.resource.data.duration != null ? checkMandatory(request.resource.data.duration) : true
+          && request.resource.data.membershipAccess != null ? checkMandatory(request.resource.data.membershipAccess) : true
+          ;
+      
+      allow update:
+          if request.auth.token.email_verified == true
+          && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['membershipId', 'membershipName', 'price', 'duration', 'membershipAccess']))
+          && request.resource.data.membershipId != null ? checkMandatory(request.resource.data.membershipId) : true
+          && request.resource.data.membershipName != null ? checkMandatory(request.resource.data.membershipName) : true
+          && request.resource.data.price != null ? checkMandatory(request.resource.data.price) : true
+          && request.resource.data.duration != null ? checkMandatory(request.resource.data.duration) : true
+          && request.resource.data.membershipAccess != null ? checkMandatory(request.resource.data.membershipAccess) : true
+          ;
+          
+
+      allow delete:
+          if request.auth.token.email_verified == true;
+    }
   }
 }
