@@ -276,8 +276,10 @@ class Person {
       constraintViolation = new NoConstraintViolation();
     } else {
       for (let k of klass_ids) {
-        constraintViolation =
-          Klass.checkKlassIdAsIdRef(k.id);
+        if (!k.id === 0) {
+          constraintViolation =
+            Klass.checkKlassIdAsIdRef(k.id);
+        }
       }
     }
     return constraintViolation;
@@ -643,6 +645,60 @@ Person.retrieveBlock = async function (params) {
   }
 };
 
+Person.inverserUpdate = async function (beforeUpdate, toUpdate, data) {
+  let add = [],
+    remove = [];
+  let personInstRef, personMemRef, inverseRef;
+  inverseRef = { id: data.id, name: data.name };
+  console.log(inverseRef);
+  console.log(data);
+  if (data.role === "1") {
+    personInstRef = { id: data.id, name: data.name };
+  } else {
+    personMemRef = { id: data.id, name: data.name };
+  }
+  console.log(personInstRef);
+  console.log(personMemRef);
+  for (let d of beforeUpdate) {
+    if (!toUpdate.includes(d) && d !== "0") remove.push(d);
+  }
+  for (let d of toUpdate) {
+    if (!beforeUpdate.includes(d) && d !== "0") add.push(d);
+  }
+  console.log(add);
+  console.log(remove);
+  try {
+    const batch = writeBatch(fsDb), // initiate batch write object
+      klassesCollRef = fsColl(fsDb, "klasses")
+        .withConverter(Klass.converter);
+    let klassDocRef;
+    if (add.length > 0) {
+      for (let i of add) {
+        klassDocRef = fsDoc(klassesCollRef, String(i));
+        if (data.role === "1") {
+          batch.update(klassDocRef, { instructor: arrayUnion(personInstRef) });
+        } else {
+          batch.update(klassDocRef, { registeredMember: arrayUnion(personMemRef) });
+        }
+      }
+    }
+    if (remove.length > 0) {
+      for (let j of remove) {
+        klassDocRef = fsDoc(klassesCollRef, String(j));
+        if (data.role === "1") {
+          batch.update(klassDocRef, { instructor: arrayRemove(inverseRef) });
+        } else {
+          batch.update(klassDocRef, { registeredMember: arrayRemove(inverseRef) });
+        }
+      }
+    }
+    batch.commit();
+  }
+  catch (e) {
+    console.error(`Error deleting klass record: ${e}`);
+  }
+}
+
 /**
  * Update a Firestore document in the Firestore collection "persons"
  * @param slots: {object}
@@ -698,8 +754,13 @@ Person.update = async function (slots) {
       if (validationResult instanceof NoConstraintViolation) updatedSlots.iban = slots.iban;
       else throw validationResult;
     }
-    if (Array.isArray(slots.trainingClasses) && slots.trainingClasses.length > 0) {
+    if (Array.isArray(slots.trainingClasses)) {
+      let beforeUpdate = [], toUpdate = [], data;
+      data = { id: slots.personId, name: slots.personName, role: slots.role };
       validationResult = await Person.checkTrainingClasses(slots.trainingClasses);
+      for (let i of personBeforeUpdate.trainingClasses) beforeUpdate.push(i.id);
+      for (let j of slots.trainingClasses) toUpdate.push(j.id);
+      Person.inverserUpdate(beforeUpdate, toUpdate, data)
       if (validationResult instanceof NoConstraintViolation) updatedSlots.trainingClasses = slots.trainingClasses;
       else throw validationResult;
     }

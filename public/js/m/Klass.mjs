@@ -64,7 +64,7 @@ class Klass {
     if (!klassId) {
       return new MandatoryValueConstraintViolation("A value for the class ID must be provided!");
     } else {
-      if (isNaN(klassId) || klassId < 1) {
+      if (isNaN(klassId) || klassId < 0) {
         return new RangeConstraintViolation("The class ID must be a positive integer!");
       } else {
         return new NoConstraintViolation();
@@ -216,7 +216,7 @@ class Klass {
     } else {
       throw validationResult;
     }
-    
+
   }
 
   //all basic constraints, getters, chechers, setters of the startDate attribute
@@ -273,7 +273,7 @@ class Klass {
   }
 
   set duration(duration) {
-    
+
     const validationResult = Klass.checkDuration(duration);
     if (validationResult instanceof NoConstraintViolation) {
       this._duration = duration;
@@ -298,7 +298,7 @@ class Klass {
 
 Klass.converter = {
   toFirestore: function (klass) {
-    
+
     const data = {
       klassId: klass.klassId,
       klassName: klass.klassName,
