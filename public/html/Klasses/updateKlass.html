@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>FitFlexStudio: Update Class</title>
+  <link rel="stylesheet" href="../../css/normalize.css" />
+  <link rel="stylesheet" href="../../css/main.css" />
+  <script src="../../js/v/Klasses/updateKlass.mjs" type="module"></script>
+</head>
+
+<body>
+  <header>
+    <div id="modal-window">
+      <div></div>
+    </div>
+    <div class="wrapper clearfix">
+      <div class="title">
+        <h1>Update a Class record</h1>
+      </div>
+      <div id="login-management" hidden="hidden"></div>
+      <nav>
+        <ul>
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="Klasses.html">Class</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="wrapper clearfix">
+      <form id="Klass">
+        <div>
+          <label>Select Class:
+            <select name="selectKlass">
+              <option value=""> ---</option>
+            </select>
+          </label>
+        </div>
+        <div><label>classId: <output name="klassId" /></label></div>
+        <div><label>Class Name: <input name="klassName" /></label></div>
+        <!--div><label>Instructor: <input name="instructor"></input></label></div-->
+        <div><label>Starting Date: <input name="startDate" type="date" /></label></div>
+        <div><label>Ending Date: <input name="endDate" type="date" /></label></div>
+        <div><label>capacity: <input name="capacity" /></label></div>
+        <div><label>scheduled Day: <select name="scheduleWeek"></select></label></div>
+        <div><label>schedule Time: <input name="scheduleTime" /></label></div>
+        <div><label>duration: <input name="duration" /></label></div>
+        <!--div><label>Registered Members: <input name="registeredMember" /></label></div-->
+        <div>
+          <button name="commit" type="button">Update</button>
+          <progress hidden="hidden" max="100">%</progress>
+        </div>
+      </form>
+    </div>
+  </main>
+  <br>
+  <footer>
+    <div class="wrapper clearfix">
+      <a href="./klasses.html">« Back to person management</a>
+    </div>
+  </footer>
+</body>
+
+</html>

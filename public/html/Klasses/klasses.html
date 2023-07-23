@@ -3,51 +3,86 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>FitFlexStudio: Create Classes</title>
+  <title>FitflexStudio</title>
+  <meta name="description" content="A minimal effort web app with plain JS + Firebase." />
   <link rel="stylesheet" href="../../css/normalize.css" />
   <link rel="stylesheet" href="../../css/main.css" />
-  <script src="../../js/v/Klasses/createKlass.mjs" type="module"></script>
+  <style>
+    figure {
+      float: right;
+    }
+
+    a.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    button.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .generateTestData {
+      margin-top: 1em;
+    }
+
+    div#login-management {
+      text-align: right;
+      padding: 1em;
+      background: #efe9ff;
+      border: 1px solid #704cff;
+      height: 100%;
+      float: right;
+      width: 50%;
+      margin: 10px;
+    }
+  </style>
+  <script type="module">
+    import { handleAuthentication } from "../../js/v/accessControl.mjs";
+    import Klass from "../../js/m/Klass.mjs";
+
+    handleAuthentication();
+  </script>
 </head>
 
 <body>
   <header>
     <div class="wrapper clearfix">
       <div class="title">
-        <h1>Create a new class record</h1>
+        <h1>FitflexStudio</h1>
+        <p>Manage Class Record</p>
       </div>
-      <div id="login-management" hidden="hidden"></div>
+      <div id="login-management"></div>
       <nav>
         <ul>
           <li><a href="../../index.html">Home</a></li>
-          <li><a href="klasses.html">Class</a></li>
+          <li><a href="../../html/Person/persons.html">Persons</a></li>
+          <li><a href="../../html/Membership/membershipOptions.html">Memberships</a></li>
+          <li><a href="../../html/Schedules/schedules.html">Schedule</a></li>
         </ul>
       </nav>
     </div>
   </header>
   <main>
     <div class="wrapper clearfix">
-      <form id="Klass">
-        <div><label>Class Id: <input name="klassId" /></label></div>
-        <div><label>Class Name: <input name="klassName" /></label></div>
-        <!--div><label>Instructor: <select name="instructor"></select></label></div-->
-        <div><label>Start Date: <input name="startDate" type="date" /></label></div>
-        <div><label>End Date: <input name="endDate" type="date" /></label></div>
-        <div><label>Capacity: <input name="capacity" /></label></div>
-        <div><label>Scheduled day: <select name="scheduleWeek"></select></label></div>
-        <div></div><label>Schedule Time: <input name="scheduleTime" /></label></div>
-        <div></div><label>Duration: <input name="duration" /></label></div>
-        <!--div><label>Registered Members: <select name="registeredMember"></select></label></div-->
-        <div>
-          <button name="commit" type="button">Create</button>
-          <progress hidden="hidden" max="100">%</progress>
-        </div>
-      </form>
+      <p>Manage Class Operations</p>
+      <div class="two-col-menu">
+        <img class="menu" src="../../img/class.png" alt="Girl in a jacket" width="100" height="100">
+        <ul class="menu">
+          <li><a href="createKlass.html" class="">Create</a> a new Class record</li>
+          <li><a href="retrieveAndListAllKlasses.html">Retrieve</a> and list all Class records</li>
+          <li><a href="updateKlass.html" class="">Update</a> a Class record</li>
+          <li><a href="deleteKlass.html" class="">Delete</a> a Class record</li>
+        </ul>
+      </div>
     </div>
   </main>
   <br>
   <footer>
     <div class="wrapper clearfix">
-      <a href="./klasses.html">« Back to person management</a>
+      <a href="../../index.html">« Back to Main Menu</a>
     </div>
   </footer>
 </body>
