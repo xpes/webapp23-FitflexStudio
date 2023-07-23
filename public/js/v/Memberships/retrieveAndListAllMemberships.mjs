@@ -81,13 +81,13 @@ async function createBlock(startAt) {
     tableBodyEl.innerHTML = "";
     const MembershipRecords = await Membership.retrieveBlock({ "order": order, "cursor": startAt });
     if (MembershipRecords.length) {
-        let listEl = [];
         // set page references for current (cursor) page
         cursor = MembershipRecords[0][order];
         // set next startAt page reference, if not next page, assign "null" value
         nextPageRef = (MembershipRecords.length < 5) ? null : MembershipRecords[MembershipRecords.length - 1][order];
         for (const Rec of MembershipRecords) {
             const row = tableBodyEl.insertRow();
+            let listEl = [];
             for (const m of Rec.membershipAccess) {
                 listEl.push(ServiceEL.labels[m]);
             }
@@ -96,6 +96,7 @@ async function createBlock(startAt) {
             row.insertCell().textContent = Rec.price;
             row.insertCell().textContent = PlanEL.labels[Rec.duration - 1];
             row.insertCell().textContent = listEl.toString();
+
         }
     }
 }
