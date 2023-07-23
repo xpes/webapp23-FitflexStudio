@@ -11,7 +11,7 @@
 import { fsDb } from "../initFirebase.mjs";
 import {
     collection as fsColl, doc as fsDoc, getDoc, getDocs, orderBy, onSnapshot,
-    query as fsQuery, setDoc, updateDoc, where, writeBatch, deleteField
+    query as fsQuery, setDoc, updateDoc, where, writeBatch, deleteField, limit
 }
     from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import { Enumeration } from "../../lib/Enumeration.mjs";

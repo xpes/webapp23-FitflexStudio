@@ -12,7 +12,7 @@
 <body>
     <header>
         <div class="wrapper clearfix">
-            
+
             <div id="login-management" hidden="hidden"></div>
             <img class="logo" src="../../img/fitflexstudio-logo.png" alt="logo">
 
@@ -27,6 +27,18 @@
     <main>
         <div class="wrapper clearfix">
             <h1>Retrieve and list all Membership records</h1>
+            <div class="nav-options" id="order">
+                <label>Ordered by:
+                    <select>
+                        <option value="membershipId">Membership ID</option>
+                        <option value="membershipName">Membership Name </option>
+                    </select>
+                </label>
+                <span>
+                    <button type="button" id="previousPage">« Previous</button>
+                    <button type="button" id="nextPage">Next »</button>
+                </span>
+            </div>
             <table id="Memberships">
                 <thead>
                     <tr>
