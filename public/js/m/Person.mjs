@@ -130,7 +130,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting name");
   }
 
   //all basic constraints, getters, chechers, setters of the gender attribute
@@ -152,7 +151,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting gender");
   }
 
   //all basic constraints, getters, chechers, setters of the birthDate attribute
@@ -179,7 +177,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting DOB");
   }
 
   //all basic constraints, getters, chechers, setters of the email attribute
@@ -201,7 +198,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting email");
   }
 
   //all basic constraints, getters, chechers, setters of the phoneNumber attribute
@@ -223,7 +219,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting phone");
   }
 
   //all basic constraints, getters, chechers, setters of the address attribute
@@ -245,7 +240,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting address");
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -267,7 +261,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting IBAN");
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -276,34 +269,16 @@ class Person {
     return this._trainingClasses;
   }
 
-  // static checkTrainingClasses(trainingClasses) {
-  //   var constraintViolation = null;
-  //   if (!trainingClasses) {
-  //     // author(s) are optional
-  //     constraintViolation = new NoConstraintViolation();
-  //   } else if (Array.isArray(trainingClasses) && trainingClasses.length > 0) {
-  //     // invoke foreign key constraint check
-  //     for (const idRef of trainingClasses) {
-  //       console.log("In klass check" + idRef.id);
-  //       constraintViolation = Klass.checkKlassIdAsIdRef(idRef.id);
-  //       console.log("done check klass " + constraintViolation instanceof NoConstraintViolation);
-  //       if (!constraintViolation instanceof NoConstraintViolation) {
-  //         return constraintViolation;
-  //       }
-  //     }
-  //   }
-  //   return constraintViolation;
-  // }
-
-  static checkTrainingClasses(klass_id) {
+  static checkTrainingClasses(klass_ids) {
     var constraintViolation = null;
-    if (!klass_id) {
+    if (!klass_ids) {
       // author(s) are optional
       constraintViolation = new NoConstraintViolation();
     } else {
-      // invoke foreign key constraint check
-      constraintViolation =
-        Klass.checkKlassIdAsIdRef(klass_id);
+      for (let k of klass_ids) {
+        constraintViolation =
+          Klass.checkKlassIdAsIdRef(k.id);
+      }
     }
     return constraintViolation;
   }
@@ -326,17 +301,13 @@ class Person {
         capacity: klass.capacity
       }
       // automatically add the derived inverse reference
-      console.log(this._trainingClasses);
       if (this.role === 1) {
-        console.log("in add setting trainer");
         //data.instructor.push({ id: this.personId, name: this.personName });
         this._trainingClasses.push(data);
       } else {
-        console.log("in add setting member");
         //this._trainingClasses[klass_id]._registeredMember[this._personId] = this.personName;
         //data.registeredMember.push({ id: this.personId, name: this.personName });
         this._trainingClasses.push(data);
-        console.log("in add done setting member");
       }
       //this._trainingClasses.push(data);
       Klass.update(data);
@@ -362,23 +333,9 @@ class Person {
       throw validationResult;
     }
   }
-  // set trainingClasses(a) {
-  //   console.log("In taining classes");
-  //   this._trainingClasses = [];
-  //   if (Array.isArray(a)) {  // array of IdRefs
-  //     for (const idRef of a) {
-  //       this.addTrainingClasses(idRef);
-  //     }
-  //   } else {  // map of IdRefs to object references
-  //     for (const idRef of Object.keys(a)) {
-  //       this.addTrainingClasses(a[idRef]);
-  //     }
-  //   }
-  //   console.log("done seeting taining classes");
-  // }
+
   set trainingClasses(a) {
     if (Array.isArray(a)) {  // array of IdRefs
-      console.log("Assigned Training class " + a.length);
       this._trainingClasses = a;
     }
   }
@@ -405,7 +362,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting role");
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -431,7 +387,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting taining ID");
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -457,7 +412,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting taining cat");
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -483,7 +437,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting taining memberID");
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -509,7 +462,6 @@ class Person {
     } else {
       throw validationResult;
     }
-    console.log("done seeting member type");
   }
 
 }
@@ -591,10 +543,8 @@ Person.converter = {
 Person.add = async function (slots) {
   let person = null;
   try {
-    console.log(slots);
     // validate data by creating person instance
     person = new Person(slots);
-    console.log("done creating person");
     // invoke asynchronous ID/uniqueness check
     let validationResult = await Person.checkPersonIdAsId(person.personId);
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
@@ -611,23 +561,19 @@ Person.add = async function (slots) {
       const personDocRef = fsDoc(fsDb, "persons", person.personId.toString()).withConverter(Person.converter),
         klassCollRef = fsColl(fsDb, "klasses").withConverter(Klass.converter);
       const personInverseRef = { id: person.personId, name: person.personName, role: person.role ? person.role : "" };
-      const personInstRef = {};
-      const personMemRef = {};
+      let personInstRef = {};
+      let personMemRef = {};
       if (person.role === 1) {
         personInstRef = { id: person.personId, name: person.personName };
       } else {
         personMemRef = { id: person.personId, name: person.personName };
       }
-      console.log(personInverseRef);
       const batch = writeBatch(fsDb); // initiate batch write object
-      await batch.set(personDocRef, person); // create book record (master)
-      // iterate ID references (foreign keys) of slave class objects (authors) and
-      // create derived inverse reference properties to master class object (book)
-      // Author::authoredBooks
+      await batch.set(personDocRef, person); // create people record (master)
       await Promise.all(person.trainingClasses.map(a => {
         const klassDocRef = fsDoc(klassCollRef, String(a.id));
-        batch.update(klassDocRef, { people: arrayUnion(personInverseRef) });
-        batch.update(klassDocRef, { instructor: arrayUnion(personInstRef) });
+        //batch.update(klassDocRef, { people: arrayUnion(personInverseRef) });
+        //batch.update(klassDocRef, { instructor: arrayUnion(personInstRef) });
         batch.update(klassDocRef, { registeredMember: arrayUnion(personMemRef) });
       }));
       batch.commit(); // commit batch write
@@ -696,8 +642,6 @@ Person.retrieveBlock = async function (params) {
     console.error(`Error retrieving all persons records: ${e}`);
   }
 };
-
-
 
 /**
  * Update a Firestore document in the Firestore collection "persons"
@@ -801,7 +745,11 @@ Person.update = async function (slots) {
       console.log(`No property value changed for person record "${slots.personId}"!`);
     }
   }
-};
+}
+
+
+
+
 /**
  * Delete a Firestore document from the Firestore collection "persons"
  * @param personId: {string}

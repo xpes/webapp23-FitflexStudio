@@ -1,19 +1,25 @@
 [
   {
-    "personId": "1",
+    "personId": 1,
     "personName": "Nourelhouda Benaida",
-    "gender": 2,
+    "gender": "2",
     "birthDate": "1995-06-15",
     "email": "Dadoua46@gmail.com",
     "phoneNumber": "0123567532",
     "address": "konigsstr 10",
     "iban": "DE7865541325679842765",
-    "role": 1,
+    "trainingClasses": [
+      {
+        "id": "1",
+        "name": "yoga"
+      }
+    ],
+    "role": "1",
     "trainerId": "TR123",
     "trainerCategory": 1
   },
   {
-    "personId": "2",
+    "personId": 2,
     "personName": "Yasmine Delabache",
     "gender": 2,
     "birthDate": "1998-04-27",
@@ -21,12 +27,22 @@
     "phoneNumber": "0876547532",
     "address": "place5 de traite de rome",
     "iban": "FR9876543456789065435",
+    "trainingClasses": [
+      {
+        "id": 2,
+        "name": "zumba"
+      },
+      {
+        "id": 5,
+        "name": "boxing"
+      }
+    ],
     "role": 2,
     "memberId": "MI846",
     "membershipType": "1"
   },
   {
-    "personId": "3",
+    "personId": 3,
     "personName": "Tom Hanks",
     "gender": 1,
     "birthDate": "1960-06-15",
@@ -34,12 +50,18 @@
     "phoneNumber": "07654567532",
     "address": "Hollywood 10",
     "iban": "US98765434567890965",
+    "trainingClasses": [
+      {
+        "id": 5,
+        "name": "boxing"
+      }
+    ],
     "role": 1,
     "trainerId": "TR456",
     "trainerCategory": 2
   },
   {
-    "personId": "4",
+    "personId": 4,
     "personName": "Soraya Benaida",
     "gender": 2,
     "birthDate": "1972-03-04",
@@ -47,22 +69,42 @@
     "phoneNumber": "098765678987",
     "address": "rue des jardinbs 35",
     "iban": "DE7865541323243455",
+    "trainingClasses": [
+      {
+        "id": 2,
+        "name": "zumba"
+      },
+      {
+        "id": 5,
+        "name": "boxing"
+      },
+      {
+        "id": 4,
+        "name": "kangooJump"
+      }
+    ],
     "role": 1,
     "trainerId": "TR789",
     "trainerCategory": 3
   },
   {
-    "personId": "5",
+    "personId": 5,
     "personName": "Faouzi Benaida",
     "gender": 1,
     "birthDate": "1966-06-14",
     "email": "Faouzi11@gmail.com",
     "phoneNumber": "0187654345632",
     "address": "5 rue des jardins",
-    "iban": "DE8765445678987655"
+    "iban": "DE8765445678987655",
+    "trainingClasses": [
+      {
+        "id": 2,
+        "name": "zumba"
+      }
+    ]
   },
   {
-    "personId": "6",
+    "personId": 6,
     "personName": "Narimene Benaida",
     "gender": 2,
     "birthDate": "1992-06-02",
@@ -70,38 +112,63 @@
     "phoneNumber": "059876545532",
     "address": "Annaba str 10",
     "iban": "DE8765434567879842765",
+    "trainingClasses": [
+      {
+        "id": 5,
+        "name": "boxing"
+      },
+      {
+        "id": 4,
+        "name": "kangooJump"
+      }
+    ],
     "role": 2,
     "memberId": "MI123",
     "membershipType": "2"
   },
   {
-    "personId": "7",
+    "personId": 7,
     "personName": "Uma Thurmann",
     "gender": 2,
     "birthDate": "1975-06-15",
     "email": "Uma@gmail.com",
     "phoneNumber": "09876545678",
     "address": "Helloworld 10",
+    "trainingClasses": [],
     "iban": "US7984298765567765",
     "role": 2,
     "memberId": "MI456",
     "membershipType": "1"
   },
   {
-    "personId": "8",
+    "personId": 8,
     "personName": "Hope hope",
     "gender": 1,
     "birthDate": "1982-03-15",
     "email": "Hope46@gmail.com",
     "phoneNumber": "098765437532",
     "address": "Alowworls 10",
+    "trainingClasses": [
+      {
+        "id": 3,
+        "name": "bbb"
+      },
+      {
+        "id": 5,
+        "name": "boxing"
+      },
+      {
+        "id": 4,
+        "name": "kangooJump"
+      }
+    ],
     "iban": "DE786559876567893453215",
     "role": 2,
     "memberId": "MI148",
     "membershipType": "1"
   },
   {
-    "personId": "9",
+    "personId": 9,
     "personName": "Ali nedeem",
     "gender": 1,
     "birthDate": "1930-01-09",
@@ -109,12 +176,26 @@
     "phoneNumber": "098765434567",
     "address": "popploop 13",
     "iban": "DE7898765435678",
+    "trainingClasses": [
+      {
+        "id": 3,
+        "name": "bbb"
+      },
+      {
+        "id": 5,
+        "name": "boxing"
+      },
+      {
+        "id": 6,
+        "name": "pilates"
+      }
+    ],
     "role": 2,
     "memberId": "MI428",
     "membershipType": "1"
   },
   {
-    "personId": "10",
+    "personId": 10,
     "personName": "Dorrothee de la cour",
     "gender": 2,
     "birthDate": "1930-06-15",
@@ -122,6 +203,20 @@
     "phoneNumber": "08765267532",
     "address": "konnigburg 2",
     "iban": "DE98765467842765",
+    "trainingClasses": [
+      {
+        "id": 3,
+        "name": "bbb"
+      },
+      {
+        "id": 5,
+        "name": "boxing"
+      },
+      {
+        "id": 6,
+        "name": "pilates"
+      }
+    ],
     "role": 2,
     "memberId": "MI753",
     "membershipType": "1"

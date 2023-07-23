@@ -16,9 +16,9 @@ function generateTestData() {
   console.log("In generate data clicked");
   try {
     console.log("In generate data clicked");
-    Person.generateTestData();
     Klass.generateTestData();
     Membership.generateTestData();
+    Person.generateTestData();
   } catch (e) {
     console.log(`${e.constructor.name}: ${e.message}`);
   }
@@ -29,9 +29,9 @@ function generateTestData() {
 function clearData() {
   if (confirm("Do you really want to delete the entire database?")) {
     try {
-      Person.clearData(false);
-      Klass.clearData(false);
+      Klass.clearData();
       Membership.clearData();
+      Person.clearData();
       console.log("All data cleared.");
     } catch (e) {
       console.log(`${e.constructor.name}: ${e.message}`);

@@ -10,7 +10,6 @@
     "scheduleTime": "18h-20h",
     "duration": "2h"
   },
-
   {
     "klassId": "2",
     "klassName": "zumba",
@@ -53,7 +52,7 @@
     "capacity": "20",
     "scheduleWeek": "7",
     "scheduleTime": "21h-22h",
-    "duration": "1h" 
+    "duration": "1h"
   },
   {
     "klassId": "6",
@@ -66,5 +65,4 @@
     "scheduleTime": "19h-20h",
     "duration": "1h"
   }
-  
 ]

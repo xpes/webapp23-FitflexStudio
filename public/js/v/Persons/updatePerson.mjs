@@ -7,7 +7,7 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Person, { GenderEL, PersonRoleEL } from "../../m/Person.mjs";
+import Person, { GenderEL, PersonRoleEL, TrainerCategoryEL } from "../../m/Person.mjs";
 import Membership from "../../m/Membership.mjs";
 import { fillSelectWithOptions } from "../../../lib/util.mjs";
 import { showProgressBar, hideProgressBar } from "../../../lib/util.mjs";
@@ -32,6 +32,7 @@ let cancelListener = null;
 // set up the gender selection list
 fillSelectWithOptions(formEl.gender, GenderEL.labels);
 fillSelectWithOptions(formEl.role, PersonRoleEL.labels);
+fillSelectWithOptions(formEl.trainerCategory, TrainerCategoryEL.labels);
 
 // fill select with options
 const optionEl = document.createElement("option");
@@ -170,8 +171,8 @@ selectMemberEl.addEventListener("change", async function () {
         formEl[field].value = personRecord[field];
       }
       else if (field === "trainingClasses") {
-        for (var i = 0; i < personRecord[field].length; i++) {
-          formEl[field].options[i + 1].selected = true;
+        for (var i of personRecord[field]) {
+          formEl[field].options[i.id].selected = true;
         }
       }
       else
