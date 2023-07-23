@@ -7,7 +7,7 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
-import Klass from "../../m/Klass.mjs";
+import Klass, { WeekEL } from "../../m/Klass.mjs";
 import Person from "../../m/Person.mjs";
 
 /***************************************************************
@@ -77,6 +77,7 @@ async function createBlock(startAt) {
   console.log("In create block");
   tableBodyEl.innerHTML = "";
   const KlassRecords = await Klass.retrieveBlock({ "order": order, "cursor": startAt });
+  console.log(KlassRecords);
   if (KlassRecords.length) {
     // set page references for current (cursor) page
     cursor = KlassRecords[0][order];
@@ -90,11 +91,10 @@ async function createBlock(startAt) {
       //row.insertCell().textContent = KlassRec.instructor;
       row.insertCell().textContent = KlassRec.startDate;
       row.insertCell().textContent = KlassRec.endDate;
-
       row.insertCell().textContent = KlassRec.capacity;
-      row.insertCell().textContent = WeekEL.labels[ScheduleRec.scheduleWeek - 1];
-      row.insertCell().textContent = ScheduleRec.scheduleTime;
-      row.insertCell().textContent = ScheduleRec.duration;
+      row.insertCell().textContent = WeekEL.labels[KlassRec.scheduleWeek - 1];
+      row.insertCell().textContent = KlassRec.scheduleTime;
+      row.insertCell().textContent = KlassRec.duration;
       //row.insertCell().textContent = KlassRec.registeredMember;
     }
   }

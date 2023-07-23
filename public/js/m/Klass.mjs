@@ -43,7 +43,7 @@ const WeekEL = new Enumeration({ "Mon": "Monday", "Tue": "Tuesday", "Wed": "Wedn
 
 class Klass {
   // record parameter with the ES6 syntax for function parameter destructuring
-  constructor({ klassId, klassName, startDate, endDate, capacity,  scheduleWeek, scheduleTime, duration}) {
+  constructor({ klassId, klassName, startDate, endDate, capacity, scheduleWeek, scheduleTime, duration }) {
     this.klassId = klassId;
     this.klassName = klassName;
     //this.instructor = [];
@@ -258,68 +258,68 @@ class Klass {
     console.log("capacity completed");
   }
 
-    //all basic constraints, getters, chechers, setters of the startDate attribute
-    get scheduleWeek() {
-      return this._scheduleWeek;
+  //all basic constraints, getters, chechers, setters of the startDate attribute
+  get scheduleWeek() {
+    return this._scheduleWeek;
+  }
+  static checkScheduleWeek(scheduleWeek) {
+    if (!scheduleWeek || scheduleWeek === "") {
+      return new MandatoryValueConstraintViolation("A scheduleWeek must be selected!");
+    } else {
+      return new NoConstraintViolation();
     }
-    static checkScheduleWeek(scheduleWeek) {
-      if (!scheduleWeek || scheduleWeek === "") {
-        return new MandatoryValueConstraintViolation("A scheduleWeek must be selected!");
-      } else {
-        return new NoConstraintViolation();
-      }
+  }
+  set scheduleWeek(scheduleWeek) {
+    const validationResult = Klass.checkScheduleWeek(scheduleWeek);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._scheduleWeek = scheduleWeek;
+    } else {
+      throw validationResult;
     }
-    set scheduleWeek(scheduleWeek) {
-      const validationResult = Klass.checkScheduleWeek(scheduleWeek);
-      if (validationResult instanceof NoConstraintViolation) {
-        this._scheduleWeek = scheduleWeek;
-      } else {
-        throw validationResult;
-      }
+  }
+
+  //all basic constraints, getters, chechers, setters of the startDate attribute
+  get scheduleTime() {
+    return this._scheduleTime;
+  }
+  static checkScheduleTime(scheduleTime) {
+    if (!scheduleTime || scheduleTime === "") {
+      return new MandatoryValueConstraintViolation("A scheduleTime must be selected!");
+    } else {
+      return new NoConstraintViolation();
     }
-  
-    //all basic constraints, getters, chechers, setters of the startDate attribute
-    get scheduleTime() {
-      return this._scheduleTime;
+  }
+  set scheduleTime(scheduleTime) {
+    const validationResult = Klass.checkScheduleTime(scheduleTime);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._scheduleTime = scheduleTime;
+    } else {
+      throw validationResult;
     }
-    static checkScheduleTime(scheduleTime) {
-      if (!scheduleTime || scheduleTime === "") {
-        return new MandatoryValueConstraintViolation("A scheduleTime must be selected!");
-      } else {
-        return new NoConstraintViolation();
-      }
+  }
+
+  //all basic constraints, getters, chechers, setters of the registeredMember attribute
+  get duration() {
+    return this._duration;
+  };
+
+  static checkDuration(duration) {
+    if (!duration || duration === "") {
+      return new MandatoryValueConstraintViolation("A duration value must be provided!");
+    } else {
+      return new NoConstraintViolation();
     }
-    set scheduleTime(scheduleTime) {
-      const validationResult = Klass.checkScheduleTime(scheduleTime);
-      if (validationResult instanceof NoConstraintViolation) {
-        this._scheduleTime = scheduleTime;
-      } else {
-        throw validationResult;
-      }
+  }
+
+  set duration(duration) {
+    //console.log("duration");
+    const validationResult = Klass.checkDuration(duration);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._duration = duration;
+    } else {
+      throw validationResult;
     }
-  
-    //all basic constraints, getters, chechers, setters of the registeredMember attribute
-    get duration() {
-      return this._duration;
-    };
-  
-    static checkDuration(duration) {
-      if (!duration || duration === "") {
-        return new MandatoryValueConstraintViolation("A duration value must be provided!");
-      } else {
-        return new NoConstraintViolation();
-      }
-    }
-  
-    set duration(duration) {
-      //console.log("duration");
-      const validationResult = Klass.checkDuration (duration);
-      if (validationResult instanceof NoConstraintViolation) {
-        this._duration = duration;
-      } else {
-        throw validationResult;
-      }
-    }
+  }
   //all basic constraints, getters, chechers, setters of the registeredMember attribute
 
   get registeredMember() {
@@ -457,7 +457,7 @@ Klass.retrieveAll = async function (order) {
 
 Klass.retrieveBlock = async function (params) {
   try {
-    let klassesCollRef = fsColl(fsDb, "klassess");
+    let klassesCollRef = fsColl(fsDb, "klasses");
     // set limit and order in query
     klassesCollRef = fsQuery(klassesCollRef, limit(5));
     if (params.order) klassesCollRef = fsQuery(klassesCollRef, orderBy(params.order));
