@@ -1,5 +1,5 @@
 /**
- * @fileOverview  View methods for the use case "delete Person"
+ * @fileOverview  View methods for the use case "delete Klass"
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
  * @author Nourelhouda Benaida
@@ -34,15 +34,15 @@ for (const KlassRec of KlassRecords) {
 }
 
 /*******************************************************************
- Setup listener on the selected person record synchronising DB with UI
+ Setup listener on the selected klass record synchronising DB with UI
  ******************************************************************/
-// set up listener to document changes on selected person record
+// set up listener to document changes on selected klass record
 selectKlassEl.addEventListener("change", async function () {
   const klassKey = selectKlassEl.value;
   if (klassKey) {
     // cancel record listener if a previous listener exists
     if (cancelListener) cancelListener();
-    // add listener to selected person, returning the function to cancel listener
+    // add listener to selected klass, returning the function to cancel listener
     cancelListener = await Klass.observeChanges(klassKey);
   }
 });
@@ -56,7 +56,7 @@ deleteButton.addEventListener("click", async function () {
   if (!klassId) return;
   if (confirm("Do you really want to delete this Klass record?")) {
     await Klass.destroy(klassId);
-    // remove deleted Person from select options
+    // remove deleted Klass from select options
     selectKlassEl.remove(selectKlassEl.selectedIndex);
   }
 });

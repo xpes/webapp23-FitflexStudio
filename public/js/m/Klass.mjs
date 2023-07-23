@@ -1,5 +1,5 @@
 /**
- * @fileOverview  The model class person with attribute definitions and storage management methods
+ * @fileOverview  The model class Klass with attribute definitions and storage management methods
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
  * @author Nourelhouda Benaida
@@ -17,7 +17,7 @@ import { fsDb } from "../initFirebase.mjs";
 //import { doc as snfsDoc, getDoc as snGetDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import {
   collection as fsColl, deleteDoc, doc as fsDoc, getDoc, getDocs, onSnapshot,
-  orderBy, query as fsQuery, setDoc, updateDoc, limit
+  orderBy, query as fsQuery, setDoc, updateDoc, limit, startAt, writeBatch, arrayUnion
 }
   from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import { Enumeration } from "../../lib/Enumeration.mjs";
@@ -36,7 +36,7 @@ import Person from "./Person.mjs";
 const WeekEL = new Enumeration({ "Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday", "Thu": "Thursday", "Fri": "Friday", "Sat": "Saturday", "Sun": "Sunday" });
 
 /**
- * Constructor function for the class person
+ * Constructor function for the class Klass
  * @constructor
  * @param {{klassId: integer, klassName: string, instructor: string, startDate: number, endDate: string, capacity: integer}} slots - Object creation slots.
  */
@@ -106,7 +106,6 @@ class Klass {
   }
 
   set klassId(klassId) {
-    console.log("klassId : " + klassId);
     var validationResult = Klass.checkKlassId(klassId);
     if (validationResult instanceof NoConstraintViolation) {
       this._klassId = klassId;
@@ -115,7 +114,7 @@ class Klass {
     }
   }
 
-  //all basic constraints, getters, chechers, setters of the personName attribute
+  //all basic constraints, getters, chechers, setters of the KlassName attribute
 
   get klassName() {
     return this._klassName;
@@ -137,7 +136,6 @@ class Klass {
   }
 
   set klassName(klassName) {
-    console.log("klassName : " + klassName);
     const validationResult = Klass.checkKlassName(klassName);
     if (validationResult instanceof NoConstraintViolation) {
       this._klassName = klassName;
@@ -146,40 +144,6 @@ class Klass {
     }
   }
 
-  //all basic constraints, getters, chechers, setters of the instructor attribute
-
-  // get instructor() {
-  //   let instructor = [];
-  //   if (this.people) {
-  //     for (d of this.people) {
-  //       if (d.role == 1) instructor.push(d.name);
-  //     }
-  //   }
-  //   console.log(instructor);
-  //   return instructor.toString();
-  // };
-
-  // static checkInstructor(Instructor) {
-  //   if (!Instructor) {
-  //     return new MandatoryValueConstraintViolation(
-  //       "A Instructor must be provided for a Member!");
-  //   } else if (Instructor === "") {
-  //     return new RangeConstraintViolation(
-  //       "The membership type must be non-empty!");
-  //   } else {
-  //     return new NoConstraintViolation();
-  //   }
-  // }
-
-  // set Instructor(instructor) {
-  //   console.log("instructor : " + instructor);
-  //   const validationResult = Klass.checkInstructor(instructor);
-  //   if (validationResult instanceof NoConstraintViolation) {
-  //     this._instructor = instructor;
-  //   } else {
-  //     throw validationResult;
-  //   }
-  // }
 
   //all basic constraints, getters, chechers, setters of the startDate attribute
   get startDate() {
@@ -195,7 +159,6 @@ class Klass {
   }
 
   set startDate(startDate) {
-    console.log("startDate : " + startDate);
     const validationResult = Klass.checkStartDate(startDate);
     if (validationResult instanceof NoConstraintViolation) {
       this._startDate = startDate;
@@ -218,7 +181,6 @@ class Klass {
   }
 
   set endDate(endDate) {
-    console.log("endDate : " + endDate);
     const validationResult = Klass.checkEndDate(endDate);
     if (validationResult instanceof NoConstraintViolation) {
       this._endDate = endDate;
@@ -248,14 +210,13 @@ class Klass {
   }
 
   set capacity(capacity) {
-    console.log("capacity : " + capacity);
     const validationResult = Klass.checkCapacity(capacity);
     if (validationResult instanceof NoConstraintViolation) {
       this._capacity = capacity;
     } else {
       throw validationResult;
     }
-    console.log("capacity completed");
+    
   }
 
   //all basic constraints, getters, chechers, setters of the startDate attribute
@@ -312,7 +273,7 @@ class Klass {
   }
 
   set duration(duration) {
-    //console.log("duration");
+    
     const validationResult = Klass.checkDuration(duration);
     if (validationResult instanceof NoConstraintViolation) {
       this._duration = duration;
@@ -326,23 +287,7 @@ class Klass {
     return this._registeredMember;
   };
 
-  // static checkRegisteredMember(registeredMember) {
-  //   if (!registeredMember || registeredMember === "") {
-  //     return new MandatoryValueConstraintViolation("A registeredMember value must be provided!");
-  //   } else {
-  //     return new NoConstraintViolation();
-  //   }
-  // }
 
-  // set registeredMember(registeredMember) {
-  //   console.log("registeredMember : " + registeredMember);
-  //   const validationResult = Klass.checkRegisteredMember(registeredMember);
-  //   if (validationResult instanceof NoConstraintViolation) {
-  //     this._registeredMember = registeredMember;
-  //   } else {
-  //     throw validationResult;
-  //   }
-  // }
 
 }
 
@@ -353,7 +298,7 @@ class Klass {
 
 Klass.converter = {
   toFirestore: function (klass) {
-    console.log(klass);
+    
     const data = {
       klassId: klass.klassId,
       klassName: klass.klassName,
@@ -366,7 +311,6 @@ Klass.converter = {
       duration: klass.duration,
       //registeredMember: klass.registeredMember
     };
-    console.log("data " + data);
     return data;
   },
   fromFirestore: function (snapshot, options) {
@@ -383,24 +327,20 @@ Klass.converter = {
       duration: klass.duration,
       //registeredMember: klass.registeredMember
     };
-    console.log(data);
     return new Klass(data);
   }
 };
 
 /**
- * Create a Firestore document in the Firestore collection "persons"
+ * Create a Firestore document in the Firestore collection "Klasses"
  * @param slots: {object}
  * @returns {Promise<void>}
  */
 Klass.add = async function (slots) {
   let klass = null;
-  console.log(`klass added`);
   try {
-    console.log(slots);
-    // validate data by creating person instance
+    // validate data by creating klass instance
     klass = new Klass(slots);
-    console.log(`klass creating new class ` + slots);
     // invoke asynchronous ID/uniqueness check
     let validationResult = await Klass.checkKlassIdAsId(klass.klassId);
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
@@ -410,9 +350,7 @@ Klass.add = async function (slots) {
   }
   if (klass) {
     try {
-      console.log("klass Added");
       const klassDocRef = await fsDoc(fsDb, "klasses", klass.klassId).withConverter(Klass.converter);
-      console.log("Done Database");
       await setDoc(klassDocRef, klass);
       console.log(`klass record "${klass.klassId}" created!`);
     } catch (e) {
@@ -422,13 +360,12 @@ Klass.add = async function (slots) {
 };
 
 /**
- * Load a person record from Firestore
- * @param personId: {object}
- * @returns {Promise<*>} personRecord: {array}
+ * Load a klass record from Firestore
+ * @param klassId: {object}
+ * @returns {Promise<*>} klassRecord: {array}
  */
 Klass.retrieve = async function (klassId) {
   try {
-    console.log("retrieve " + klassId);
     const klassRec = (await getDoc(fsDoc(fsDb, "klasses", klassId)
       .withConverter(Klass.converter))).data();
     console.log(`Klass record "${klassRec.klassId}" retrieved.`);
@@ -439,8 +376,8 @@ Klass.retrieve = async function (klassId) {
 };
 
 /**
- * Load all person records from Firestore
- * @returns {Promise<*>} personRecords: {array}
+ * Load all klass records from Firestore
+ * @returns {Promise<*>} klassRecords: {array}
  */
 Klass.retrieveAll = async function (order) {
   if (!order) order = "klassId";
@@ -477,7 +414,7 @@ Klass.retrieveBlock = async function (params) {
 };
 
 /**
- * Update a Firestore document in the Firestore collection "persons"
+ * Update a Firestore document in the Firestore collection "klasses"
  * @param slots: {object}
  * @returns {Promise<void>}
  */
@@ -552,8 +489,8 @@ Klass.update = async function (slots) {
 };
 
 /**
- * Delete a Firestore document from the Firestore collection "persons"
- * @param personId: {string}
+ * Delete a Firestore document from the Firestore collection "klasses"
+ * @param klassId: {string}
  * @returns {Promise<void>}
  */
 Klass.destroy = async function (klassId) {
@@ -572,8 +509,6 @@ Klass.destroy = async function (klassId) {
  */
 Klass.generateTestData = async function () {
   try {
-    console.log("Generating test data...");
-    console.log("working");
     const response = await fetch("../../test-data/klasses.json");
     const klassRecs = await response.json();
     await Promise.all(klassRecs.map(d => Klass.add(d)));
@@ -588,7 +523,6 @@ Klass.generateTestData = async function () {
 Klass.clearData = async function (confirmation = true) {
   if (confirm("Do you really want to delete all klass records?")) {
     try {
-      console.log("Clearing test data...");
       const klassesCollRef = fsColl(fsDb, "klasses");
       const klassesQrySn = (await getDocs(klassesCollRef));
       await Promise.all(klassesQrySn.docs.map(d => Klass.destroy(d.id)))
@@ -604,18 +538,14 @@ Klass.observeChanges = async function (klassId) {
     // listen document changes, returning a snapshot (snapshot) on every change
     const klassDocRef = fsDoc(fsDb, "klasses", klassId).withConverter(Klass.converter);
     const klassRec = (await getDoc(klassDocRef)).data();
-    console.log(klassRec);
     return onSnapshot(klassDocRef, function (snapshot) {
-      console.log("In snapshot function");
       // create object with original document data
       const originalData = { itemName: "klass", description: `${klassRec.klassName} (classId: ${klassRec.klassId})` };
-      console.log("orginal before " + originalData);
       if (!snapshot.data()) { // removed: if snapshot has not data
         originalData.type = "REMOVED";
         createModalFromChange(originalData); // invoke modal window reporting change of original data
       } else if (JSON.stringify(klassRec) !== JSON.stringify(snapshot.data())) {
         originalData.type = "MODIFIED";
-        console.log(originalData);
         createModalFromChange(originalData); // invoke modal window reporting change of original data
       }
     });

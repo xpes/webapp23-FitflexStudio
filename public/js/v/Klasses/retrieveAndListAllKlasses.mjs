@@ -1,5 +1,5 @@
 /**
- * @fileOverview  View methods for the use case "retrieve and list Persons"
+ * @fileOverview  View methods for the use case "retrieve and list Klasses"
  * @author Gerd Wagner
  * @author Juan-Francisco Reyes
  * @author Nourelhouda Benaida
@@ -70,32 +70,28 @@ selectOrderEl.addEventListener("change", async function (e) {
 const tableBodyEl = document.querySelector("table#Klasses>tbody");
 
 /***************************************************************
- Render list of all Person records
+ Render list of all Klass records
  ***************************************************************/
-// for each Person, create a table row with a cell for each attribute
+// for each Klass, create a table row with a cell for each attribute
 async function createBlock(startAt) {
   console.log("In create block");
   tableBodyEl.innerHTML = "";
   const KlassRecords = await Klass.retrieveBlock({ "order": order, "cursor": startAt });
-  console.log(KlassRecords);
   if (KlassRecords.length) {
     // set page references for current (cursor) page
     cursor = KlassRecords[0][order];
     // set next startAt page reference, if not next page, assign "null" value
     nextPageRef = (KlassRecords.length < 5) ? null : KlassRecords[KlassRecords.length - 1][order];
     for (const KlassRec of KlassRecords) {
-      console.log("In for loop " + KlassRec);
       const row = tableBodyEl.insertRow();
       row.insertCell().textContent = KlassRec.klassId;
       row.insertCell().textContent = KlassRec.klassName;
-      //row.insertCell().textContent = KlassRec.instructor;
       row.insertCell().textContent = KlassRec.startDate;
       row.insertCell().textContent = KlassRec.endDate;
       row.insertCell().textContent = KlassRec.capacity;
       row.insertCell().textContent = WeekEL.labels[KlassRec.scheduleWeek - 1];
       row.insertCell().textContent = KlassRec.scheduleTime;
       row.insertCell().textContent = KlassRec.duration;
-      //row.insertCell().textContent = KlassRec.registeredMember;
     }
   }
 }
