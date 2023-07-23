@@ -60,7 +60,7 @@ service cloud.firestore {
           && request.resource.data.capacity != null ? checkMandatory(request.resource.data.capacity) : true
           && request.resource.data.scheduleWeek != null ? checkMandatory(request.resource.data.scheduleWeek) : true
           && request.resource.data.scheduleTime != null ? checkMandatory(request.resource.data.scheduleTime) : true
-          && request.resource.data.duratio != null ? checkMandatory(request.resource.data.duration) : true
+          && request.resource.data.duration != null ? checkMandatory(request.resource.data.duration) : true
           && request.resource.data.registreredMember != null ? checkMandatory(request.resource.data.registreredMember) : true
           ;
       
@@ -75,7 +75,7 @@ service cloud.firestore {
           && request.resource.data.capacity != null ? checkMandatory(request.resource.data.capacity) : true
           && request.resource.data.scheduleWeek != null ? checkMandatory(request.resource.data.scheduleWeek) : true
           && request.resource.data.scheduleTime != null ? checkMandatory(request.resource.data.scheduleTime) : true
-          && request.resource.data.duratio != null ? checkMandatory(request.resource.data.duration) : true
+          && request.resource.data.duration != null ? checkMandatory(request.resource.data.duration) : true
           && request.resource.data.registreredMember != null ? checkMandatory(request.resource.data.registreredMember) : true
           ;
           
