@@ -89,7 +89,7 @@ async function createBlock(startAt) {
             const row = tableBodyEl.insertRow();
             let listEl = [];
             for (const m of Rec.membershipAccess) {
-                listEl.push(ServiceEL.labels[m]);
+                listEl.push(ServiceEL.labels[m - 1]);
             }
             row.insertCell().textContent = Rec.membershipId;
             row.insertCell().textContent = Rec.membershipName;
