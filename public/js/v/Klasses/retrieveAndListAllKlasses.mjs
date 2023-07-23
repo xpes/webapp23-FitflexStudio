@@ -7,8 +7,8 @@
 /***************************************************************
  Import classes and data types
  ***************************************************************/
- import Klass from "../../m/Klass.mjs";
- import Person from "../../m/Person.mjs";
+import Klass from "../../m/Klass.mjs";
+import Person from "../../m/Person.mjs";
 
 /***************************************************************
  Load data
@@ -63,7 +63,7 @@ selectOrderEl.addEventListener("change", async function (e) {
   previousBtnEl.disabled = true;
   nextBtnEl.disabled = false;
 });
- 
+
 /***************************************************************
  Declare variables for accessing UI elements
  ***************************************************************/
@@ -77,10 +77,11 @@ async function createBlock(startAt) {
   console.log("In create block");
   tableBodyEl.innerHTML = "";
   const KlassRecords = await Klass.retrieveBlock({ "order": order, "cursor": startAt });
+  console.log(KlassRecords);
   if (KlassRecords.length) {
     // set page references for current (cursor) page
     cursor = KlassRecords[0][order];
-   // set next startAt page reference, if not next page, assign "null" value
+    // set next startAt page reference, if not next page, assign "null" value
     nextPageRef = (KlassRecords.length < 5) ? null : KlassRecords[KlassRecords.length - 1][order];
     for (const KlassRec of KlassRecords) {
       console.log("In for loop " + KlassRec);

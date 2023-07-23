@@ -330,6 +330,7 @@ async function createMultiSelectionWidget(formEl, idRefs, inputEl,
 }
 
 
+
 export {
   isNonEmptyString, isIntegerOrIntegerString, createOption, createMultiSelectionWidget,
   fillSelectWithOptions, createChoiceWidget, showProgressBar, hideProgressBar,

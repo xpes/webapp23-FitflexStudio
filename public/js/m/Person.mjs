@@ -17,7 +17,7 @@ import { fsDb } from "../initFirebase.mjs";
 //import { doc as snfsDoc, getDoc as snGetDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import {
   collection as fsColl, deleteDoc, doc as fsDoc, getDoc, getDocs, onSnapshot,
-  orderBy, query as fsQuery, setDoc, updateDoc, limit, startAt
+  orderBy, query as fsQuery, setDoc, updateDoc, limit, startAt, writeBatch, arrayUnion
 }
   from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import { Enumeration } from "../../lib/Enumeration.mjs";
@@ -28,6 +28,7 @@ import {
 
 import { createModalFromChange } from "../../lib/util.mjs";
 import Membership from "./Membership.mjs";
+import Klass from "./Klass.mjs";
 /**
  * Define Enumerations
  */
@@ -42,7 +43,7 @@ const TrainerCategoryEL = new Enumeration(["Yoga Trainer", "Fitness Trainer", "P
  */
 class Person {
   // record parameter with the ES6 syntax for function parameter destructuring
-  constructor({ personId, personName, gender, birthDate, email, phoneNumber, address, iban, role, trainerId, trainerCategory, memberId, membershipType }) {
+  constructor({ personId, personName, gender, birthDate, email, phoneNumber, address, iban, trainingClasses, role, trainerId, trainerCategory, memberId, membershipType }) {
     this.personId = personId;
     this.personName = personName;
     this.gender = gender;
@@ -51,6 +52,7 @@ class Person {
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.iban = iban;
+    this.trainingClasses = trainingClasses;
     if (role) this.role = role;
     if (trainerId) this.trainerId = trainerId;
     if (trainerCategory) this.trainerCategory = trainerCategory;
@@ -128,6 +130,7 @@ class Person {
     } else {
       throw validationResult;
     }
+    console.log("done seeting name");
   }
 
   //all basic constraints, getters, chechers, setters of the gender attribute
@@ -149,6 +152,7 @@ class Person {
     } else {
       throw validationResult;
     }
+    console.log("done seeting gender");
   }
 
   //all basic constraints, getters, chechers, setters of the birthDate attribute
@@ -175,6 +179,7 @@ class Person {
     } else {
       throw validationResult;
     }
+    console.log("done seeting DOB");
   }
 
   //all basic constraints, getters, chechers, setters of the email attribute
@@ -196,6 +201,7 @@ class Person {
     } else {
       throw validationResult;
     }
+    console.log("done seeting email");
   }
 
   //all basic constraints, getters, chechers, setters of the phoneNumber attribute
@@ -217,6 +223,7 @@ class Person {
     } else {
       throw validationResult;
     }
+    console.log("done seeting phone");
   }
 
   //all basic constraints, getters, chechers, setters of the address attribute
@@ -238,6 +245,7 @@ class Person {
     } else {
       throw validationResult;
     }
+    console.log("done seeting address");
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -259,6 +267,120 @@ class Person {
     } else {
       throw validationResult;
     }
+    console.log("done seeting IBAN");
+  }
+
+  //all basic constraints, getters, chechers, setters of the IBAN attribute
+
+  get trainingClasses() {
+    return this._trainingClasses;
+  }
+
+  // static checkTrainingClasses(trainingClasses) {
+  //   var constraintViolation = null;
+  //   if (!trainingClasses) {
+  //     // author(s) are optional
+  //     constraintViolation = new NoConstraintViolation();
+  //   } else if (Array.isArray(trainingClasses) && trainingClasses.length > 0) {
+  //     // invoke foreign key constraint check
+  //     for (const idRef of trainingClasses) {
+  //       console.log("In klass check" + idRef.id);
+  //       constraintViolation = Klass.checkKlassIdAsIdRef(idRef.id);
+  //       console.log("done check klass " + constraintViolation instanceof NoConstraintViolation);
+  //       if (!constraintViolation instanceof NoConstraintViolation) {
+  //         return constraintViolation;
+  //       }
+  //     }
+  //   }
+  //   return constraintViolation;
+  // }
+
+  static checkTrainingClasses(klass_id) {
+    var constraintViolation = null;
+    if (!klass_id) {
+      // author(s) are optional
+      constraintViolation = new NoConstraintViolation();
+    } else {
+      // invoke foreign key constraint check
+      constraintViolation =
+        Klass.checkKlassIdAsIdRef(klass_id);
+    }
+    return constraintViolation;
+  }
+
+  addTrainingClasses(a) {
+    // a can be an ID reference or an object reference
+    const klass_id = (typeof a !== "object") ? a : a.klassId;
+    const validationResult = Klass.checkKlassId(klass_id);
+    if (klass_id && validationResult instanceof NoConstraintViolation) {
+      // add the new klass reference
+      let data, klass;
+      klass = Klass.retrieve(klass_id);
+      data = {
+        klassId: klass.klassId,
+        klassName: klass.klassName,
+        instructor: klass.instructor,
+        registeredMember: klass.registeredMember,
+        startDate: klass.startDate,
+        endDate: klass.endDate,
+        capacity: klass.capacity
+      }
+      // automatically add the derived inverse reference
+      console.log(this._trainingClasses);
+      if (this.role === 1) {
+        console.log("in add setting trainer");
+        //data.instructor.push({ id: this.personId, name: this.personName });
+        this._trainingClasses.push(data);
+      } else {
+        console.log("in add setting member");
+        //this._trainingClasses[klass_id]._registeredMember[this._personId] = this.personName;
+        //data.registeredMember.push({ id: this.personId, name: this.personName });
+        this._trainingClasses.push(data);
+        console.log("in add done setting member");
+      }
+      //this._trainingClasses.push(data);
+      Klass.update(data);
+    } else {
+      throw validationResult;
+    }
+  }
+  removeTrainingClasses(a) {
+    // a can be an ID reference or an object reference
+    const klass_id = (typeof a !== "object") ? a : a.klassId;
+    const validationResult = Klass.checkKlassId(klass_id);
+    if (klass_id && validationResult instanceof NoConstraintViolation) {
+      // automatically delete the derived inverse reference
+      if (this.role === 1) {
+        delete this._trainingClasses[klass_id].instructor[this._personId];
+      } else {
+        delete this._trainingClasses[klass_id].registeredMember[this._personId];
+      }
+      Klass.update(this._trainingClasses[klass_id]);
+      // delete the klass reference
+      delete this._trainingClasses[klass_id];
+    } else {
+      throw validationResult;
+    }
+  }
+  // set trainingClasses(a) {
+  //   console.log("In taining classes");
+  //   this._trainingClasses = [];
+  //   if (Array.isArray(a)) {  // array of IdRefs
+  //     for (const idRef of a) {
+  //       this.addTrainingClasses(idRef);
+  //     }
+  //   } else {  // map of IdRefs to object references
+  //     for (const idRef of Object.keys(a)) {
+  //       this.addTrainingClasses(a[idRef]);
+  //     }
+  //   }
+  //   console.log("done seeting taining classes");
+  // }
+  set trainingClasses(a) {
+    if (Array.isArray(a)) {  // array of IdRefs
+      console.log("Assigned Training class " + a.length);
+      this._trainingClasses = a;
+    }
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -277,13 +399,13 @@ class Person {
     }
   }
   set role(role) {
-    console.log("In role");
     var validationResult = Person.checkRole(role);
     if (validationResult instanceof NoConstraintViolation) {
       this._role = role;
     } else {
       throw validationResult;
     }
+    console.log("done seeting role");
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -292,7 +414,6 @@ class Person {
     return this._trainerId;
   }
   static checkTrainerId(trainerId, role) {
-    console.log(trainerId + " " + role + " " + PersonRoleEL.TRAINER);
     if (parseInt(role) === PersonRoleEL.TRAINER && !trainerId) {
       return new MandatoryValueConstraintViolation(
         "A training ID must be provided for a Trainer!");
@@ -304,13 +425,13 @@ class Person {
     }
   }
   set trainerId(trainerId) {
-    console.log("In trainer Id");
     var validationResult = Person.checkTrainerId(trainerId, this.role);
     if (validationResult instanceof NoConstraintViolation) {
       this._trainerId = trainerId;
     } else {
       throw validationResult;
     }
+    console.log("done seeting taining ID");
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -330,13 +451,13 @@ class Person {
     }
   }
   set trainerCategory(trainerCategory) {
-    console.log("In tainer category");
     var validationResult = Person.checkTrainerCategory(trainerCategory, this.role);
     if (validationResult instanceof NoConstraintViolation) {
       this._trainerCategory = trainerCategory;
     } else {
       throw validationResult;
     }
+    console.log("done seeting taining cat");
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -345,8 +466,6 @@ class Person {
     return this._memberId;
   }
   static checkMemberId(memberId, role) {
-    console.log(memberId + " " + role);
-    console.log(parseInt(role) !== PersonRoleEL.MEMBER);
     if (parseInt(role) === PersonRoleEL.MEMBER && !memberId) {
       return new MandatoryValueConstraintViolation(
         "A member ID must be provided for a Member!");
@@ -358,13 +477,13 @@ class Person {
     }
   }
   set memberId(memberId) {
-    console.log("In member ID");
     var validationResult = Person.checkMemberId(memberId, this.role);
     if (validationResult instanceof NoConstraintViolation) {
       this._memberId = memberId;
     } else {
       throw validationResult;
     }
+    console.log("done seeting taining memberID");
   }
 
   //all basic constraints, getters, chechers, setters of the IBAN attribute
@@ -373,7 +492,6 @@ class Person {
     return this._membershipType;
   }
   static checkMembershipType(membershipType, role) {
-    console.log(membershipType + " " + role);
     if (parseInt(role) === PersonRoleEL.MEMBER && !membershipType) {
       return new MandatoryValueConstraintViolation(
         "A membership type must be provided for a Member!");
@@ -385,14 +503,15 @@ class Person {
     }
   }
   set membershipType(membershipType) {
-    console.log("In membership Type");
     var validationResult = Person.checkMembershipType(membershipType, this.role);
     if (validationResult instanceof NoConstraintViolation) {
       this._membershipType = membershipType;
     } else {
       throw validationResult;
     }
+    console.log("done seeting member type");
   }
+
 }
 
 
@@ -408,7 +527,6 @@ class Person {
 */
 Person.converter = {
   toFirestore: function (person) {
-    console.log(person);
     var data = {
       personId: person.personId,
       personName: person.personName,
@@ -417,29 +535,26 @@ Person.converter = {
       email: person.email,
       phoneNumber: person.phoneNumber,
       address: person.address,
-      iban: person.iban
+      iban: person.iban,
+      trainingClasses: person.trainingClasses
     };
     if (person.role) {
       data["role"] = person.role;
       switch (parseInt(person.role)) {
         case PersonRoleEL.TRAINER:
-          console.log("Switch " + PersonRoleEL.TRAINER + " " + person.role);
           data["trainerId"] = person.trainerId;
           data["trainerCategory"] = person.trainerCategory;
           break;
         case PersonRoleEL.MEMBER:
-          console.log("Switch " + PersonRoleEL.MEMBER + " " + person.role);
           data["memberId"] = person.memberId;
           data["membershipType"] = person.membershipType;
           break;
       }
     }
-    console.log(data);
     return data;
   },
   fromFirestore: function (snapshot, options) {
     const person = snapshot.data(options);
-    console.log(person.personId);
     var data = {
       personId: person.personId,
       personName: person.personName,
@@ -448,7 +563,8 @@ Person.converter = {
       email: person.email,
       phoneNumber: person.phoneNumber,
       address: person.address,
-      iban: person.iban
+      iban: person.iban,
+      trainingClasses: person.trainingClasses
     };
     if (person.role) {
       data["role"] = person.role;
@@ -463,7 +579,6 @@ Person.converter = {
           break;
       }
     }
-    console.log(data);
     return new Person(data);
   }
 };
@@ -476,15 +591,15 @@ Person.converter = {
 Person.add = async function (slots) {
   let person = null;
   try {
+    console.log(slots);
     // validate data by creating person instance
     person = new Person(slots);
+    console.log("done creating person");
     // invoke asynchronous ID/uniqueness check
     let validationResult = await Person.checkPersonIdAsId(person.personId);
     if (!validationResult instanceof NoConstraintViolation) throw validationResult;
     if (person.role === 2) {
-      console.log("Membersip ref ID " + person.membershipType);
       validationResult = await Membership.checkMembershipIdAsIdRef(person.membershipType);
-      console.log("completed refID check " + validationResult.message);
       if (!validationResult instanceof NoConstraintViolation) throw validationResult.message;
     }
   } catch (e) {
@@ -493,11 +608,32 @@ Person.add = async function (slots) {
   }
   if (person) {
     try {
-      console.log(person);
-      const personDocRef = fsDoc(fsDb, "persons", person.personId.toString()).withConverter(Person.converter);
-      await setDoc(personDocRef, person);
+      const personDocRef = fsDoc(fsDb, "persons", person.personId.toString()).withConverter(Person.converter),
+        klassCollRef = fsColl(fsDb, "klasses").withConverter(Klass.converter);
+      const personInverseRef = { id: person.personId, name: person.personName, role: person.role ? person.role : "" };
+      const personInstRef = {};
+      const personMemRef = {};
+      if (person.role === 1) {
+        personInstRef = { id: person.personId, name: person.personName };
+      } else {
+        personMemRef = { id: person.personId, name: person.personName };
+      }
+      console.log(personInverseRef);
+      const batch = writeBatch(fsDb); // initiate batch write object
+      await batch.set(personDocRef, person); // create book record (master)
+      // iterate ID references (foreign keys) of slave class objects (authors) and
+      // create derived inverse reference properties to master class object (book)
+      // Author::authoredBooks
+      await Promise.all(person.trainingClasses.map(a => {
+        const klassDocRef = fsDoc(klassCollRef, String(a.id));
+        batch.update(klassDocRef, { people: arrayUnion(personInverseRef) });
+        batch.update(klassDocRef, { instructor: arrayUnion(personInstRef) });
+        batch.update(klassDocRef, { registeredMember: arrayUnion(personMemRef) });
+      }));
+      batch.commit(); // commit batch write
       console.log(`person record "${person.personId}" created!`);
-    } catch (e) {
+    }
+    catch (e) {
       console.error(`${e.constructor.name}: ${e.message} + ${e}`);
     }
   }
@@ -618,34 +754,34 @@ Person.update = async function (slots) {
       if (validationResult instanceof NoConstraintViolation) updatedSlots.iban = slots.iban;
       else throw validationResult;
     }
+    if (Array.isArray(slots.trainingClasses) && slots.trainingClasses.length > 0) {
+      validationResult = await Person.checkTrainingClasses(slots.trainingClasses);
+      if (validationResult instanceof NoConstraintViolation) updatedSlots.trainingClasses = slots.trainingClasses;
+      else throw validationResult;
+    }
     if (personBeforeUpdate.role !== slots.role) {
-      console.log("role value " + slots.role);
       validationResult = Person.checkRole(slots.role);
       if (validationResult instanceof NoConstraintViolation) updatedSlots.role = slots.role;
       else throw validationResult;
     }
     if (slots.role === "1") {
       if (personBeforeUpdate.trainerId !== slots.trainerId) {
-        console.log("membershipType updated " + slots.trainerId);
         validationResult = Person.checkTrainerId(slots.trainerId, slots.role);
         if (validationResult instanceof NoConstraintViolation) updatedSlots.trainerId = slots.trainerId;
         else throw validationResult;
       }
       if (personBeforeUpdate.trainerCategory !== slots.trainerCategory) {
-        console.log("membershipType updated " + slots.trainerCategory);
         validationResult = Person.checkTrainerCategory(slots.trainerCategory, slots.role);
         if (validationResult instanceof NoConstraintViolation) updatedSlots.trainerCategory = slots.trainerCategory;
         else throw validationResult;
       }
     } else if (slots.role === "2") {
       if (personBeforeUpdate.memberId !== slots.memberId) {
-        console.log("membershipType updated " + slots.memberId);
         validationResult = Person.checkMemberId(slots.memberId, slots.role);
         if (validationResult instanceof NoConstraintViolation) updatedSlots.memberId = slots.memberId;
         else throw validationResult;
       }
       if (personBeforeUpdate.membershipType !== slots.membershipType) {
-        console.log("membershipType updated " + slots.membershipType);
         validationResult = Person.checkMembershipType(slots.membershipType, slots.role);
         if (validationResult instanceof NoConstraintViolation) updatedSlots.membershipType = slots.membershipType;
         else throw validationResult;

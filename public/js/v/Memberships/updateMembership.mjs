@@ -74,7 +74,13 @@ selectMembershipEl.addEventListener("change", async function () {
         const membershipRecord = await Membership.retrieve(membershipId);
         for (const field of ["membershipId", "membershipName", "price", "duration", "membershipAccess"]) {
             if (field === "membershipAccess") {
-                formEl[field].values = membershipRecord[field];
+                for (var i = 0; i < formEl[field].options.length; i++) {
+                    formEl[field].options[i].selected = false;
+                }
+                for (let i of membershipRecord[field]) {
+                    console.log(i);
+                    formEl[field].options[i].selected = true;
+                }
             }
             else
                 formEl[field].value = membershipRecord[field] !== undefined ? membershipRecord[field] : "";

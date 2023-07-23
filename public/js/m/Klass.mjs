@@ -17,7 +17,7 @@ import { fsDb } from "../initFirebase.mjs";
 //import { doc as snfsDoc, getDoc as snGetDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import {
   collection as fsColl, deleteDoc, doc as fsDoc, getDoc, getDocs, onSnapshot,
-  orderBy, query as fsQuery, setDoc, updateDoc
+  orderBy, query as fsQuery, setDoc, updateDoc, limit
 }
   from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
 import { Enumeration } from "../../lib/Enumeration.mjs";
@@ -42,14 +42,14 @@ import Person from "./Person.mjs";
 
 class Klass {
   // record parameter with the ES6 syntax for function parameter destructuring
-  constructor({ klassId, klassName, instructor, startDate, endDate, capacity,registeredMember }) {
+  constructor({ klassId, klassName, startDate, endDate, capacity }) {
     this.klassId = klassId;
     this.klassName = klassName;
-    this.instructor = instructor;
+    //this.instructor = [];
     this.startDate = startDate;
     this.endDate = endDate;
     this.capacity = capacity;
-    this.registeredMember = registeredMember; 
+    //this.registeredMember = [];
   }
 
   get klassId() {
@@ -88,18 +88,21 @@ class Klass {
     return validationResult;
   }
 
-  static checkKlassIdAsIdRef(id) {
-    var validationResult = Klass.checkKlassId(id);
+  static async checkKlassIdAsIdRef(id) {
+    let validationResult = Klass.checkKlassId(id);
     if ((validationResult instanceof NoConstraintViolation) && id) {
-      if (!Klass.instances[id]) {
+      const klassDocSn = await getDoc(fsDoc(fsDb, "klasses", id));
+      console.log("exist" + klassDocSn.exists());
+      if (!klassDocSn.exists()) {
         validationResult = new ReferentialIntegrityConstraintViolation(
-          'There is no klass record with this klass ID!');
+          "There is no class record with this ID!");
       }
     }
     return validationResult;
   }
 
   set klassId(klassId) {
+    console.log("klassId : " + klassId);
     var validationResult = Klass.checkKlassId(klassId);
     if (validationResult instanceof NoConstraintViolation) {
       this._klassId = klassId;
@@ -108,115 +111,124 @@ class Klass {
     }
   }
 
-    //all basic constraints, getters, chechers, setters of the personName attribute
+  //all basic constraints, getters, chechers, setters of the personName attribute
 
-    get klassName() {
-      return this._klassName;
-    };
-  
-    static checkKlassName( klassName) {
-      const KLASSNAME_LENGTH_MAX = 50;
-      if (!klassName) {
-        return new MandatoryValueConstraintViolation("A class name must be provided!");
-      } else if (klassName === "") {
-        return new RangeConstraintViolation("The name must be a non-empty string!");
-      } else if (klassName.length > KLASSNAME_LENGTH_MAX) {
-        return new StringLengthConstraintViolation(
-          `The value of the class must be at most ${KLASSNAME_LENGTH_MAX} characters!`);
-      }
-      else {
-        return new NoConstraintViolation();
+  get klassName() {
+    return this._klassName;
+  };
+
+  static checkKlassName(klassName) {
+    const KLASSNAME_LENGTH_MAX = 50;
+    if (!klassName) {
+      return new MandatoryValueConstraintViolation("A class name must be provided!");
+    } else if (klassName === "") {
+      return new RangeConstraintViolation("The name must be a non-empty string!");
+    } else if (klassName.length > KLASSNAME_LENGTH_MAX) {
+      return new StringLengthConstraintViolation(
+        `The value of the class must be at most ${KLASSNAME_LENGTH_MAX} characters!`);
+    }
+    else {
+      return new NoConstraintViolation();
+    }
+  }
+
+  set klassName(klassName) {
+    console.log("klassName : " + klassName);
+    const validationResult = Klass.checkKlassName(klassName);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._klassName = klassName;
+    } else {
+      throw validationResult;
+    }
+  }
+
+  //all basic constraints, getters, chechers, setters of the instructor attribute
+
+  get instructor() {
+    let instructor = [];
+    if (this.people) {
+      for (d of this.people) {
+        if (d.role == 1) instructor.push(d.name);
       }
     }
-  
-    set klassName( klassName) {
-      console.log("klassName");
-      const validationResult = Klass.checkKlassName( klassName);
-      if (validationResult instanceof NoConstraintViolation) {
-        this._klassName = klassName;
-      } else {
-        throw validationResult;
-      }
+    console.log(instructor);
+    return instructor.toString();
+  };
+
+  // static checkInstructor(Instructor) {
+  //   if (!Instructor) {
+  //     return new MandatoryValueConstraintViolation(
+  //       "A Instructor must be provided for a Member!");
+  //   } else if (Instructor === "") {
+  //     return new RangeConstraintViolation(
+  //       "The membership type must be non-empty!");
+  //   } else {
+  //     return new NoConstraintViolation();
+  //   }
+  // }
+
+  // set Instructor(instructor) {
+  //   console.log("instructor : " + instructor);
+  //   const validationResult = Klass.checkInstructor(instructor);
+  //   if (validationResult instanceof NoConstraintViolation) {
+  //     this._instructor = instructor;
+  //   } else {
+  //     throw validationResult;
+  //   }
+  // }
+
+  //all basic constraints, getters, chechers, setters of the startDate attribute
+  get startDate() {
+    return this._startDate;
+  };
+
+  static checkStartDate(startDate) {
+    if (!startDate) {
+      return new MandatoryValueConstraintViolation("A date must be provided!");
+    } else {
+      return new NoConstraintViolation();
     }
+  }
 
-        //all basic constraints, getters, chechers, setters of the instructor attribute
+  set startDate(startDate) {
+    console.log("startDate : " + startDate);
+    const validationResult = Klass.checkStartDate(startDate);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._startDate = startDate;
+    } else {
+      throw validationResult;
+    }
+  }
 
-   get Instructor() {
-     return this._instructor;
-   };
-   
-  //  static checkInstructor( instructor) {
-  //    if (!instructor || instructor === "") {
-  //      return new MandatoryValueConstraintViolation("An instructor value must be provided!");
-  //    } else {
-  //      return new NoConstraintViolation();
-  //    }
-  //  }
-   
-   set Instructor( instructor) {
-     const validationResult = Klass.checkInstructor( instructor);
-     if (validationResult instanceof NoConstraintViolation) {
-       this._instructor = instructor;
-     } else {
-       throw validationResult;
-     }
-   }
+  //all basic constraints, getters, chechers, setters of the endDate attribute
+  get endDate() {
+    return this._endDate;
+  };
 
-    //all basic constraints, getters, chechers, setters of the startDate attribute
-   get startDate() {
-     return this._startDate;
-   };
-   
-   static checkStartDate( startDate) {
-     if (!startDate) {
-       return new MandatoryValueConstraintViolation("A date must be provided!");
-     } else if (startDate === "") {
-       return new RangeConstraintViolation("The date must be a non-empty string!");
-     } else {
-       return new NoConstraintViolation();
-     }
-   }
-   set startDate( startDate) {
-     const validationResult = Klass.checkStartDate( startDate);
-     if (validationResult instanceof NoConstraintViolation) {
-       this._startDate = startDate;
-     } else {
-       throw validationResult;
-     }
-   } 
+  static checkEndDate(endDate) {
+    if (!endDate) {
+      return new MandatoryValueConstraintViolation("A date must be provided!");
+    } else {
+      return new NoConstraintViolation();
+    }
+  }
 
-  //  //all basic constraints, getters, chechers, setters of the endDate attribute
-  //  get endDate() {
-  //    return this.endDate;
-  //  };
+  set endDate(endDate) {
+    console.log("endDate : " + endDate);
+    const validationResult = Klass.checkEndDate(endDate);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._endDate = endDate;
+    } else {
+      throw validationResult;
+    }
+  }
 
-  //  static checkEndDate( endDate) {
-  //    if (!endDate) {
-  //      return new MandatoryValueConstraintViolation("A date must be provided!");
-  //    } else if (endDate === "") {
-  //      return new RangeConstraintViolation("The date must be a non-empty string!");
-  //    } else {
-  //      return new NoConstraintViolation();
-  //    }
-  //  }
-
-
-  //  set endDate( endDate) {
-  //    console.log("endDate");
-  //    const validationResult = Klass.checkEndDate( endDate);
-  //    if (validationResult instanceof NoConstraintViolation) {
-  //      this._endDate = endDate;
-  //    } else {
-  //      throw validationResult;
-  //    }
-  //  }
-    //all basic constraints, getters, chechers, setters of the capacity attribute
 
   get capacity() {
     return this._capacity;
   };
 
-  static checkCapacity( capacity) {
+  static checkCapacity(capacity) {
     const CAPACITY_MAX = 20;
     if (!capacity) {
       return new MandatoryValueConstraintViolation("A capacity must be provided!");
@@ -231,9 +243,9 @@ class Klass {
     }
   }
 
-  set capacity( capacity) {
-    console.log("capacity");
-    const validationResult = Klass.checkCapacity( capacity);
+  set capacity(capacity) {
+    console.log("capacity : " + capacity);
+    const validationResult = Klass.checkCapacity(capacity);
     if (validationResult instanceof NoConstraintViolation) {
       this._capacity = capacity;
     } else {
@@ -242,29 +254,29 @@ class Klass {
     console.log("capacity completed");
   }
 
-    //all basic constraints, getters, chechers, setters of the registeredMember attribute
+  //all basic constraints, getters, chechers, setters of the registeredMember attribute
 
-    get registeredMember() {
-      return this._registeredMember;
-    };
-  
-    static checkRegisteredMember(registeredMember) {
-      if (!registeredMember || registeredMember === "") {
-        return new MandatoryValueConstraintViolation("A registeredMember value must be provided!");
-      } else {
-        return new NoConstraintViolation();
-      }
-    }
-  
-    set registeredMember( registeredMember) {
-      console.log("registeredMember");
-      const validationResult = Klass.checkRegisteredMember( registeredMember);
-      if (validationResult instanceof NoConstraintViolation) {
-        this._registeredMember = registeredMember;
-      } else {
-        throw validationResult;
-      }
-    }
+  get registeredMember() {
+    return this._registeredMember;
+  };
+
+  // static checkRegisteredMember(registeredMember) {
+  //   if (!registeredMember || registeredMember === "") {
+  //     return new MandatoryValueConstraintViolation("A registeredMember value must be provided!");
+  //   } else {
+  //     return new NoConstraintViolation();
+  //   }
+  // }
+
+  // set registeredMember(registeredMember) {
+  //   console.log("registeredMember : " + registeredMember);
+  //   const validationResult = Klass.checkRegisteredMember(registeredMember);
+  //   if (validationResult instanceof NoConstraintViolation) {
+  //     this._registeredMember = registeredMember;
+  //   } else {
+  //     throw validationResult;
+  //   }
+  // }
 
 }
 
@@ -281,10 +293,11 @@ Klass.converter = {
       klassName: klass.klassName,
       instructor: klass.instructor,
       startDate: klass.startDate,
+      endDate: klass.endDate,
       capacity: klass.capacity,
       registeredMember: klass.registeredMember
     };
-    console.log(data);
+    console.log("data " + data);
     return data;
   },
   fromFirestore: function (snapshot, options) {
@@ -294,6 +307,7 @@ Klass.converter = {
       klassName: klass.klassName,
       instructor: klass.instructor,
       startDate: klass.startDate,
+      endDate: klass.endDate,
       capacity: klass.capacity,
       registeredMember: klass.registeredMember
     };
@@ -325,8 +339,9 @@ Klass.add = async function (slots) {
   if (klass) {
     try {
       console.log("klass Added");
-      const klassDocRef = fsDoc(fsDb, "klasses", klass.klassId).withConverter(Klass.converter);
-      setDoc(klassDocRef, klass);
+      const klassDocRef = await fsDoc(fsDb, "klasses", klass.klassId).withConverter(Klass.converter);
+      console.log("Done Database");
+      await setDoc(klassDocRef, klass);
       console.log(`klass record "${klass.klassId}" created!`);
     } catch (e) {
       console.error(`${e.constructor.name}: ${e.message} + ${e}`);
@@ -341,6 +356,7 @@ Klass.add = async function (slots) {
  */
 Klass.retrieve = async function (klassId) {
   try {
+    console.log("retrieve " + klassId);
     const klassRec = (await getDoc(fsDoc(fsDb, "klasses", klassId)
       .withConverter(Klass.converter))).data();
     console.log(`Klass record "${klassRec.klassId}" retrieved.`);
@@ -379,12 +395,13 @@ Klass.retrieveBlock = async function (params) {
     }
     const klassesRecs = (await getDocs(klassesCollRef
       .withConverter(Klass.converter))).docs.map(d => d.data());
+    console.log(klassesRecs);
     if (klassesRecs.length) {
-      console.log(`Block of persons records retrieved! (cursor: ${klassesRecs[0][params.order]})`);
+      console.log(`Block of class records retrieved! (cursor: ${klassesRecs[0][params.order]})`);
     }
     return klassesRecs;
   } catch (e) {
-    console.error(`Error retrieving all persons records: ${e}`);
+    console.error(`Error retrieving all class records: ${e}`);
   }
 };
 

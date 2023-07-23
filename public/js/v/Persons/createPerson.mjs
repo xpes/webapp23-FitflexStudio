@@ -13,11 +13,13 @@ import Membership from "../../m/Membership.mjs";
 import { fillSelectWithOptions } from "../../../lib/util.mjs";
 import { showProgressBar, hideProgressBar } from "../../../lib/util.mjs";
 import { undisplayAllSegmentFields, displaySegmentFields } from "../../c/app.mjs"
+import Klass from "../../m/Klass.mjs";
 
 /***************************************************************
  Load data
  ***************************************************************/
 const MembershipRecords = await Membership.retrieveAll();
+const KlassRecords = await Klass.retrieveAll()
 
 
 /**********************************************
@@ -51,6 +53,17 @@ for (const MembershipRec of MembershipRecords) {
     selectMembershipTypeEl.add(optionEl, null);
 }
 
+// set up a multiple selection list for selecting Klass
+const optionE2 = document.createElement("option");
+optionE2.text = "---";
+optionE2.value = 0;
+formEl["trainingClasses"].add(optionE2, null);
+for (const KlassRec of KlassRecords) {
+    const optionE2 = document.createElement("option");
+    optionE2.text = KlassRec.klassName;
+    optionE2.value = KlassRec.klassId;
+    formEl["trainingClasses"].add(optionE2, null);
+}
 // set up the selection list
 const createGenderSelectEl = formEl.gender;
 fillSelectWithOptions(createGenderSelectEl, GenderEL.labels);
@@ -150,12 +163,25 @@ createButton.addEventListener("click", async function () {
         phoneNumber: formEl["phoneNumber"].value,
         address: formEl["address"].value,
         iban: formEl["IBAN"].value,
+        trainingClasses: [],
         role: formEl["role"].value,
         trainerId: formEl["trainerId"].value,
         trainerCategory: formEl["trainerCategory"].value,
         memberId: formEl["memberId"].value,
         membershipType: formEl["membershipType"].value
     };
+
+    // get the list of selected taining classes
+    const selKlassOptions = formEl["trainingClasses"].selectedOptions;
+    // save the input data only if all form fields are valid
+    if (selKlassOptions.length > 0) {
+        // construct a list of person ID references
+        for (const opt of selKlassOptions) {
+            const klass = { id: opt.value, name: opt.text };
+            slots.trainingClasses.push(klass);
+            //slots.trainingClasses[opt.value]=opt.text;
+        }
+    }
     // check constraints and set error messages
     showProgressBar(progressEl);
     formEl["personId"].setCustomValidity((await Person.checkPersonIdAsId(slots.personId)).message);

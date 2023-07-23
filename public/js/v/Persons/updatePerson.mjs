@@ -11,13 +11,15 @@ import Person, { GenderEL, PersonRoleEL } from "../../m/Person.mjs";
 import Membership from "../../m/Membership.mjs";
 import { fillSelectWithOptions } from "../../../lib/util.mjs";
 import { showProgressBar, hideProgressBar } from "../../../lib/util.mjs";
-import { undisplayAllSegmentFields, displaySegmentFields } from "../../c/app.mjs"
+import { undisplayAllSegmentFields, displaySegmentFields } from "../../c/app.mjs";
+import Klass from "../../m/Klass.mjs";
 
 /***************************************************************
  Load data
  ***************************************************************/
 const MemberRecords = await Person.retrieveAll();
 const MembershipRecords = await Membership.retrieveAll();
+const KlassRecords = await Klass.retrieveAll()
 
 /***************************************************************
  Declare variables for accessing UI elements
@@ -36,7 +38,6 @@ const optionEl = document.createElement("option");
 optionEl.text = "---";
 optionEl.value = 0;
 for (const MemberRec of MemberRecords) {
-  console.log("selection " + MemberRec.personId);
   const optionEl = document.createElement("option");
   optionEl.text = MemberRec.personName;
   optionEl.value = MemberRec.personId;
@@ -49,11 +50,22 @@ optionEl2.text = "---";
 optionEl2.value = 0;
 selectMembershipTypeEl.add(optionEl2, null);
 for (const MembershipRec of MembershipRecords) {
-  console.log("selection " + MembershipRec.membershipId);
   const optionEl2 = document.createElement("option");
   optionEl2.text = MembershipRec.membershipName;
   optionEl2.value = MembershipRec.membershipId;
   selectMembershipTypeEl.add(optionEl2, null);
+}
+
+// set up a multiple selection list for selecting Klass
+const optionE2 = document.createElement("option");
+optionE2.text = "---";
+optionE2.value = 0;
+formEl["trainingClasses"].add(optionE2, null);
+for (const KlassRec of KlassRecords) {
+  const optionE2 = document.createElement("option");
+  optionE2.text = KlassRec.klassName;
+  optionE2.value = KlassRec.klassId;
+  formEl["trainingClasses"].add(optionE2, null);
 }
 
 /**
@@ -69,7 +81,6 @@ function handleCategorySelectChangeEvent(e) {
   }
   // the array index of PersonRoleEL.labels
   categoryIndexStr = formEl.role.value;
-  console.log(formEl["role"].value);
   if (categoryIndexStr) {
     displaySegmentFields(formEl, PersonRoleEL.labels,
       parseInt(categoryIndexStr));
@@ -82,7 +93,6 @@ function handleCategorySelectChangeEvent(e) {
  * Refresh the Create person UI
  **********************************************/
 var subClassProp = document.getElementsByClassName("field");
-console.log(subClassProp.length);
 for (let i = 0; i < subClassProp.length; i++) {
   subClassProp[i].style.display = "none";
 }
@@ -151,13 +161,18 @@ selectMemberEl.addEventListener("change", async function () {
     // retrieve up-to-date person record
     cancelListener = await Person.observeChanges(memberId);
     const personRecord = await Person.retrieve(memberId);
-    for (const field of ["personId", "personName", "gender", "birthDate", "email", "phoneNumber", "address", "iban", "role", "trainerId", "trainerCategory", "memberId", "membershipType"]) {
+    for (const field of ["personId", "personName", "gender", "birthDate", "email", "phoneNumber", "address", "iban", "trainingClasses", "role", "trainerId", "trainerCategory", "memberId", "membershipType"]) {
       if (field === "role") {
         formEl[field].value = [personRecord[field]];
         handleCategorySelectChangeEvent();
       }
       else if (field === "membershipType") {
         formEl[field].value = personRecord[field];
+      }
+      else if (field === "trainingClasses") {
+        for (var i = 0; i < personRecord[field].length; i++) {
+          formEl[field].options[i + 1].selected = true;
+        }
       }
       else
         formEl[field].value = personRecord[field] !== undefined ? personRecord[field] : "";
@@ -185,6 +200,7 @@ updateButton.addEventListener("click", async function () {
     phoneNumber: formEl["phoneNumber"].value,
     address: formEl["address"].value,
     iban: formEl["iban"].value,
+    trainingClasses: [],
     role: formEl["role"].value,
     trainerId: formEl["trainerId"].value,
     trainerCategory: formEl["trainerCategory"].value,
@@ -192,6 +208,16 @@ updateButton.addEventListener("click", async function () {
     membershipType: formEl["membershipType"].value
   },
     MemberIdRef = selectMemberEl.value;
+  // get the list of selected taining classes
+  const selKlassOptions = formEl["trainingClasses"].selectedOptions;
+  // save the input data only if all form fields are valid
+  if (selKlassOptions.length > 0) {
+    // construct a list of person ID references
+    for (const opt of selKlassOptions) {
+      const klass = { id: opt.value, name: opt.text };
+      slots.trainingClasses.push(klass);
+    }
+  }
   // set error messages in case of constraint violations
   formEl["personName"].setCustomValidity(Person.checkPersonName(slots.personName).message);
   formEl["gender"].setCustomValidity(Person.checkGender(slots.gender).message);

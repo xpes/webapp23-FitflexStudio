@@ -87,6 +87,12 @@ async function createBlock(startAt) {
     nextPageRef = (PersonRecords.length < 5) ? null : PersonRecords[PersonRecords.length - 1][order];
     for (const PersonRec of PersonRecords) {
       let membership = null;
+      let klass = [];
+      if (PersonRec.trainingClasses) {
+        for (let k of PersonRec.trainingClasses) {
+          klass.push(k.name);
+        }
+      }
       console.log("In for loop " + PersonRec);
       const row = tableBodyEl.insertRow();
       row.insertCell().textContent = PersonRec.personId;
@@ -97,6 +103,7 @@ async function createBlock(startAt) {
       row.insertCell().textContent = PersonRec.phoneNumber;
       row.insertCell().textContent = PersonRec.address;
       row.insertCell().textContent = PersonRec.iban;
+      row.insertCell().textContent = (klass) ? klass.toString() : "";
       row.insertCell().textContent = PersonRoleEL.labels[PersonRec.role - 1];
       row.insertCell().textContent = PersonRec.trainerId;
       row.insertCell().textContent = TrainerCategoryEL.labels[PersonRec.trainerCategory - 1];

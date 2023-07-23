@@ -92,8 +92,8 @@ function createSignInAndSignUpUI() {
     linkSignUpEl = document.createElement("a"),
     linkSignInEl = document.createElement("a"),
     text = document.createTextNode(" | ");
-  linkSignUpEl.href = "signUp.html";
-  linkSignInEl.href = "signIn.html";
+  linkSignUpEl.href = "/signUp.html";
+  linkSignInEl.href = "/signIn.html";
   linkSignUpEl.textContent = "Sign up";
   linkSignInEl.textContent = "Sign in";
   fragment.appendChild(linkSignUpEl);
